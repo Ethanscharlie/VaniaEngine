@@ -1,7 +1,6 @@
 #include "App.hpp"
 
 #include "imgui_impl_sdlrenderer3.h"
-#include <cstdlib>
 #include <format>
 #include <stdexcept>
 
@@ -27,7 +26,7 @@ void App::update() {
   ImGui_ImplSDL3_ProcessEvent(&event);
 
   if (event.type == SDL_EVENT_QUIT) {
-    std::exit(1);
+    running = false;
   }
 
   ImGui_ImplSDLRenderer3_NewFrame();
@@ -43,6 +42,8 @@ void App::update() {
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
   SDL_RenderPresent(renderer);
 }
+
+bool App::isRunning() { return running; }
 
 void App::initSDL() {
   const int sdlInitSuccess = SDL_Init(SDL_INIT_VIDEO);

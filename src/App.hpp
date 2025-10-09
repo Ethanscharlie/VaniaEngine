@@ -13,10 +13,13 @@ class App {
   SDL_Event event;
   ImGuiIO *io;
 
+  bool running = true;
+
 public:
   App();
   ~App();
   void update();
+  bool isRunning();
 
 private:
   void initSDL();

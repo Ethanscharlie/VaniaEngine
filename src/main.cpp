@@ -3,7 +3,7 @@
 int main() {
   Vania::App app;
 
-  while (1) {
+  while (app.isRunning()) {
     app.update();
   }
 }
