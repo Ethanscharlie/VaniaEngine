@@ -22,6 +22,8 @@ public:
   bool isRunning();
 
 private:
+  void startNewFrame();
+  void render();
   void initSDL();
   void createWindow();
   void initImGui();

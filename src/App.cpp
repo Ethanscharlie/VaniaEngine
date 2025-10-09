@@ -29,12 +29,22 @@ void App::update() {
     running = false;
   }
 
-  ImGui_ImplSDLRenderer3_NewFrame();
-  ImGui_ImplSDL3_NewFrame();
-  ImGui::NewFrame();
+  startNewFrame();
 
   ImGui::ShowDemoWindow();
 
+  render();
+}
+
+bool App::isRunning() { return running; }
+
+void App::startNewFrame() {
+  ImGui_ImplSDLRenderer3_NewFrame();
+  ImGui_ImplSDL3_NewFrame();
+  ImGui::NewFrame();
+}
+
+void App::render() {
   ImGui::Render();
   SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x,
                      io->DisplayFramebufferScale.y);
@@ -42,8 +52,6 @@ void App::update() {
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
   SDL_RenderPresent(renderer);
 }
-
-bool App::isRunning() { return running; }
 
 void App::initSDL() {
   const int sdlInitSuccess = SDL_Init(SDL_INIT_VIDEO);
