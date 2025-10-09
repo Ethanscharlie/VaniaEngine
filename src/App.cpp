@@ -1,5 +1,9 @@
 #include "App.hpp"
+
+#include "imgui_impl_sdlrenderer3.h"
 #include <cstdlib>
+#include <format>
+#include <stdexcept>
 
 namespace Vania {
 App::App() {
