@@ -28,9 +28,17 @@ void EntityPanel::update() {
     }
     ImGui::EndChild();
   }
+
   ImGui::SameLine();
 
-  ImGui::Text(std::format("Name: {}", entities[selected].name).c_str());
+  ImGui::BeginGroup();
+  {
+    EntityDef &selectedEntity = entities[selected];
+    ImGui::Text(std::format("Name: {}", selectedEntity.name).c_str());
+    ImGui::InputInt("Width", &selectedEntity.width);
+    ImGui::InputInt("Height", &selectedEntity.height);
+  }
+  ImGui::EndGroup();
 
   ImGui::End();
 }
