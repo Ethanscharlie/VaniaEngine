@@ -15,16 +15,20 @@ target_include_directories(index PUBLIC
   external/sol
 )
 
-add_subdirectory(external/SDL)
+# add_subdirectory(external/SDL)
+find_package(SDL3 REQUIRED)
 target_link_libraries(index PUBLIC SDL3::SDL3)
 
-add_subdirectory(external/SDL_image)
+# add_subdirectory(external/SDL_image)
+find_package(SDL3_image REQUIRED)
 target_link_libraries(index PUBLIC SDL3_image::SDL3_image)
 
-add_subdirectory(external/SDL_mixer)
+# add_subdirectory(external/SDL_mixer)
+find_package(SDL3_mixer REQUIRED)
 target_link_libraries(index PUBLIC SDL3_mixer::SDL3_mixer)
 
-add_subdirectory(external/SDL_ttf)
+# add_subdirectory(external/SDL_ttf)
+find_package(SDL3_ttf REQUIRED)
 target_link_libraries(index PUBLIC SDL3_ttf::SDL3_ttf)
 
 add_subdirectory(external/imgui)
