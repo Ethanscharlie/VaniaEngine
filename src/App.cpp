@@ -8,7 +8,7 @@
 
 namespace Vania {
 App::App() {
-  panels.emplace_back(std::make_unique<EntityPanel>());
+  panels.emplace_back(std::make_unique<EntityPanel>(gameData));
 
   initSDL();
   createWindow();
