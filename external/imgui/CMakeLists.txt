@@ -20,6 +20,7 @@ add_library(imgui STATIC
     imgui_internal.h
     imgui_tables.cpp
     imgui_widgets.cpp
+    misc/cpp/imgui_stdlib.cpp
 )
 
 # Include ImGui headers

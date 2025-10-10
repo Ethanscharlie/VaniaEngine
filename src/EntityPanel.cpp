@@ -1,6 +1,8 @@
 #include "EntityPanel.hpp"
 #include "EntityDef.hpp"
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
+#include <cstring>
 #include <format>
 
 namespace Vania {
@@ -37,6 +39,8 @@ void EntityPanel::update() {
     ImGui::Text(std::format("Name: {}", selectedEntity.name).c_str());
     ImGui::InputInt("Width", &selectedEntity.width);
     ImGui::InputInt("Height", &selectedEntity.height);
+
+    ImGui::InputText("Color", &selectedEntity.color);
   }
   ImGui::EndGroup();
 
