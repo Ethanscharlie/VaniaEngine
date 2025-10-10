@@ -1,10 +1,11 @@
+#include "EntityDef.hpp"
 #include "IPanel.hpp"
 #include <string>
 #include <vector>
 
 namespace Vania {
 class EntityPanel : public IPanel {
-  std::vector<std::string> entities;
+  std::vector<EntityDef> entities;
 
 public:
   EntityPanel();
