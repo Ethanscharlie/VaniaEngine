@@ -18,13 +18,20 @@ EntityPanel::EntityPanel() {
 void EntityPanel::update() {
   ImGui::Begin("Entity");
 
+  if (ImGui::Button("   +   ")) {
+    entities.push_back({});
+  }
+
   static int selected = 0;
   {
     ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
                       ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     for (int i = 0; i < entities.size(); i++) {
       const EntityDef &entity = entities[i];
-      if (ImGui::Selectable(entity.name.c_str(), selected == i,
+      const std::string label =
+          std::format("{}###{}n{}", entity.name, entity.name, i);
+
+      if (ImGui::Selectable(label.c_str(), selected == i,
                             ImGuiSelectableFlags_SelectOnNav))
         selected = i;
     }
