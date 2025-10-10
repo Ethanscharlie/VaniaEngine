@@ -36,10 +36,9 @@ void EntityPanel::update() {
   ImGui::BeginGroup();
   {
     EntityDef &selectedEntity = entities[selected];
-    ImGui::Text(std::format("Name: {}", selectedEntity.name).c_str());
+    ImGui::InputText("name", &selectedEntity.name);
     ImGui::InputInt("Width", &selectedEntity.width);
     ImGui::InputInt("Height", &selectedEntity.height);
-
     ImGui::InputText("Color", &selectedEntity.color);
   }
   ImGui::EndGroup();
