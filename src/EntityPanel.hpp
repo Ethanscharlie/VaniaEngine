@@ -1,6 +1,5 @@
-#include "EntityDef.hpp"
+#include "GameDataStructs.hpp"
 #include "IPanel.hpp"
-#include <string>
 #include <vector>
 
 namespace Vania {
