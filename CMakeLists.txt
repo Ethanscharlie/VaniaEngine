@@ -12,6 +12,7 @@ add_executable(index
 
 target_include_directories(index PUBLIC
   src
+  external/sol
 )
 
 add_subdirectory(external/SDL)
