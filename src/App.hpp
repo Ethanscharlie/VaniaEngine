@@ -1,7 +1,10 @@
+#include "IPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include <SDL3/SDL.h>
+#include <memory>
 #include <unistd.h>
+#include <vector>
 
 namespace Vania {
 class App {
@@ -14,6 +17,8 @@ class App {
   ImGuiIO *io;
 
   bool running = true;
+
+  std::vector<std::unique_ptr<IPanel>> panels;
 
 public:
   App();

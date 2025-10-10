@@ -1,11 +1,15 @@
 #include "App.hpp"
 
+#include "EntityPanel.hpp"
 #include "imgui_impl_sdlrenderer3.h"
 #include <format>
+#include <memory>
 #include <stdexcept>
 
 namespace Vania {
 App::App() {
+  panels.emplace_back(std::make_unique<EntityPanel>());
+
   initSDL();
   createWindow();
   initImGui();
@@ -32,6 +36,10 @@ void App::update() {
   startNewFrame();
 
   ImGui::ShowDemoWindow();
+
+  for (auto &panel : panels) {
+    panel->update();
+  }
 
   render();
 }
