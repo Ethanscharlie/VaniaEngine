@@ -5,28 +5,28 @@
 #include <format>
 
 namespace Vania {
-EntityPanel::EntityPanel() {
+EntityPanel::EntityPanel(GameData &gameData) : gameData(gameData) {
   EntityDef ethan;
   ethan.name = "Ethan";
   EntityDef connor;
   connor.name = "Connor";
 
-  entities = {ethan, connor};
+  gameData.entityDefs = {ethan, connor};
 }
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");
 
   if (ImGui::Button("   +   ")) {
-    entities.push_back({});
+    gameData.entityDefs.push_back({});
   }
 
   static int selected = 0;
   {
     ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
                       ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
-    for (int i = 0; i < entities.size(); i++) {
-      const EntityDef &entity = entities[i];
+    for (int i = 0; i < gameData.entityDefs.size(); i++) {
+      const EntityDef &entity = gameData.entityDefs[i];
       const std::string label =
           std::format("{}###{}n{}", entity.name, entity.name, i);
 
@@ -41,7 +41,7 @@ void EntityPanel::update() {
 
   ImGui::BeginGroup();
   {
-    EntityDef &selectedEntity = entities[selected];
+    EntityDef &selectedEntity = gameData.entityDefs[selected];
     ImGui::InputText("name", &selectedEntity.name);
     ImGui::InputInt("Width", &selectedEntity.width);
     ImGui::InputInt("Height", &selectedEntity.height);

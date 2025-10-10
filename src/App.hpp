@@ -1,3 +1,4 @@
+#include "GameDataStructs.hpp"
 #include "IPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
@@ -19,6 +20,8 @@ class App {
   bool running = true;
 
   std::vector<std::unique_ptr<IPanel>> panels;
+
+  GameData gameData;
 
 public:
   App();

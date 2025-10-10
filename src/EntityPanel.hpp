@@ -4,10 +4,10 @@
 
 namespace Vania {
 class EntityPanel : public IPanel {
-  std::vector<EntityDef> entities;
+  GameData &gameData;
 
 public:
-  EntityPanel();
+  EntityPanel(GameData &gameData);
   void update() override;
 };
 } // namespace Vania
