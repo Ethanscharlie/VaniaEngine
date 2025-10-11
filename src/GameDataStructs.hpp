@@ -10,6 +10,12 @@ struct EntityDef {
   std::string color = "white";
 };
 
+struct EditorData {
+  int selectedEntityDef = 0;
+};
+
 struct GameData {
   std::vector<EntityDef> entityDefs;
+
+  EditorData editorData;
 };

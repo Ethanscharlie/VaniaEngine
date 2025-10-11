@@ -21,8 +21,9 @@ void EntityPanel::update() {
     gameData.entityDefs.push_back({});
   }
 
-  static int selected = 0;
   {
+    int &selected = gameData.editorData.selectedEntityDef;
+
     ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
                       ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     for (int i = 0; i < gameData.entityDefs.size(); i++) {
@@ -37,17 +38,17 @@ void EntityPanel::update() {
     ImGui::EndChild();
   }
 
-  ImGui::SameLine();
-
-  ImGui::BeginGroup();
-  {
-    EntityDef &selectedEntity = gameData.entityDefs[selected];
-    ImGui::InputText("name", &selectedEntity.name);
-    ImGui::InputInt("Width", &selectedEntity.width);
-    ImGui::InputInt("Height", &selectedEntity.height);
-    ImGui::InputText("Color", &selectedEntity.color);
-  }
-  ImGui::EndGroup();
+  // ImGui::SameLine();
+  //
+  // ImGui::BeginGroup();
+  // {
+  //   EntityDef &selectedEntity = gameData.entityDefs[selected];
+  //   ImGui::InputText("name", &selectedEntity.name);
+  //   ImGui::InputInt("Width", &selectedEntity.width);
+  //   ImGui::InputInt("Height", &selectedEntity.height);
+  //   ImGui::InputText("Color", &selectedEntity.color);
+  // }
+  // ImGui::EndGroup();
 
   ImGui::End();
 }
