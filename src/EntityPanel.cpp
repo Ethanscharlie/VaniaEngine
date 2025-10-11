@@ -22,18 +22,17 @@ void EntityPanel::update() {
   }
 
   {
-    int &selected = gameData.editorData.selectedEntityDef;
-
     ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
                       ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     for (int i = 0; i < gameData.entityDefs.size(); i++) {
-      const EntityDef &entity = gameData.entityDefs[i];
+      EntityDef &entity = gameData.entityDefs[i];
       const std::string label =
           std::format("{}###{}n{}", entity.name, entity.name, i);
 
-      if (ImGui::Selectable(label.c_str(), selected == i,
+      if (ImGui::Selectable(label.c_str(),
+                            gameData.editorData.selectedEntityDef == &entity,
                             ImGuiSelectableFlags_SelectOnNav))
-        selected = i;
+        gameData.editorData.selectedEntityDef = &entity;
     }
     ImGui::EndChild();
   }
