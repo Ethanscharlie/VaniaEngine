@@ -53,12 +53,17 @@ void WorldPanel::calculateCanvasPositionValues() {
 
 void WorldPanel::drawGrid() {
 
-  for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x; x += GRID_STEP)
+  for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x;
+       x += GRID_STEP) {
     draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y),
                        ImVec2(canvas_p0.x + x, canvas_p1.y), LIGHT_GRAY);
-  for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y; y += GRID_STEP)
+  }
+
+  for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y;
+       y += GRID_STEP) {
     draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y),
                        ImVec2(canvas_p1.x, canvas_p0.y + y), LIGHT_GRAY);
+  }
 }
 
 void WorldPanel::draw() {
