@@ -8,6 +8,7 @@ add_executable(index
   src/main.cpp
   src/App.cpp
   src/EntityPanel.cpp
+  src/WorldPanel.cpp
 )
 
 target_include_directories(index PUBLIC
