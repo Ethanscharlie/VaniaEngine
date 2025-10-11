@@ -12,11 +12,11 @@ WorldPanel::WorldPanel(GameData &gameData) : gameData(gameData) {}
 void WorldPanel::update() {
   ImGui::Begin("World");
 
+  calculateCanvasPositionValues();
+
   ImGui::InvisibleButton("canvas", canvas_sz,
                          ImGuiButtonFlags_MouseButtonLeft |
                              ImGuiButtonFlags_MouseButtonRight);
-
-  calculateCanvasPositionValues();
 
   const bool is_active = ImGui::IsItemActive();
   if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
@@ -51,22 +51,25 @@ void WorldPanel::calculateCanvasPositionValues() {
   canvas_p1 = ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y);
 }
 
+void WorldPanel::drawGrid() {
+
+  for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x; x += GRID_STEP)
+    draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y),
+                       ImVec2(canvas_p0.x + x, canvas_p1.y), LIGHT_GRAY);
+  for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y; y += GRID_STEP)
+    draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y),
+                       ImVec2(canvas_p1.x, canvas_p0.y + y), LIGHT_GRAY);
+}
+
 void WorldPanel::draw() {
-  ImDrawList *draw_list = ImGui::GetWindowDrawList();
-  draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
-  draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
+  draw_list = ImGui::GetWindowDrawList(); // ImGui is annoying
+
+  draw_list->AddRectFilled(canvas_p0, canvas_p1, DARK_GRAY);
+  draw_list->AddRect(canvas_p0, canvas_p1, WHITE);
 
   // Draw grid + all lines in the canvas
   draw_list->PushClipRect(canvas_p0, canvas_p1, true);
-  const float GRID_STEP = 64.0f;
-  for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x; x += GRID_STEP)
-    draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y),
-                       ImVec2(canvas_p0.x + x, canvas_p1.y),
-                       IM_COL32(200, 200, 200, 40));
-  for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y; y += GRID_STEP)
-    draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y),
-                       ImVec2(canvas_p1.x, canvas_p0.y + y),
-                       IM_COL32(200, 200, 200, 40));
+  drawGrid();
   draw_list->PopClipRect();
 }
 
