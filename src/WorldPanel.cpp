@@ -12,15 +12,13 @@ WorldPanel::WorldPanel(GameData &gameData) : gameData(gameData) {}
 void WorldPanel::update() {
   ImGui::Begin("World");
 
-  calculateCanvasPositionValues();
-
-  // This will catch our interactions
   ImGui::InvisibleButton("canvas", canvas_sz,
                          ImGuiButtonFlags_MouseButtonLeft |
                              ImGuiButtonFlags_MouseButtonRight);
 
-  findWindowInputState();
+  calculateCanvasPositionValues();
 
+  const bool is_active = ImGui::IsItemActive();
   if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
     ImGuiIO &io = ImGui::GetIO();
     scrolling.x += io.MouseDelta.x;
@@ -32,13 +30,11 @@ void WorldPanel::update() {
   ImGui::End();
 }
 
-void WorldPanel::findWindowInputState() {
+ImVec2 WorldPanel::getMousePositionOnCanvas() {
   ImGuiIO &io = ImGui::GetIO();
-  is_hovered = ImGui::IsItemHovered(); // Hovered
-  is_active = ImGui::IsItemActive();   // Held
-  origin = {canvas_p0.x + scrolling.x,
-            canvas_p0.y + scrolling.y}; // Lock scrolled origin
-  mouse_pos_in_canvas = {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
+  const ImVec2 origin = {canvas_p0.x + scrolling.x,
+                         canvas_p0.y + scrolling.y}; // Lock scrolled origin
+  return {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
 }
 
 void WorldPanel::calculateCanvasPositionValues() {

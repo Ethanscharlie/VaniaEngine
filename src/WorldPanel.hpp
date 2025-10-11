@@ -13,18 +13,13 @@ class WorldPanel : public IPanel {
   ImVec2 canvas_sz;
   ImVec2 canvas_p1;
 
-  bool is_hovered;
-  bool is_active;
-  ImVec2 origin;
-  ImVec2 mouse_pos_in_canvas;
-
 public:
   WorldPanel(GameData &gameData);
   void update() override;
 
 private:
   void calculateCanvasPositionValues();
-  void findWindowInputState();
+  ImVec2 getMousePositionOnCanvas();
   void draw();
 };
 } // namespace Vania
