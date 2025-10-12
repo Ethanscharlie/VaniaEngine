@@ -1,5 +1,7 @@
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
+#include "sol/sol.hpp"
+
 namespace Vania {
 
 class Runner {
@@ -14,6 +16,8 @@ private:
   SDL_Renderer *renderer;
 
   GameData instanceOfGameData;
+
+  sol::state lua;
 
 public:
   Runner(const GameData &gameData, SDL_Renderer *renderer);

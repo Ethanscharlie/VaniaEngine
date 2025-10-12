@@ -12,6 +12,9 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
   displayTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                                      SDL_TEXTUREACCESS_TARGET, DISPLAY_WIDTH,
                                      DISPLAY_HEIGHT);
+
+  lua.open_libraries(sol::lib::base, sol::lib::package);
+  lua.script("print('bark bark bark!')");
 }
 
 Runner::~Runner() { SDL_DestroyTexture(displayTexture); }
