@@ -1,6 +1,8 @@
 #include "Runner.hpp"
+#include "GameDataStructs.hpp"
 #include "SDL3/SDL_oldnames.h"
 #include "SDL3/SDL_render.h"
+#include "sol/forward.hpp"
 #include <print>
 
 namespace Vania {
@@ -14,7 +16,15 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
                                      DISPLAY_HEIGHT);
 
   lua.open_libraries(sol::lib::base, sol::lib::package);
-  lua.script("print('bark bark bark!')");
+
+  lua.new_usertype<Entity>("Entity", "x", &Entity::x, "y", &Entity::y);
+
+  lua.script("function run(entity)\n"
+             "entity.x = entity.x + 100\n"
+             "end");
+
+  sol::function func = lua["run"];
+  func(&instanceOfGameData.worldData.entities[0]);
 }
 
 Runner::~Runner() { SDL_DestroyTexture(displayTexture); }
