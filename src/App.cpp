@@ -3,6 +3,7 @@
 #include "EntityPanel.hpp"
 #include "GamePanel.hpp"
 #include "WorldPanel.hpp"
+#include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
 #include <format>
 #include <memory>
@@ -40,6 +41,8 @@ void App::update() {
   }
 
   startNewFrame();
+
+  ImGui::DockSpaceOverViewport();
 
   ImGui::ShowDemoWindow();
 
@@ -91,6 +94,8 @@ void App::initImGui() {
   ImGui::CreateContext();
   io = &ImGui::GetIO();
   (void)io;
+
+  io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   ImGui::StyleColorsDark();
 
