@@ -15,8 +15,13 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
                                      DISPLAY_HEIGHT);
 
   lua.open_libraries(sol::lib::base, sol::lib::package);
+
+  lua.new_usertype<EntityDef>("EntityDef", "width", &EntityDef::width, "height",
+                              &EntityDef::height);
+
   lua.new_usertype<RuntimeEntity>("Entity", "x", &RuntimeEntity::x, "y",
-                                  &RuntimeEntity::y);
+                                  &RuntimeEntity::y, "def",
+                                  &RuntimeEntity::entityDef);
 
   reset(gameData);
 }

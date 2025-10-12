@@ -21,3 +21,10 @@ end
 function keyHeldDown(entity)
 	entity.y = entity.y + speed
 end
+
+function keyHeldSpace(entity)
+	entity.x = entity.x - speed / 2
+	entity.y = entity.y - speed / 2
+	entity.def.width = entity.def.width + speed
+	entity.def.height = entity.def.height + speed
+end

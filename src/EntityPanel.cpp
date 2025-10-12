@@ -58,8 +58,8 @@ void EntityPanel::showPropertyEditor() {
   {
     EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
     ImGui::InputText("name", &selectedEntity.name);
-    ImGui::InputInt("Width", &selectedEntity.width);
-    ImGui::InputInt("Height", &selectedEntity.height);
+    ImGui::InputFloat("Width", &selectedEntity.width);
+    ImGui::InputFloat("Height", &selectedEntity.height);
     ImGui::InputText("Color", &selectedEntity.color);
     ImGui::InputText("Script", &selectedEntity.script);
   }
