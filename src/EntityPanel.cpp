@@ -1,6 +1,7 @@
 #include "EntityPanel.hpp"
 #include "GameDataStructs.hpp"
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
 #include <format>
 
 namespace Vania {
@@ -36,18 +37,32 @@ void EntityPanel::update() {
     ImGui::EndChild();
   }
 
-  // ImGui::SameLine();
-  //
-  // ImGui::BeginGroup();
-  // {
-  //   EntityDef &selectedEntity = gameData.entityDefs[selected];
-  //   ImGui::InputText("name", &selectedEntity.name);
-  //   ImGui::InputInt("Width", &selectedEntity.width);
-  //   ImGui::InputInt("Height", &selectedEntity.height);
-  //   ImGui::InputText("Color", &selectedEntity.color);
-  // }
-  // ImGui::EndGroup();
+  ImGui::SameLine();
+
+  const bool somethingIsSelected = gameData.editorData.selectedEntityDef;
+  if (ImGui::Button("Edit") && somethingIsSelected) {
+    ImGui::OpenPopup("Entity Def Editor");
+  }
+
+  bool defEditorOpen = true;
+  if (ImGui::BeginPopupModal("Entity Def Editor", &defEditorOpen)) {
+    showPropertyEditor();
+    ImGui::EndPopup();
+  }
 
   ImGui::End();
 }
+
+void EntityPanel::showPropertyEditor() {
+  ImGui::BeginGroup();
+  {
+    EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
+    ImGui::InputText("name", &selectedEntity.name);
+    ImGui::InputInt("Width", &selectedEntity.width);
+    ImGui::InputInt("Height", &selectedEntity.height);
+    ImGui::InputText("Color", &selectedEntity.color);
+  }
+  ImGui::EndGroup();
+}
+
 } // namespace Vania

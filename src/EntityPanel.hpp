@@ -9,5 +9,8 @@ class EntityPanel : public IPanel {
 public:
   EntityPanel(GameData &gameData);
   void update() override;
+
+private:
+  void showPropertyEditor();
 };
 } // namespace Vania

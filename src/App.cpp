@@ -1,6 +1,5 @@
 #include "App.hpp"
 
-#include "EntityDefEditor.hpp"
 #include "EntityPanel.hpp"
 #include "WorldPanel.hpp"
 #include "imgui_impl_sdlrenderer3.h"
@@ -12,7 +11,6 @@ namespace Vania {
 App::App() {
   panels.emplace_back(std::make_unique<EntityPanel>(gameData));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData));
-  panels.emplace_back(std::make_unique<EntityDefEditor>(gameData));
 
   initSDL();
   createWindow();

@@ -22,6 +22,7 @@ struct WorldData {
 
 struct EditorData {
   EntityDef *selectedEntityDef = nullptr;
+  bool entityDefEditorOpen = false;
 };
 
 struct GameData {
