@@ -1,4 +1,5 @@
 #include "Runner.hpp"
+#include "SDL3/SDL_oldnames.h"
 #include "SDL3/SDL_render.h"
 #include <print>
 
@@ -20,8 +21,16 @@ void Runner::reset() { instanceOfGameData = gameData; }
 void Runner::update() {
   SDL_SetRenderTarget(renderer, displayTexture);
 
-  SDL_SetRenderDrawColor(renderer, 255, 0, 100, 255);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 10, 255);
   SDL_RenderClear(renderer);
+
+  for (Entity &entity : instanceOfGameData.worldData.entities) {
+    SDL_SetRenderDrawColor(renderer, 136, 42, 230, 255);
+    SDL_FRect rect = {(float)entity.x, (float)entity.y,
+                      (float)entity.entityDef->width,
+                      (float)entity.entityDef->height};
+    SDL_RenderFillRect(renderer, &rect);
+  }
 
   SDL_SetRenderTarget(renderer, nullptr);
 }
