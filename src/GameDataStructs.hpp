@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,7 @@ struct WorldData {
 struct EditorData {
   EntityDef *selectedEntityDef = nullptr;
   bool entityDefEditorOpen = false;
+  std::filesystem::path rootPath = "../testres/";
 };
 
 struct GameData {

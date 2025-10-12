@@ -19,7 +19,7 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
 
   lua.new_usertype<Entity>("Entity", "x", &Entity::x, "y", &Entity::y);
 
-  lua.script_file("../testres/myscript.lua");
+  lua.script_file(instanceOfGameData.editorData.rootPath / "myscript.lua");
 
   sol::function func = lua["run"];
   func(&instanceOfGameData.worldData.entities[0]);
