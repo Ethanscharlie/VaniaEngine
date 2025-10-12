@@ -27,6 +27,7 @@ public:
 private:
   void calculateCanvasPositionValues();
   ImVec2 getMousePositionOnCanvas();
+  ImVec2 getOrigin();
 
   void drawGrid();
   void draw();

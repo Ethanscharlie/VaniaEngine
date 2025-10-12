@@ -7,7 +7,9 @@
 #include <format>
 
 namespace Vania {
-WorldPanel::WorldPanel(GameData &gameData) : gameData(gameData) {}
+WorldPanel::WorldPanel(GameData &gameData) : gameData(gameData) {
+  gameData.worldData.entities.push_back({&gameData.entityDefs[0], 0, 0});
+}
 
 void WorldPanel::update() {
   ImGui::Begin("World");
@@ -32,9 +34,13 @@ void WorldPanel::update() {
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
   ImGuiIO &io = ImGui::GetIO();
-  const ImVec2 origin = {canvas_p0.x + scrolling.x,
-                         canvas_p0.y + scrolling.y}; // Lock scrolled origin
+  const ImVec2 origin = getOrigin();
   return {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
+}
+
+ImVec2 WorldPanel::getOrigin() {
+  return {canvas_p0.x + scrolling.x,
+          canvas_p0.y + scrolling.y}; // Lock scrolled origin
 }
 
 void WorldPanel::calculateCanvasPositionValues() {
@@ -75,6 +81,20 @@ void WorldPanel::draw() {
   // Draw grid + all lines in the canvas
   draw_list->PushClipRect(canvas_p0, canvas_p1, true);
   drawGrid();
+
+  const ImVec2 origin = getOrigin();
+  for (const Entity &entity : gameData.worldData.entities) {
+    const float x = entity.x + origin.x;
+    const float y = entity.y + origin.y;
+    const float w = entity.entityDef->width;
+    const float h = entity.entityDef->height;
+
+    const ImVec2 min = {x, y};
+    const ImVec2 max = {x + w, y + h};
+
+    draw_list->AddRectFilled(min, max, WHITE);
+  }
+
   draw_list->PopClipRect();
 }
 
