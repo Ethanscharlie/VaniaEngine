@@ -8,7 +8,7 @@ class GamePanel : public IPanel {
   GameData &gameData;
   Runner runner;
 
-  bool running = true;
+  bool running = false;
 
 public:
   GamePanel(GameData &gameData, SDL_Renderer *renderer);
