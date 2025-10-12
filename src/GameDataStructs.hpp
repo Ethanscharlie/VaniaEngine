@@ -14,8 +14,8 @@ struct EntityDef {
 
 struct Entity {
   EntityDef *entityDef;
-  int x;
-  int y;
+  float x;
+  float y;
 };
 
 struct WorldData {

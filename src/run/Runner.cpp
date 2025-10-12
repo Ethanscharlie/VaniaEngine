@@ -35,7 +35,15 @@ void Runner::runAllScriptsSetups() {
   }
 }
 
-void Runner::update() { render(); }
+void Runner::update() {
+  for (Entity &entity : instanceOfGameData.worldData.entities) {
+    const std::string &script = entity.entityDef->script;
+    lua.script_file(instanceOfGameData.editorData.rootPath / script);
+    lua["update"](&entity);
+  }
+
+  render();
+}
 
 void Runner::render() {
   SDL_SetRenderTarget(renderer, displayTexture);
