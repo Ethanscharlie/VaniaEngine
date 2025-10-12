@@ -1,7 +1,6 @@
 #include "EntityPanel.hpp"
 #include "GameDataStructs.hpp"
 #include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
 #include <format>
 
 namespace Vania {

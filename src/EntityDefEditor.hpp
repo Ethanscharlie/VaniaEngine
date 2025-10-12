@@ -8,5 +8,8 @@ class EntityDefEditor : public IPanel {
 public:
   EntityDefEditor(GameData &gameData);
   void update() override;
+
+private:
+  void showPropertyEditor();
 };
 } // namespace Vania
