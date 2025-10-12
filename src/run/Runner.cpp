@@ -24,19 +24,20 @@ Runner::~Runner() { SDL_DestroyTexture(displayTexture); }
 
 void Runner::reset() {
   instanceOfGameData = gameData;
-  runAllScriptsSetups();
+  render();
 }
 
 void Runner::runAllScriptsSetups() {
   for (Entity &entity : instanceOfGameData.worldData.entities) {
-    std::cout << (entity.entityDef->name) << "\n";
     const std::string &script = entity.entityDef->script;
     lua.script_file(instanceOfGameData.editorData.rootPath / script);
     lua["setup"](&entity);
   }
 }
 
-void Runner::update() {
+void Runner::update() { render(); }
+
+void Runner::render() {
   SDL_SetRenderTarget(renderer, displayTexture);
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 10, 255);

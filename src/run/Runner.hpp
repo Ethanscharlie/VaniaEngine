@@ -25,6 +25,7 @@ public:
   void reset();
   void runAllScriptsSetups();
   void update();
+  void render();
 };
 
 }; // namespace Vania

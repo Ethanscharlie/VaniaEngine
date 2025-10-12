@@ -15,6 +15,20 @@ void GamePanel::update() {
   }
 
   ImGui::Begin("Game Runner");
+
+  if (ImGui::Button("Run")) {
+    running = true;
+    runner.reset();
+    runner.runAllScriptsSetups();
+  }
+
+  ImGui::SameLine();
+
+  if (ImGui::Button("Stop")) {
+    running = false;
+    runner.reset();
+  }
+
   ImGui::Image((ImTextureID)(intptr_t)runner.displayTexture,
                ImVec2(runner.DISPLAY_WIDTH, runner.DISPLAY_HEIGHT));
   ImGui::End();

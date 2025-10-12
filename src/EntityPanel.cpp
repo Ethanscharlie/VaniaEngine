@@ -61,6 +61,7 @@ void EntityPanel::showPropertyEditor() {
     ImGui::InputInt("Width", &selectedEntity.width);
     ImGui::InputInt("Height", &selectedEntity.height);
     ImGui::InputText("Color", &selectedEntity.color);
+    ImGui::InputText("Script", &selectedEntity.script);
   }
   ImGui::EndGroup();
 }
