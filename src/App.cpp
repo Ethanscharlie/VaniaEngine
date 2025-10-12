@@ -1,6 +1,7 @@
 #include "App.hpp"
 
 #include "EntityPanel.hpp"
+#include "GamePanel.hpp"
 #include "WorldPanel.hpp"
 #include "imgui_impl_sdlrenderer3.h"
 #include <format>
@@ -9,12 +10,13 @@
 
 namespace Vania {
 App::App() {
-  panels.emplace_back(std::make_unique<EntityPanel>(gameData));
-  panels.emplace_back(std::make_unique<WorldPanel>(gameData));
-
   initSDL();
   createWindow();
   initImGui();
+
+  panels.emplace_back(std::make_unique<EntityPanel>(gameData));
+  panels.emplace_back(std::make_unique<WorldPanel>(gameData));
+  panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
 }
 
 App::~App() {
@@ -28,9 +30,11 @@ App::~App() {
 }
 
 void App::update() {
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  SDL_RenderClear(renderer);
+
   SDL_PollEvent(&event);
   ImGui_ImplSDL3_ProcessEvent(&event);
-
   if (event.type == SDL_EVENT_QUIT) {
     running = false;
   }
@@ -58,8 +62,8 @@ void App::render() {
   ImGui::Render();
   SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x,
                      io->DisplayFramebufferScale.y);
-  SDL_RenderClear(renderer);
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+
   SDL_RenderPresent(renderer);
 }
 
