@@ -23,6 +23,7 @@ public:
   Runner(const GameData &gameData, SDL_Renderer *renderer);
   ~Runner();
   void reset();
+  void runAllScriptsSetups();
   void update();
 };
 

@@ -9,6 +9,7 @@ struct EntityDef {
   int width = 16;
   int height = 16;
   std::string color = "white";
+  std::string script = "myscript.lua";
 };
 
 struct Entity {

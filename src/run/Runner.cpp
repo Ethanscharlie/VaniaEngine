@@ -9,25 +9,32 @@ namespace Vania {
 
 Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
     : gameData(gameData), renderer(renderer) {
-  reset();
 
   displayTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                                      SDL_TEXTUREACCESS_TARGET, DISPLAY_WIDTH,
                                      DISPLAY_HEIGHT);
 
   lua.open_libraries(sol::lib::base, sol::lib::package);
-
   lua.new_usertype<Entity>("Entity", "x", &Entity::x, "y", &Entity::y);
 
-  lua.script_file(instanceOfGameData.editorData.rootPath / "myscript.lua");
-
-  sol::function func = lua["run"];
-  func(&instanceOfGameData.worldData.entities[0]);
+  reset();
 }
 
 Runner::~Runner() { SDL_DestroyTexture(displayTexture); }
 
-void Runner::reset() { instanceOfGameData = gameData; }
+void Runner::reset() {
+  instanceOfGameData = gameData;
+  runAllScriptsSetups();
+}
+
+void Runner::runAllScriptsSetups() {
+  for (Entity &entity : instanceOfGameData.worldData.entities) {
+    std::cout << (entity.entityDef->name) << "\n";
+    const std::string &script = entity.entityDef->script;
+    lua.script_file(instanceOfGameData.editorData.rootPath / script);
+    lua["setup"](&entity);
+  }
+}
 
 void Runner::update() {
   SDL_SetRenderTarget(renderer, displayTexture);
