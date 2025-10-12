@@ -1,8 +1,15 @@
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "sol/sol.hpp"
+#include <vector>
 
 namespace Vania {
+
+struct RuntimeEntity {
+  EntityDef entityDef;
+  float x;
+  float y;
+};
 
 class Runner {
 public:
@@ -12,17 +19,15 @@ public:
   SDL_Texture *displayTexture;
 
 private:
-  const GameData &gameData;
   SDL_Renderer *renderer;
-
-  GameData instanceOfGameData;
-
   sol::state lua;
+  std::vector<RuntimeEntity> entities;
+  const std::filesystem::path &root;
 
 public:
   Runner(const GameData &gameData, SDL_Renderer *renderer);
   ~Runner();
-  void reset();
+  void reset(const GameData &gameData);
   void runAllScriptsSetups();
   void update();
   void render();

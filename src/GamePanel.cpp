@@ -18,7 +18,7 @@ void GamePanel::update() {
 
   if (ImGui::Button("Run")) {
     running = true;
-    runner.reset();
+    runner.reset(gameData);
     runner.runAllScriptsSetups();
   }
 
@@ -26,7 +26,7 @@ void GamePanel::update() {
 
   if (ImGui::Button("Stop")) {
     running = false;
-    runner.reset();
+    runner.reset(gameData);
   }
 
   ImGui::SameLine();
