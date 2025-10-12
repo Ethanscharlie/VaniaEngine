@@ -9,6 +9,7 @@ add_executable(index
   src/App.cpp
   src/EntityPanel.cpp
   src/WorldPanel.cpp
+  src/EntityDefEditor.cpp
 )
 
 target_include_directories(index PUBLIC

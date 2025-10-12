@@ -78,8 +78,8 @@ void WorldPanel::draw() {
   draw_list->AddRectFilled(canvas_p0, canvas_p1, DARK_GRAY);
   draw_list->AddRect(canvas_p0, canvas_p1, WHITE);
 
-  // Draw grid + all lines in the canvas
   draw_list->PushClipRect(canvas_p0, canvas_p1, true);
+
   drawGrid();
 
   const ImVec2 origin = getOrigin();
