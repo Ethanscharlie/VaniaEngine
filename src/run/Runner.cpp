@@ -40,6 +40,11 @@ void Runner::update() {
     const std::string &script = entity.entityDef->script;
     lua.script_file(instanceOfGameData.editorData.rootPath / script);
     lua["update"](&entity);
+
+    const bool *keystates = SDL_GetKeyboardState(NULL);
+    if (keystates[SDL_SCANCODE_SPACE]) {
+      lua["keyHeldSpace"](&entity);
+    }
   }
 
   render();
