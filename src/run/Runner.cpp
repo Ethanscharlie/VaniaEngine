@@ -45,6 +45,18 @@ void Runner::update() {
     if (keystates[SDL_SCANCODE_SPACE]) {
       lua["keyHeldSpace"](&entity);
     }
+    if (keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_D]) {
+      lua["keyHeldRight"](&entity);
+    }
+    if (keystates[SDL_SCANCODE_LEFT] || keystates[SDL_SCANCODE_A]) {
+      lua["keyHeldLeft"](&entity);
+    }
+    if (keystates[SDL_SCANCODE_UP] || keystates[SDL_SCANCODE_W]) {
+      lua["keyHeldUp"](&entity);
+    }
+    if (keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_S]) {
+      lua["keyHeldDown"](&entity);
+    }
   }
 
   render();
