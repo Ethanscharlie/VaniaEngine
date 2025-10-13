@@ -23,6 +23,16 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
                                   &RuntimeEntity::y, "def",
                                   &RuntimeEntity::entityDef);
 
+  lua.set_function("summon",
+                   [this, gameData](const std::string &name, float x, float y) {
+                     for (const EntityDef &def : gameData.entityDefs) {
+                       if (def.name == name) {
+                         entities.push_back({def, x, y});
+                         return;
+                       }
+                     }
+                   });
+
   utils::exposeAll(lua);
 
   reset(gameData);
@@ -42,6 +52,8 @@ void Runner::reset(const GameData &gameData) {
 void Runner::runAllScriptsSetups() {
   for (auto &entity : entities) {
     const std::string &script = entity.entityDef.script;
+    if (script == "")
+      continue;
     lua.script_file(root / script);
     lua["setup"](&entity);
   }
@@ -50,6 +62,8 @@ void Runner::runAllScriptsSetups() {
 void Runner::update() {
   for (auto &entity : entities) {
     const std::string &script = entity.entityDef.script;
+    if (script == "")
+      continue;
     lua.script_file(root / script);
     lua["update"](&entity);
 

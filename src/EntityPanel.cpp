@@ -10,6 +10,7 @@ EntityPanel::EntityPanel(GameData &gameData) : gameData(gameData) {
   ethan.name = "Ethan";
   EntityDef connor;
   connor.name = "Connor";
+  connor.script = "";
 
   gameData.entityDefs = {ethan, connor};
 }
