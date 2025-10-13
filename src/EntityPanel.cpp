@@ -67,14 +67,17 @@ void EntityPanel::showPropertyEditor() {
     ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
     ImGui::InputFloat("Height", &selectedEntity.height);
 
-    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-    ImGui::InputInt("r", &selectedEntity.r);
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-    ImGui::InputInt("g", &selectedEntity.g);
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-    ImGui::InputInt("b", &selectedEntity.b);
+    int &r = selectedEntity.r;
+    int &g = selectedEntity.g;
+    int &b = selectedEntity.b;
+    int &a = selectedEntity.a;
+    float color_f[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
+    if (ImGui::ColorEdit4("Color", color_f)) {
+      r = color_f[0] * 255.0f;
+      g = color_f[1] * 255.0f;
+      b = color_f[2] * 255.0f;
+      a = color_f[3] * 255.0f;
+    }
 
     ImGui::InputText("Script", &selectedEntity.script);
   }

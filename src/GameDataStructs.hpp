@@ -19,6 +19,7 @@ struct EntityDef {
   int r = 255;
   int g = 255;
   int b = 255;
+  int a = 255;
 
   std::string script = "";
   std::map<std::string, Property> properties;
