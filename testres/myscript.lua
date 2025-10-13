@@ -2,6 +2,9 @@ local speed = 0.1
 
 function setup(entity)
 	entity.x = entity.x + 100
+
+	setProp(entity, "my", "Hi")
+	print(getProp(entity, "my"))
 end
 
 function update(entity) end

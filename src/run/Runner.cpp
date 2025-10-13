@@ -1,7 +1,7 @@
 #include "Runner.hpp"
 #include "GameDataStructs.hpp"
-#include "SDL3/SDL_oldnames.h"
 #include "SDL3/SDL_render.h"
+#include "run/utils.hpp"
 #include "sol/forward.hpp"
 #include <print>
 
@@ -22,6 +22,8 @@ Runner::Runner(const GameData &gameData, SDL_Renderer *renderer)
   lua.new_usertype<RuntimeEntity>("Entity", "x", &RuntimeEntity::x, "y",
                                   &RuntimeEntity::y, "def",
                                   &RuntimeEntity::entityDef);
+
+  utils::exposeAll(lua);
 
   reset(gameData);
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "sol/sol.hpp"

@@ -1,8 +1,14 @@
 #pragma once
 
 #include <filesystem>
+#include <map>
 #include <string>
 #include <vector>
+
+struct Property {
+  float number;
+  std::string text;
+};
 
 struct EntityDef {
   std::string name = "New Entity";
@@ -10,6 +16,7 @@ struct EntityDef {
   float height = 16;
   std::string color = "white";
   std::string script = "myscript.lua";
+  std::map<std::string, Property> properties;
 };
 
 struct Entity {
