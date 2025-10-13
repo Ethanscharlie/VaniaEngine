@@ -54,8 +54,8 @@ void Runner::runAllScriptsSetups() {
     const std::string &script = entity.entityDef.script;
     if (script == "")
       continue;
-    lua.script_file(root / script);
-    lua["setup"](&entity);
+    sol::table funcs = lua.script_file(root / script);
+    funcs["setup"](&entity);
   }
 }
 
@@ -64,24 +64,24 @@ void Runner::update() {
     const std::string &script = entity.entityDef.script;
     if (script == "")
       continue;
-    lua.script_file(root / script);
-    lua["update"](&entity);
+    sol::table funcs = lua.script_file(root / script);
+    funcs["update"](&entity);
 
     const bool *keystates = SDL_GetKeyboardState(NULL);
     if (keystates[SDL_SCANCODE_SPACE]) {
-      lua["keyHeldSpace"](&entity);
+      funcs["keyHeldSpace"](&entity);
     }
     if (keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_D]) {
-      lua["keyHeldRight"](&entity);
+      funcs["keyHeldRight"](&entity);
     }
     if (keystates[SDL_SCANCODE_LEFT] || keystates[SDL_SCANCODE_A]) {
-      lua["keyHeldLeft"](&entity);
+      funcs["keyHeldLeft"](&entity);
     }
     if (keystates[SDL_SCANCODE_UP] || keystates[SDL_SCANCODE_W]) {
-      lua["keyHeldUp"](&entity);
+      funcs["keyHeldUp"](&entity);
     }
     if (keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_S]) {
-      lua["keyHeldDown"](&entity);
+      funcs["keyHeldDown"](&entity);
     }
   }
 

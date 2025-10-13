@@ -15,7 +15,7 @@ struct EntityDef {
   float width = 16;
   float height = 16;
   std::string color = "white";
-  std::string script = "myscript.lua";
+  std::string script = "";
   std::map<std::string, Property> properties;
 };
 

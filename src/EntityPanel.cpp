@@ -6,13 +6,14 @@
 
 namespace Vania {
 EntityPanel::EntityPanel(GameData &gameData) : gameData(gameData) {
-  EntityDef ethan;
-  ethan.name = "Ethan";
-  EntityDef connor;
-  connor.name = "Connor";
-  connor.script = "";
+  EntityDef player;
+  player.name = "Player";
+  player.script = "player.lua";
+  EntityDef zombie;
+  zombie.name = "Zombie";
+  zombie.script = "zombie.lua";
 
-  gameData.entityDefs = {ethan, connor};
+  gameData.entityDefs = {player, zombie};
 }
 
 void EntityPanel::update() {
