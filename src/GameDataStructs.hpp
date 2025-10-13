@@ -12,9 +12,14 @@ struct Property {
 
 struct EntityDef {
   std::string name = "New Entity";
+
   float width = 16;
   float height = 16;
-  std::string color = "white";
+
+  int r = 255;
+  int g = 255;
+  int b = 255;
+
   std::string script = "";
   std::map<std::string, Property> properties;
 };

@@ -56,13 +56,26 @@ void EntityPanel::update() {
 }
 
 void EntityPanel::showPropertyEditor() {
+  static int SMALL_NUMBER_WIDTH = 100;
+
   ImGui::BeginGroup();
   {
     EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
     ImGui::InputText("name", &selectedEntity.name);
+    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
     ImGui::InputFloat("Width", &selectedEntity.width);
+    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
     ImGui::InputFloat("Height", &selectedEntity.height);
-    ImGui::InputText("Color", &selectedEntity.color);
+
+    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+    ImGui::InputInt("r", &selectedEntity.r);
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+    ImGui::InputInt("g", &selectedEntity.g);
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+    ImGui::InputInt("b", &selectedEntity.b);
+
     ImGui::InputText("Script", &selectedEntity.script);
   }
   ImGui::EndGroup();

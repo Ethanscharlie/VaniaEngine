@@ -95,7 +95,8 @@ void Runner::render() {
   SDL_RenderClear(renderer);
 
   for (auto &entity : entities) {
-    SDL_SetRenderDrawColor(renderer, 136, 42, 230, 255);
+    SDL_SetRenderDrawColor(renderer, entity.entityDef.r, entity.entityDef.g,
+                           entity.entityDef.b, 255);
     SDL_FRect rect = {(float)entity.x, (float)entity.y,
                       (float)entity.entityDef.width,
                       (float)entity.entityDef.height};

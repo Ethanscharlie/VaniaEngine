@@ -92,7 +92,9 @@ void WorldPanel::draw() {
     const ImVec2 min = {x, y};
     const ImVec2 max = {x + w, y + h};
 
-    draw_list->AddRectFilled(min, max, WHITE);
+    draw_list->AddRectFilled(min, max,
+                             IM_COL32(entity.entityDef->r, entity.entityDef->g,
+                                      entity.entityDef->b, 255));
   }
 
   draw_list->PopClipRect();
