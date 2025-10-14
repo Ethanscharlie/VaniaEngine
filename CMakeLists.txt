@@ -35,6 +35,9 @@ add_subdirectory(external/SDL_ttf)
 # find_package(SDL3_ttf REQUIRED)
 target_link_libraries(index PUBLIC SDL3_ttf::SDL3_ttf)
 
+add_subdirectory(external/yaml-cpp)
+target_link_libraries(index PUBLIC yaml-cpp::yaml-cpp)
+
 add_subdirectory(external/imgui)
 target_link_libraries(index PUBLIC imgui imgui_impl_sdl3 imgui_impl_sdlrenderer3)
 
