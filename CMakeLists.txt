@@ -11,6 +11,7 @@ add_executable(index
   src/GamePanel.cpp
   src/WorldPanel.cpp
   src/run/Runner.cpp
+  src/run/AssetManager.cpp
 )
 
 target_include_directories(index PUBLIC

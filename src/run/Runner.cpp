@@ -1,6 +1,7 @@
 #include "Runner.hpp"
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
+#include "run/AssetManager.hpp"
 #include "run/utils.hpp"
 #include "sol/forward.hpp"
 #include <print>
@@ -101,6 +102,10 @@ void Runner::render() {
                       (float)entity.entityDef.width,
                       (float)entity.entityDef.height};
     SDL_RenderFillRect(renderer, &rect);
+
+    SDL_Texture *texture =
+        AssetManager::getInstance().get(renderer, root / "img.png");
+    SDL_RenderTexture(renderer, texture, nullptr, &rect);
   }
 
   SDL_SetRenderTarget(renderer, nullptr);
