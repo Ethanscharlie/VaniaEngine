@@ -1,5 +1,6 @@
 #include "GameDataStructs.hpp"
 #include "IPanel.hpp"
+#include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include <vector>
 
@@ -11,6 +12,7 @@ class WorldPanel : public IPanel {
   const ImU32 WHITE = IM_COL32(255, 255, 255, 255);
 
   GameData &gameData;
+  SDL_Renderer *renderer;
 
   ImVec2 scrolling = {0.0f, 0.0f};
 
@@ -21,7 +23,7 @@ class WorldPanel : public IPanel {
   ImDrawList *draw_list;
 
 public:
-  WorldPanel(GameData &gameData);
+  WorldPanel(GameData &gameData, SDL_Renderer *renderer);
   void update() override;
 
 private:
@@ -31,5 +33,9 @@ private:
 
   void drawGrid();
   void draw();
+  void drawBox(const ImVec2 &min, const ImVec2 &max, int r, int g, int b,
+               int a);
+  void drawImage(const ImVec2 &min, const ImVec2 &max,
+                 const std::string &fullpath);
 };
 } // namespace Vania

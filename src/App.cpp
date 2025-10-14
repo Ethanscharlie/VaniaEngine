@@ -16,7 +16,7 @@ App::App() {
   initImGui();
 
   panels.emplace_back(std::make_unique<EntityPanel>(gameData));
-  panels.emplace_back(std::make_unique<WorldPanel>(gameData));
+  panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
 }
 

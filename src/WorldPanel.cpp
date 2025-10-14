@@ -1,13 +1,16 @@
 #include "WorldPanel.hpp"
 
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "run/AssetManager.hpp"
 #include <cmath>
 #include <format>
 
 namespace Vania {
-WorldPanel::WorldPanel(GameData &gameData) : gameData(gameData) {
+WorldPanel::WorldPanel(GameData &gameData, SDL_Renderer *renderer)
+    : gameData(gameData), renderer(renderer) {
   gameData.worldData.entities.push_back({&gameData.entityDefs[0], 0, 0});
 }
 
@@ -92,12 +95,31 @@ void WorldPanel::draw() {
     const ImVec2 min = {x, y};
     const ImVec2 max = {x + w, y + h};
 
-    draw_list->AddRectFilled(min, max,
-                             IM_COL32(entity.entityDef->r, entity.entityDef->g,
-                                      entity.entityDef->b, 255));
+    if (entity.entityDef->imageMode) {
+      auto &root = gameData.editorData.rootPath;
+      const std::string &image = entity.entityDef->image;
+      drawImage(min, max, root / image);
+    } else {
+      drawBox(min, max, entity.entityDef->r, entity.entityDef->g,
+              entity.entityDef->b, entity.entityDef->a);
+    }
   }
 
   draw_list->PopClipRect();
+}
+
+void WorldPanel::drawImage(const ImVec2 &min, const ImVec2 &max,
+                           const std::string &fullpath) {
+  AssetManager &assetManager = AssetManager::getInstance();
+  SDL_Texture *texture = assetManager.get(renderer, fullpath);
+  if (texture == nullptr)
+    return;
+  draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max);
+}
+
+void WorldPanel::drawBox(const ImVec2 &min, const ImVec2 &max, int r, int g,
+                         int b, int a) {
+  draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
 }
 
 } // namespace Vania
