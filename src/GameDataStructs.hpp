@@ -20,6 +20,8 @@ struct EntityDef {
   int g = 255;
   int b = 255;
   int a = 255;
+  std::string image;
+  bool imageMode = false;
 
   std::string script = "";
   std::map<std::string, Property> properties;

@@ -59,28 +59,43 @@ void EntityPanel::showPropertyEditor() {
   static int SMALL_NUMBER_WIDTH = 100;
 
   ImGui::BeginGroup();
-  {
-    EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
-    ImGui::InputText("name", &selectedEntity.name);
-    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-    ImGui::InputFloat("Width", &selectedEntity.width);
-    ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-    ImGui::InputFloat("Height", &selectedEntity.height);
+  EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
+  ImGui::InputText("name", &selectedEntity.name);
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  ImGui::InputFloat("Width", &selectedEntity.width);
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  ImGui::InputFloat("Height", &selectedEntity.height);
 
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  if (ImGui::BeginCombo("###renderCombo",
+                        selectedEntity.imageMode ? "image" : "box")) {
+    if (ImGui::Selectable("box", !selectedEntity.imageMode)) {
+      selectedEntity.imageMode = false;
+    }
+    if (ImGui::Selectable("image", selectedEntity.imageMode)) {
+      selectedEntity.imageMode = true;
+    }
+    ImGui::EndCombo();
+  }
+
+  ImGui::SameLine();
+  if (selectedEntity.imageMode) {
+    ImGui::InputText("Image", &selectedEntity.image);
+  } else {
     int &r = selectedEntity.r;
     int &g = selectedEntity.g;
     int &b = selectedEntity.b;
     int &a = selectedEntity.a;
     float color_f[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
-    if (ImGui::ColorEdit4("Color", color_f)) {
+    if (ImGui::ColorEdit4("###Color", color_f, ImGuiColorEditFlags_NoInputs)) {
       r = color_f[0] * 255.0f;
       g = color_f[1] * 255.0f;
       b = color_f[2] * 255.0f;
       a = color_f[3] * 255.0f;
     }
-
-    ImGui::InputText("Script", &selectedEntity.script);
   }
+
+  ImGui::InputText("Script", &selectedEntity.script);
   ImGui::EndGroup();
 }
 
