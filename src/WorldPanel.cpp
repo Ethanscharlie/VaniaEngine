@@ -112,9 +112,17 @@ void WorldPanel::drawImage(const ImVec2 &min, const ImVec2 &max,
                            const std::string &fullpath) {
   AssetManager &assetManager = AssetManager::getInstance();
   SDL_Texture *texture = assetManager.get(renderer, fullpath);
-  if (texture == nullptr)
+  if (texture == nullptr) {
+    drawNoImage(min, max);
     return;
+  }
   draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max);
+}
+
+void WorldPanel::drawNoImage(const ImVec2 &min, const ImVec2 &max) {
+  draw_list->AddRectFilled(min, max, IM_COL32(0, 0, 0, 255));
+  draw_list->AddRect(min, max, IM_COL32(255, 0, 0, 255));
+  draw_list->AddLine(min, max, IM_COL32(255, 0, 0, 255));
 }
 
 void WorldPanel::drawBox(const ImVec2 &min, const ImVec2 &max, int r, int g,

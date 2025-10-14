@@ -35,6 +35,7 @@ private:
   void draw();
   void drawBox(const ImVec2 &min, const ImVec2 &max, int r, int g, int b,
                int a);
+  void drawNoImage(const ImVec2 &min, const ImVec2 &max);
   void drawImage(const ImVec2 &min, const ImVec2 &max,
                  const std::string &fullpath);
 };
