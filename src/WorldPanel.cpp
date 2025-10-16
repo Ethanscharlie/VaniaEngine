@@ -2,11 +2,14 @@
 
 #include <cmath>
 #include <format>
+#include <fstream>
+#include <nlohmann/json_fwd.hpp>
 
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "nlohmann/detail/json_pointer.hpp"
 #include "run/AssetManager.hpp"
 
 namespace Vania {
@@ -64,35 +67,36 @@ void WorldPanel::drawGrid() {
 }
 
 void WorldPanel::draw() {
-  // draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
-  //
-  // draw_list->AddRectFilled(canvas_p0, canvas_p1, DARK_GRAY);
-  // draw_list->AddRect(canvas_p0, canvas_p1, WHITE);
-  //
-  // draw_list->PushClipRect(canvas_p0, canvas_p1, true);
-  //
-  // drawGrid();
-  //
-  // const ImVec2 origin = getOrigin();
-  // for (const Entity& entity : gameData.worldData.entities) {
-  //   const float x = entity.x + origin.x;
-  //   const float y = entity.y + origin.y;
-  //   const float w = entity.entityDef->width;
-  //   const float h = entity.entityDef->height;
-  //
-  //   const ImVec2 min = {x, y};
-  //   const ImVec2 max = {x + w, y + h};
-  //
-  //   if (entity.entityDef->imageMode) {
-  //     auto& root = gameData.editorData.rootPath;
-  //     const std::string& image = entity.entityDef->image;
-  //     drawImage(min, max, root / image);
-  //   } else {
-  //     drawBox(min, max, entity.entityDef->r, entity.entityDef->g, entity.entityDef->b, entity.entityDef->a);
-  //   }
-  // }
-  //
-  // draw_list->PopClipRect();
+  draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
+
+  draw_list->AddRectFilled(canvas_p0, canvas_p1, DARK_GRAY);
+  draw_list->AddRect(canvas_p0, canvas_p1, WHITE);
+
+  draw_list->PushClipRect(canvas_p0, canvas_p1, true);
+
+  drawGrid();
+
+  const ImVec2 origin = getOrigin();
+  for (const nlohmann::json& entity : gameData["entities"]) {
+    const nlohmann::json& def = gameData["defs"][entity["defId"]];
+    const float x = entity["x"].get<float>() + origin.x;
+    const float y = entity["y"].get<float>() + origin.y;
+    const float w = def["width"];
+    const float h = def["height"];
+
+    const ImVec2 min = {x, y};
+    const ImVec2 max = {x + w, y + h};
+
+    if (def["imageMode"]) {
+      std::filesystem::path root = gameData["editor"]["rootPath"];
+      const std::string& image = def["image"];
+      drawImage(min, max, root / image);
+    } else {
+      drawBox(min, max, def["r"], def["g"], def["b"], def["a"]);
+    }
+  }
+
+  draw_list->PopClipRect();
 }
 
 void WorldPanel::drawImage(const ImVec2& min, const ImVec2& max, const std::string& fullpath) {

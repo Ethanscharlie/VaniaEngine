@@ -40,7 +40,7 @@ void EntityPanel::update() {
 
   ImGui::SameLine();
 
-  const bool somethingIsSelected = gameData["editor"]["selectedDef"] != 0;
+  const bool somethingIsSelected = gameData["editor"]["selectedDef"] != "";
   if (ImGui::Button("Edit") && somethingIsSelected) {
     ImGui::OpenPopup("Entity Def Editor");
   }
