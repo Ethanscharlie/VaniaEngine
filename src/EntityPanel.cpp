@@ -1,47 +1,46 @@
 #include "EntityPanel.hpp"
+
+#include <cstddef>
+#include <format>
+#include <iostream>
+#include <nlohmann/json_fwd.hpp>
+#include <print>
+
 #include "GameDataStructs.hpp"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
-#include <format>
 
 namespace Vania {
-EntityPanel::EntityPanel(GameData &gameData) : gameData(gameData) {
-  EntityDef player;
-  player.name = "Player";
-  player.script = "player.lua";
-  EntityDef zombie;
-  zombie.name = "Zombie";
-  zombie.script = "zombie.lua";
-
-  gameData.entityDefs = {player, zombie};
-}
+EntityPanel::EntityPanel(nlohmann::json& gameData) : gameData(gameData) {}
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");
 
   if (ImGui::Button("   +   ")) {
-    gameData.entityDefs.push_back({});
+    srand(time(0));
+    gameData["defs"][std::to_string(rand() % 100001)] = createEntityDef();
   }
 
   {
-    ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
-    for (int i = 0; i < gameData.entityDefs.size(); i++) {
-      EntityDef &entity = gameData.entityDefs[i];
-      const std::string label =
-          std::format("{}###{}n{}", entity.name, entity.name, i);
+    ImGui::BeginChild("Entity Selection", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 
-      if (ImGui::Selectable(label.c_str(),
-                            gameData.editorData.selectedEntityDef == &entity,
-                            ImGuiSelectableFlags_SelectOnNav))
-        gameData.editorData.selectedEntityDef = &entity;
+    for (auto& [defID, entity] : gameData["defs"].items()) {
+      std::string name = entity["name"];
+      const std::string label = std::format("{}###{}", name, defID);
+
+      std::string selectedDefID = gameData["editor"]["selectedDef"];
+      bool isSelected = selectedDefID == defID;
+      if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_SelectOnNav)) {
+        gameData["editor"]["selectedDef"] = defID;
+      }
     }
+
     ImGui::EndChild();
   }
 
   ImGui::SameLine();
 
-  const bool somethingIsSelected = gameData.editorData.selectedEntityDef;
+  const bool somethingIsSelected = gameData["editor"]["selectedDef"] != 0;
   if (ImGui::Button("Edit") && somethingIsSelected) {
     ImGui::OpenPopup("Entity Def Editor");
   }
@@ -57,46 +56,56 @@ void EntityPanel::update() {
 
 void EntityPanel::showPropertyEditor() {
   static int SMALL_NUMBER_WIDTH = 100;
+  std::string selectedDefID = gameData["editor"]["selectedDef"];
 
   ImGui::BeginGroup();
-  EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
-  ImGui::InputText("name", &selectedEntity.name);
-  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-  ImGui::InputFloat("Width", &selectedEntity.width);
-  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-  ImGui::InputFloat("Height", &selectedEntity.height);
+
+  static std::string name = gameData["defs"][selectedDefID]["name"];
+  if (ImGui::InputText("name", &name)) gameData["defs"][selectedDefID]["name"] = name;
 
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-  if (ImGui::BeginCombo("###renderCombo",
-                        selectedEntity.imageMode ? "image" : "box")) {
-    if (ImGui::Selectable("box", !selectedEntity.imageMode)) {
-      selectedEntity.imageMode = false;
+  static float width = gameData["defs"][selectedDefID]["width"];
+  if (ImGui::InputFloat("Width", &width)) gameData["defs"][selectedDefID]["width"] = width;
+
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  static float height = gameData["defs"][selectedDefID]["height"];
+  if (ImGui::InputFloat("Height", &height)) gameData["defs"][selectedDefID]["height"] = height;
+
+  static bool imageMode = gameData["defs"][selectedDefID]["imageMode"];
+  std::cout << imageMode << "\n";
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  if (ImGui::BeginCombo("###renderCombo", imageMode ? "image" : "box")) {
+    if (ImGui::Selectable("box", !imageMode)) {
+      gameData["defs"][selectedDefID]["imageMode"] = false;
     }
-    if (ImGui::Selectable("image", selectedEntity.imageMode)) {
-      selectedEntity.imageMode = true;
+    if (ImGui::Selectable("image", imageMode)) {
+      gameData["defs"][selectedDefID]["imageMode"] = true;
     }
     ImGui::EndCombo();
   }
 
   ImGui::SameLine();
-  if (selectedEntity.imageMode) {
-    ImGui::InputText("Image", &selectedEntity.image);
+  if (imageMode) {
+    static std::string image = gameData["defs"][selectedDefID]["image"];
+    if (ImGui::InputText("Image", &image)) gameData["defs"][selectedDefID]["image"] = image;
   } else {
-    int &r = selectedEntity.r;
-    int &g = selectedEntity.g;
-    int &b = selectedEntity.b;
-    int &a = selectedEntity.a;
-    float color_f[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
+    static int r = gameData["defs"][selectedDefID]["r"];
+    static int g = gameData["defs"][selectedDefID]["g"];
+    static int b = gameData["defs"][selectedDefID]["b"];
+    static int a = gameData["defs"][selectedDefID]["a"];
+    static float color_f[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
     if (ImGui::ColorEdit4("###Color", color_f, ImGuiColorEditFlags_NoInputs)) {
-      r = color_f[0] * 255.0f;
-      g = color_f[1] * 255.0f;
-      b = color_f[2] * 255.0f;
-      a = color_f[3] * 255.0f;
+      gameData["defs"][selectedDefID]["r"] = color_f[0] * 255.0f;
+      gameData["defs"][selectedDefID]["g"] = color_f[1] * 255.0f;
+      gameData["defs"][selectedDefID]["b"] = color_f[2] * 255.0f;
+      gameData["defs"][selectedDefID]["a"] = color_f[3] * 255.0f;
     }
   }
 
-  ImGui::InputText("Script", &selectedEntity.script);
+  static std::string script = gameData["defs"][selectedDefID]["script"];
+  if (ImGui::InputText("Script", &script)) gameData["defs"][selectedDefID]["script"] = script;
+
   ImGui::EndGroup();
 }
 
-} // namespace Vania
+}  // namespace Vania

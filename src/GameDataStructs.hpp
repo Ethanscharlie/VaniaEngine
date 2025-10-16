@@ -1,51 +1,42 @@
 #pragma once
 
-#include <filesystem>
-#include <map>
-#include <string>
-#include <vector>
+#include <nlohmann/json_fwd.hpp>
 
-struct Property {
-  float number;
-  std::string text;
-};
+#include "nlohmann/json.hpp"
 
-struct EntityDef {
-  std::string name = "New Entity";
+inline nlohmann::json createEntityDef() {
+  nlohmann::json node;
+  node["name"] = "New Entity";
+  node["width"] = 16;
+  node["height"] = 16;
+  node["r"] = 255;
+  node["g"] = 255;
+  node["b"] = 255;
+  node["a"] = 255;
+  node["image"] = "";
+  node["imageMode"] = false;
+  node["script"] = "";
+  return node;
+}
 
-  float width = 16;
-  float height = 16;
+inline nlohmann::json createEntity(std::string defId, float x, float y) {
+  nlohmann::json node;
+  node["defId"] = defId;
+  node["x"] = x;
+  node["y"] = y;
+  return node;
+}
 
-  int r = 255;
-  int g = 255;
-  int b = 255;
-  int a = 255;
-  std::string image;
-  bool imageMode = false;
+inline nlohmann::json createGameData() {
+  nlohmann::json node;
+  node["defs"];
+  node["entities"];
 
-  std::string script = "";
-  std::map<std::string, Property> properties;
-};
+  nlohmann::json editor;
+  editor["selectedDef"] = "";
+  editor["entityDefEditorOpen"] = false;
+  editor["rootPath"] = "../testres/";
+  node["editor"] = editor;
 
-struct Entity {
-  EntityDef *entityDef;
-  float x;
-  float y;
-};
-
-struct WorldData {
-  std::vector<Entity> entities;
-};
-
-struct EditorData {
-  EntityDef *selectedEntityDef = nullptr;
-  bool entityDefEditorOpen = false;
-  std::filesystem::path rootPath = "../testres/";
-};
-
-struct GameData {
-  std::vector<EntityDef> entityDefs;
-
-  WorldData worldData;
-  EditorData editorData;
-};
+  return node;
+}

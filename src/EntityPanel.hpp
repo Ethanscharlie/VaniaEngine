@@ -1,16 +1,17 @@
+#include <vector>
+
 #include "GameDataStructs.hpp"
 #include "IPanel.hpp"
-#include <vector>
 
 namespace Vania {
 class EntityPanel : public IPanel {
-  GameData &gameData;
+  nlohmann::json& gameData;
 
-public:
-  EntityPanel(GameData &gameData);
+ public:
+  EntityPanel(nlohmann::json& gameData);
   void update() override;
 
-private:
+ private:
   void showPropertyEditor();
 };
-} // namespace Vania
+}  // namespace Vania

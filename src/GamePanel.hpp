@@ -5,13 +5,13 @@
 
 namespace Vania {
 class GamePanel : public IPanel {
-  GameData &gameData;
+  nlohmann::json& gameData;
   Runner runner;
 
   bool running = false;
 
-public:
-  GamePanel(GameData &gameData, SDL_Renderer *renderer);
+ public:
+  GamePanel(nlohmann::json& gameData, SDL_Renderer* renderer);
   void update() override;
 };
-} // namespace Vania
+}  // namespace Vania
