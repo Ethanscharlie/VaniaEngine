@@ -1,13 +1,16 @@
 #include "App.hpp"
 
+#include <format>
+#include <memory>
+#include <print>
+#include <stdexcept>
+
 #include "EntityPanel.hpp"
 #include "GamePanel.hpp"
 #include "WorldPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
-#include <format>
-#include <memory>
-#include <stdexcept>
+#include "nlohmann/detail/json_pointer.hpp"
 
 namespace Vania {
 App::App() {
@@ -18,6 +21,10 @@ App::App() {
   panels.emplace_back(std::make_unique<EntityPanel>(gameData));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
+
+  nlohmann::json node = gameData;
+  std::string s = node.dump();
+  std::cout << (s) << "\n";
 }
 
 App::~App() {
@@ -46,7 +53,7 @@ void App::update() {
 
   ImGui::ShowDemoWindow();
 
-  for (auto &panel : panels) {
+  for (auto& panel : panels) {
     panel->update();
   }
 
@@ -63,8 +70,7 @@ void App::startNewFrame() {
 
 void App::render() {
   ImGui::Render();
-  SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x,
-                     io->DisplayFramebufferScale.y);
+  SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x, io->DisplayFramebufferScale.y);
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
 
   SDL_RenderPresent(renderer);
@@ -73,19 +79,15 @@ void App::render() {
 void App::initSDL() {
   const int sdlInitSuccess = SDL_Init(SDL_INIT_VIDEO);
   if (!sdlInitSuccess) {
-    throw std::runtime_error(
-        std::format("Couldn't initialize SDL: %s\n", SDL_GetError()).c_str());
+    throw std::runtime_error(std::format("Couldn't initialize SDL: %s\n", SDL_GetError()).c_str());
   }
 }
 
 void App::createWindow() {
   const int windowCreationSucess =
-      SDL_CreateWindowAndRenderer("Demo", WINDOW_WIDTH, WINDOW_HEIGHT,
-                                  SDL_WINDOW_RESIZABLE, &window, &renderer);
+      SDL_CreateWindowAndRenderer("Demo", WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer);
   if (!windowCreationSucess) {
-    throw std::runtime_error(
-        std::format("Couldn't initialize SDL window: %s\n", SDL_GetError())
-            .c_str());
+    throw std::runtime_error(std::format("Couldn't initialize SDL window: %s\n", SDL_GetError()).c_str());
   }
 }
 
@@ -103,4 +105,4 @@ void App::initImGui() {
   ImGui_ImplSDLRenderer3_Init(renderer);
 }
 
-}; // namespace Vania
+};  // namespace Vania
