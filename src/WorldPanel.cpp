@@ -14,7 +14,7 @@
 
 namespace Vania {
 WorldPanel::WorldPanel(nlohmann::json& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {
-  gameData["entities"].push_back(createEntity("13", 0, 0));
+  gameData["entities"]["42"] = createEntity("13", 0, 0);
 }
 
 void WorldPanel::update() {

@@ -14,6 +14,7 @@ namespace Vania {
 EntityPanel::EntityPanel(nlohmann::json& gameData) : gameData(gameData) {
   gameData["defs"]["13"] = createEntityDef();
   gameData["defs"]["13"]["name"] = "Player";
+  gameData["defs"]["13"]["script"] = "player.lua";
 }
 
 void EntityPanel::update() {

@@ -5,6 +5,7 @@
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "sol/sol.hpp"
+#include "sol/table.hpp"
 
 namespace Vania {
 
@@ -18,7 +19,7 @@ class Runner {
  private:
   SDL_Renderer* renderer;
   sol::state lua;
-  nlohmann::json gameDataCopy;
+  sol::table gameDataTable;
   std::filesystem::path root;
 
  public:
@@ -28,6 +29,7 @@ class Runner {
   void runAllScriptsSetups();
   void update();
   void render();
+  sol::table jsonToSol(const nlohmann::json& value, sol::state& lua);
 };
 
 };  // namespace Vania
