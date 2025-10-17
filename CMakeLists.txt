@@ -17,6 +17,7 @@ add_executable(index
 target_include_directories(index PUBLIC
   src
   external/sol
+  external/json/include
 )
 
 add_subdirectory(external/SDL)
