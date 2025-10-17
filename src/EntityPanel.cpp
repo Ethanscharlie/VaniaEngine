@@ -11,7 +11,10 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 namespace Vania {
-EntityPanel::EntityPanel(nlohmann::json& gameData) : gameData(gameData) {}
+EntityPanel::EntityPanel(nlohmann::json& gameData) : gameData(gameData) {
+  gameData["defs"]["13"] = createEntityDef();
+  gameData["defs"]["13"]["name"] = "Player";
+}
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");

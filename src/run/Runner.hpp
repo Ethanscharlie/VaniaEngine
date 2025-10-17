@@ -18,7 +18,7 @@ class Runner {
  private:
   SDL_Renderer* renderer;
   sol::state lua;
-  // std::vector<RuntimeEntity> entities;
+  nlohmann::json gameDataCopy;
   std::filesystem::path root;
 
  public:

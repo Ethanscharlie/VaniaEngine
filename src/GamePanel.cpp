@@ -35,7 +35,7 @@ void GamePanel::update() {
 
   ImGui::Text((running) ? "Running..." : "Stopped.");
 
-  // ImGui::Image((ImTextureID)(intptr_t)runner.displayTexture, ImVec2(runner.DISPLAY_WIDTH, runner.DISPLAY_HEIGHT));
+  ImGui::Image((ImTextureID)(intptr_t)runner.displayTexture, ImVec2(runner.DISPLAY_WIDTH, runner.DISPLAY_HEIGHT));
   ImGui::End();
 }
 
