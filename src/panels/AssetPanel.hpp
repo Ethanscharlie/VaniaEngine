@@ -8,6 +8,7 @@ class AssetPanel : public IPanel {
   SDL_Renderer* renderer;
 
   float zoom = 1;
+  int gridSize = 16;
 
  public:
   AssetPanel(GameData& gameData, SDL_Renderer* renderer);
