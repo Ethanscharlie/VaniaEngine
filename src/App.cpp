@@ -9,6 +9,7 @@
 
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
+#include "panels/AssetPanel.hpp"
 #include "panels/EntityPanel.hpp"
 #include "panels/GamePanel.hpp"
 #include "panels/WorldPanel.hpp"
@@ -26,6 +27,7 @@ App::App() {
   panels.emplace_back(std::make_unique<EntityPanel>(gameData));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
+  panels.emplace_back(std::make_unique<AssetPanel>(gameData, renderer));
 }
 
 App::~App() {
