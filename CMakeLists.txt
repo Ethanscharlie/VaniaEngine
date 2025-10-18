@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 23)
 add_executable(index
   src/main.cpp
   src/App.cpp
-  src/EntityPanel.cpp
-  src/GamePanel.cpp
-  src/WorldPanel.cpp
+  src/panels/EntityPanel.cpp
+  src/panels/GamePanel.cpp
+  src/panels/WorldPanel.cpp
   src/run/Runner.cpp
   src/run/AssetManager.cpp
 )

@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "GameDataStructs.hpp"
-#include "IPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
+#include "panels/IPanel.hpp"
 
 namespace Vania {
 class App {

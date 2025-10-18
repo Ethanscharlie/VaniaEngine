@@ -7,11 +7,11 @@
 #include <print>
 #include <stdexcept>
 
-#include "EntityPanel.hpp"
-#include "GamePanel.hpp"
-#include "WorldPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
+#include "panels/EntityPanel.hpp"
+#include "panels/GamePanel.hpp"
+#include "panels/WorldPanel.hpp"
 
 #define DEFAULT_ROOT_PATH std::filesystem::path("../testres/")
 
