@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
 #include <numbers>
+#include <print>
 #include <string>
 #include <vector>
 
@@ -23,7 +24,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
 )
 
 struct EntityDef {
-  int id = rand() % 100000001;
+  int id = 0;
   std::string name = "New Entity";
 
   float width = 16;
@@ -72,13 +73,13 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
 )
 
 struct Entity {
-  EntityDef* entityDef;
   int defID;
   EntityDef entityDefOverride;
   float x;
   float y;
 
-  Entity(EntityDef* entityDef, float x, float y) : entityDef(entityDef), defID(entityDef->id), x(x), y(x) {}
+  Entity() {}
+  Entity(int entityDefID, float x, float y) : defID(entityDefID), x(x), y(x) {}
 
   static void exposeToLua(sol::state& lua) {
     lua.new_usertype<Entity>(               //
@@ -115,7 +116,7 @@ struct EditorData {
 };
 
 struct GameData {
-  std::vector<EntityDef> entityDefs;
+  std::map<int, EntityDef> entityDefs;
 
   WorldData worldData;
   EditorData editorData;

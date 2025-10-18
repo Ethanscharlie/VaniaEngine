@@ -18,9 +18,9 @@ Runner::Runner(const GameData& gameData, SDL_Renderer* renderer)
   lua.open_libraries(sol::lib::base, sol::lib::package);
 
   lua.set_function("summon", [this, gameData](const std::string& name, float x, float y) {
-    for (EntityDef& def : gameDataCopy.entityDefs) {
+    for (auto& [id, def] : gameDataCopy.entityDefs) {
       if (def.name == name) {
-        gameDataCopy.worldData.entities.push_back({&def, x, y});
+        gameDataCopy.worldData.entities.push_back({id, x, y});
         return;
       }
     }
@@ -40,7 +40,8 @@ void Runner::reset(const GameData& gameData) {
   gameDataCopy = gameData;
 
   for (auto& entity : gameDataCopy.worldData.entities) {
-    entity.entityDefOverride = *entity.entityDef;
+    const EntityDef& def = gameData.entityDefs.at(entity.defID);
+    entity.entityDefOverride = def;
   }
 
   render();

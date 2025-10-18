@@ -11,7 +11,12 @@
 
 namespace Vania {
 WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {
-  gameData.worldData.entities.push_back({&gameData.entityDefs[0], 0, 0});
+  int def1id = 0;
+  for (auto& [id, def] : gameData.entityDefs) {
+    def1id = id;
+    break;
+  }
+  gameData.worldData.entities.push_back({def1id, 0, 0});
 }
 
 void WorldPanel::update() {
@@ -75,20 +80,21 @@ void WorldPanel::draw() {
 
   const ImVec2 origin = getOrigin();
   for (const Entity& entity : gameData.worldData.entities) {
+    const EntityDef& def = gameData.entityDefs.at(entity.defID);
     const float x = entity.x + origin.x;
     const float y = entity.y + origin.y;
-    const float w = entity.entityDef->width;
-    const float h = entity.entityDef->height;
+    const float w = def.width;
+    const float h = def.height;
 
     const ImVec2 min = {x, y};
     const ImVec2 max = {x + w, y + h};
 
-    if (entity.entityDef->imageMode) {
+    if (def.imageMode) {
       auto& root = gameData.editorData.rootPath;
-      const std::string& image = entity.entityDef->image;
+      const std::string& image = def.image;
       drawImage(min, max, root / image);
     } else {
-      drawBox(min, max, entity.entityDef->r, entity.entityDef->g, entity.entityDef->b, entity.entityDef->a);
+      drawBox(min, max, def.r, def.g, def.b, def.a);
     }
   }
 

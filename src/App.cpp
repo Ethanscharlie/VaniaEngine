@@ -1,6 +1,8 @@
 #include "App.hpp"
 
+#include <filesystem>
 #include <format>
+#include <fstream>
 #include <memory>
 #include <print>
 #include <stdexcept>
@@ -11,8 +13,12 @@
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
 
+#define DEFAULT_ROOT_PATH std::filesystem::path("../testres/")
+
 namespace Vania {
 App::App() {
+  loadFromFile();
+
   initSDL();
   createWindow();
   initImGui();
@@ -20,10 +26,6 @@ App::App() {
   panels.emplace_back(std::make_unique<EntityPanel>(gameData));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
-
-  nlohmann::json node = gameData;
-  std::string s = node.dump();
-  std::cout << (s) << "\n";
 }
 
 App::~App() {
@@ -34,6 +36,29 @@ App::~App() {
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
+}
+
+void App::loadFromFile() {
+  std::filesystem::path mainPath = DEFAULT_ROOT_PATH / "main.json";
+
+  if (!std::filesystem::exists(mainPath)) {
+    std::println("{} path doesnt exist", mainPath.string());
+  }
+
+  std::ifstream ifs(mainPath);
+  try {
+    nlohmann::json gameDataJson;
+    ifs >> gameDataJson;
+
+    if (gameDataJson.is_object()) {
+      gameData = gameDataJson.get<GameData>();
+    } else {
+      std::cerr << "Error: Invalid JSON structure in file: " << mainPath << std::endl;
+    }
+  } catch (const nlohmann::json::parse_error& e) {
+    std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
+    return;
+  }
 }
 
 void App::update() {
