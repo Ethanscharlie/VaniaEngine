@@ -74,15 +74,18 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
 struct Entity {
   EntityDef* entityDef;
   int defID;
+  EntityDef entityDefOverride;
   float x;
   float y;
 
+  Entity(EntityDef* entityDef, float x, float y) : entityDef(entityDef), defID(entityDef->id), x(x), y(x) {}
+
   static void exposeToLua(sol::state& lua) {
-    lua.new_usertype<Entity>(       //
-        "Entity",                   //
-        "def", &Entity::entityDef,  //
-        "x", &Entity::x,            //
-        "y", &Entity::y             //
+    lua.new_usertype<Entity>(               //
+        "Entity",                           //
+        "def", &Entity::entityDefOverride,  //
+        "x", &Entity::x,                    //
+        "y", &Entity::y                     //
     );
   }
 };

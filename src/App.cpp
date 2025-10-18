@@ -10,7 +10,6 @@
 #include "WorldPanel.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
-#include "nlohmann/detail/json_pointer.hpp"
 
 namespace Vania {
 App::App() {

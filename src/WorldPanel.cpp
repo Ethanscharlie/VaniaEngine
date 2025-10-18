@@ -11,7 +11,7 @@
 
 namespace Vania {
 WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {
-  gameData.worldData.entities.push_back({&gameData.entityDefs[0], gameData.entityDefs[0].id, 0, 0});
+  gameData.worldData.entities.push_back({&gameData.entityDefs[0], 0, 0});
 }
 
 void WorldPanel::update() {
