@@ -10,14 +10,7 @@
 #include "run/AssetManager.hpp"
 
 namespace Vania {
-WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {
-  int def1id = 0;
-  for (auto& [id, def] : gameData.entityDefs) {
-    def1id = id;
-    break;
-  }
-  gameData.worldData.entities.push_back({def1id, 0, 0});
-}
+WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {}
 
 void WorldPanel::update() {
   ImGui::Begin("World");

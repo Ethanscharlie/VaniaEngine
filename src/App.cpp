@@ -52,13 +52,28 @@ void App::loadFromFile() {
 
     if (gameDataJson.is_object()) {
       gameData = gameDataJson.get<GameData>();
+      return;
     } else {
       std::cerr << "Error: Invalid JSON structure in file: " << mainPath << std::endl;
     }
   } catch (const nlohmann::json::parse_error& e) {
     std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
-    return;
   }
+
+  // Template project
+  int id = rand() % 100000;
+  EntityDef newDef;
+  newDef.id = id;
+  gameData.entityDefs[id] = newDef;
+  newDef.name = "Player";
+  newDef.script = "player.lua";
+
+  int def1id = 0;
+  for (auto& [id, def] : gameData.entityDefs) {
+    def1id = id;
+    break;
+  }
+  gameData.worldData.entities.push_back({def1id, 0, 0});
 }
 
 void App::update() {

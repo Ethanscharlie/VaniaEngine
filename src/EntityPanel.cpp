@@ -10,15 +10,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 namespace Vania {
-EntityPanel::EntityPanel(GameData& gameData) : gameData(gameData) {
-  EntityDef& player = createDef();
-  player.name = "Player";
-  player.script = "player.lua";
-
-  EntityDef& zombie = createDef();
-  zombie.name = "Zombie";
-  zombie.script = "zombie.lua";
-}
+EntityPanel::EntityPanel(GameData& gameData) : gameData(gameData) {}
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");
