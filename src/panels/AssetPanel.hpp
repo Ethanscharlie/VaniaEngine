@@ -5,6 +5,9 @@
 namespace Vania {
 class AssetPanel : public IPanel {
   GameData& gameData;
+  SDL_Renderer* renderer;
+
+  float zoom = 1;
 
  public:
   AssetPanel(GameData& gameData, SDL_Renderer* renderer);

@@ -1,22 +1,24 @@
 #include "AssetManager.hpp"
+
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
 #include "SDL3_image/SDL_image.h"
 
-std::map<std::string, SDL_Texture *> AssetManager::assets;
+std::map<std::string, SDL_Texture*> AssetManager::assets;
 
-SDL_Texture *AssetManager::get(SDL_Renderer *renderer,
-                               const std::string &name) {
+SDL_Texture* AssetManager::get(SDL_Renderer* renderer, const std::string& name) {
   if (assets.contains(name)) {
     return assets.at(name);
   }
 
-  SDL_Texture *texture = IMG_LoadTexture(renderer, name.c_str());
+  SDL_Texture* texture = IMG_LoadTexture(renderer, name.c_str());
+  SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART);
   assets[name] = texture;
   return texture;
 }
 
 void AssetManager::clear() {
-  for (auto &[name, texture] : assets) {
+  for (auto& [name, texture] : assets) {
     SDL_DestroyTexture(texture);
   }
 
