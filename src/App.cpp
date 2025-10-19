@@ -9,7 +9,6 @@
 
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
-#include "panels/AssetPanel.hpp"
 #include "panels/EntityPanel.hpp"
 #include "panels/GamePanel.hpp"
 #include "panels/WorldPanel.hpp"
@@ -24,10 +23,9 @@ App::App() {
   createWindow();
   initImGui();
 
-  panels.emplace_back(std::make_unique<EntityPanel>(gameData));
+  panels.emplace_back(std::make_unique<EntityPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
-  panels.emplace_back(std::make_unique<AssetPanel>(gameData, renderer));
 }
 
 App::~App() {
@@ -59,6 +57,8 @@ void App::loadFromFile() {
       std::cerr << "Error: Invalid JSON structure in file: " << mainPath << std::endl;
     }
   } catch (const nlohmann::json::parse_error& e) {
+    std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
+  } catch (const nlohmann::json::out_of_range& e) {
     std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
   }
 

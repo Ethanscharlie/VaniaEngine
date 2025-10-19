@@ -34,25 +34,34 @@ struct EntityDef {
   int g = 255;
   int b = 255;
   int a = 255;
-  std::string image;
+
+  float imageWidth = 0;
+  float imageHeight = 0;
+  float imageRow = 0;
+  float imageCol = 0;
+  std::string image = "";
   bool imageMode = false;
 
   std::string script = "";
   std::map<std::string, Property> properties;
 
   static void exposeToLua(sol::state& lua) {
-    lua.new_usertype<EntityDef>(       //
-        "EntityDef",                   //
-        "id", &EntityDef::id,          //
-        "name", &EntityDef::name,      //
-        "width", &EntityDef::width,    //
-        "height", &EntityDef::height,  //
-        "r", &EntityDef::r,            //
-        "g", &EntityDef::g,            //
-        "b", &EntityDef::b,            //
-        "a", &EntityDef::a,            //
-        "image", &EntityDef::image,    //
-        "script", &EntityDef::script   //
+    lua.new_usertype<EntityDef>(                 //
+        "EntityDef",                             //
+        "id", &EntityDef::id,                    //
+        "name", &EntityDef::name,                //
+        "width", &EntityDef::width,              //
+        "height", &EntityDef::height,            //
+        "r", &EntityDef::r,                      //
+        "g", &EntityDef::g,                      //
+        "b", &EntityDef::b,                      //
+        "a", &EntityDef::a,                      //
+        "imageWith", &EntityDef::imageWidth,     //
+        "imageHeight", &EntityDef::imageHeight,  //
+        "imageRow", &EntityDef::imageRow,        //
+        "imageCol", &EntityDef::imageCol,        //
+        "image", &EntityDef::image,              //
+        "script", &EntityDef::script             //
     );
   }
 };
@@ -67,6 +76,11 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     g,                               //
     b,                               //
     a,                               //
+    imageWidth,                      //
+    imageHeight,                     //
+    imageRow,                        //
+    imageCol,                        //
+    imageMode,                       //
     image,                           //
     script,                          //
     properties                       //

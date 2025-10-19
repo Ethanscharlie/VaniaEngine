@@ -1,42 +1,31 @@
 {
     "entityDefs": [
         [
-            4196,
+            65974,
             {
                 "a": 255,
                 "b": 255,
                 "g": 255,
-                "height": 16.0,
-                "id": 4196,
-                "image": "",
-                "name": "Player",
+                "height": 64.0,
+                "id": 65974,
+                "image": "sheet.png",
+                "imageCol": 0.0,
+                "imageHeight": 32.0,
+                "imageMode": true,
+                "imageRow": 0.0,
+                "imageWidth": 64.0,
+                "name": "New Entity",
                 "properties": {},
                 "r": 255,
-                "script": "player.lua",
-                "width": 16.0
-            }
-        ],
-        [
-            73735,
-            {
-                "a": 255,
-                "b": 255,
-                "g": 255,
-                "height": 16.0,
-                "id": 73735,
-                "image": "",
-                "name": "Zombie",
-                "properties": {},
-                "r": 255,
-                "script": "zombie.lua",
-                "width": 16.0
+                "script": "",
+                "width": 128.0
             }
         ]
     ],
     "worldData": {
         "entities": [
             {
-                "defID": 4196,
+                "defID": 65974,
                 "x": 0.0,
                 "y": 0.0
             }

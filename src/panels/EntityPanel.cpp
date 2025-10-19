@@ -6,11 +6,13 @@
 #include <random>
 
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "run/AssetManager.hpp"
 
 namespace Vania {
-EntityPanel::EntityPanel(GameData& gameData) : gameData(gameData) {}
+EntityPanel::EntityPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {}
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");
@@ -66,8 +68,6 @@ EntityDef& EntityPanel::createDef() {
 }
 
 void EntityPanel::showPropertyEditor() {
-  static int SMALL_NUMBER_WIDTH = 100;
-
   ImGui::BeginGroup();
   EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
   ImGui::InputText("name", &selectedEntity.name);
@@ -89,7 +89,11 @@ void EntityPanel::showPropertyEditor() {
 
   ImGui::SameLine();
   if (selectedEntity.imageMode) {
-    ImGui::InputText("Image", &selectedEntity.image);
+    if (ImGui::Button("Set Image")) {
+      cellWidth = 1;
+      cellHeight = 1;
+      ImGui::OpenPopup("Image Picker");
+    }
   } else {
     int& r = selectedEntity.r;
     int& g = selectedEntity.g;
@@ -104,8 +108,71 @@ void EntityPanel::showPropertyEditor() {
     }
   }
 
+  bool b = true;
+  if (ImGui::BeginPopupModal("Image Picker", &b)) {
+    showImagePicker();
+    ImGui::EndPopup();
+  }
+
   ImGui::InputText("Script", &selectedEntity.script);
   ImGui::EndGroup();
+}
+
+void EntityPanel::showImagePicker() {
+  EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
+  ImGui::InputText("Image", &selectedEntity.image);
+
+  static float zoom = 1;
+  static int gridSize = 32;
+
+  ImGui::SliderFloat("Zoom", &zoom, 1, 10);
+  ImGui::InputInt("Grid Size", &gridSize);
+
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  ImGui::InputInt("Cell Width", &cellWidth);
+  ImGui::SameLine();
+  ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
+  ImGui::InputInt("Cell Height", &cellHeight);
+
+  auto& root = gameData.editorData.rootPath;
+  AssetManager& assetManager = AssetManager::getInstance();
+  SDL_Texture* texture = assetManager.get(renderer, root / selectedEntity.image);
+
+  float width, height;
+  SDL_GetTextureSize(texture, &width, &height);
+  width *= zoom;
+  height *= zoom;
+
+  float tile_size_x = gridSize * zoom * cellWidth;
+  float tile_size_y = gridSize * zoom * cellHeight;
+
+  int cols = static_cast<int>(width) / tile_size_x;
+  int rows = static_cast<int>(height) / tile_size_y;
+
+  for (int row = 0; row < rows; ++row) {
+    for (int col = 0; col < cols; ++col) {
+      ImVec2 position(col * tile_size_x, row * tile_size_y);
+
+      ImVec2 uv0(col * tile_size_x / width, row * tile_size_y / height);
+      ImVec2 uv1((col + 1) * tile_size_x / width, (row + 1) * tile_size_y / height);
+
+      std::string buttonID = std::format("{},{}", row, col);
+      const bool buttonPressed =
+          ImGui::ImageButton(buttonID.c_str(), texture, ImVec2(tile_size_x, tile_size_y), uv0, uv1);
+
+      if (buttonPressed) {
+        selectedEntity.imageWidth = gridSize * cellWidth;
+        selectedEntity.imageHeight = gridSize * cellHeight;
+        selectedEntity.imageRow = row;
+        selectedEntity.imageCol = col;
+        ImGui::CloseCurrentPopup();
+      }
+
+      ImGui::SameLine();
+    }
+
+    ImGui::NewLine();
+  }
 }
 
 }  // namespace Vania

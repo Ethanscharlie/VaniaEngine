@@ -1,10 +1,8 @@
 #include "Runner.hpp"
 
-#include <print>
-
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
-#include "run/AssetManager.hpp"
+#include "render.hpp"
 #include "run/utils.hpp"
 #include "sol/forward.hpp"
 
@@ -91,14 +89,7 @@ void Runner::render() {
   SDL_RenderClear(renderer);
 
   for (auto& entity : gameDataCopy.worldData.entities) {
-    SDL_SetRenderDrawColor(renderer, entity.entityDefOverride.r, entity.entityDefOverride.g, entity.entityDefOverride.b,
-                           entity.entityDefOverride.a);
-    SDL_FRect rect = {(float)entity.x, (float)entity.y, (float)entity.entityDefOverride.width,
-                      (float)entity.entityDefOverride.height};
-    SDL_RenderFillRect(renderer, &rect);
-
-    SDL_Texture* texture = AssetManager::getInstance().get(renderer, root / "img.png");
-    SDL_RenderTexture(renderer, texture, nullptr, &rect);
+    Render::render(renderer, entity, entity.entityDefOverride, gameDataCopy.editorData.rootPath);
   }
 
   SDL_SetRenderTarget(renderer, nullptr);
