@@ -85,23 +85,34 @@ void WorldPanel::draw() {
     if (def.imageMode) {
       auto& root = gameData.editorData.rootPath;
       const std::string& image = def.image;
-      drawImage(min, max, root / image);
+      AssetManager& assetManager = AssetManager::getInstance();
+      SDL_Texture* texture = assetManager.get(renderer, root / image);
+
+      float textureW, textureH;
+      SDL_GetTextureSize(texture, &textureW, &textureH);
+
+      ImVec2 uv0 = {
+          def.imageCol / textureW,  //
+          def.imageRow / textureH   //
+      };
+
+      ImVec2 uv1 = {
+          (def.imageCol + def.imageWidth) / textureW,  //
+          (def.imageRow + def.imageHeight) / textureH  //
+      };
+
+      if (texture == nullptr) {
+        drawNoImage(min, max);
+        return;
+      }
+
+      draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max, uv0, uv1);
     } else {
       drawBox(min, max, def.r, def.g, def.b, def.a);
     }
   }
 
   draw_list->PopClipRect();
-}
-
-void WorldPanel::drawImage(const ImVec2& min, const ImVec2& max, const std::string& fullpath) {
-  AssetManager& assetManager = AssetManager::getInstance();
-  SDL_Texture* texture = assetManager.get(renderer, fullpath);
-  if (texture == nullptr) {
-    drawNoImage(min, max);
-    return;
-  }
-  draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max);
 }
 
 void WorldPanel::drawNoImage(const ImVec2& min, const ImVec2& max) {

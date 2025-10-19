@@ -34,4 +34,5 @@ inline void render(SDL_Renderer* renderer, const Entity& entity, const EntityDef
     SDL_RenderFillRect(renderer, &rect);
   }
 }
+
 }  // namespace Vania::Render
