@@ -163,8 +163,8 @@ void EntityPanel::showImagePicker() {
       if (buttonPressed) {
         selectedEntity.imageWidth = gridSize * cellWidth;
         selectedEntity.imageHeight = gridSize * cellHeight;
-        selectedEntity.imageRow = row;
-        selectedEntity.imageCol = col;
+        selectedEntity.imageRow = row * tile_size_x;
+        selectedEntity.imageCol = col * tile_size_y;
         ImGui::CloseCurrentPopup();
       }
 
