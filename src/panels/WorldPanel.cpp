@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <format>
+#include <print>
 
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
@@ -20,10 +21,17 @@ void WorldPanel::update() {
   ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
 
   const bool is_active = ImGui::IsItemActive();
-  if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
-    ImGuiIO& io = ImGui::GetIO();
-    scrolling.x += io.MouseDelta.x;
-    scrolling.y += io.MouseDelta.y;
+  if (is_active) {
+    if (ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
+      ImGuiIO& io = ImGui::GetIO();
+      scrolling.x += io.MouseDelta.x;
+      scrolling.y += io.MouseDelta.y;
+    }
+
+    else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+      ImVec2 mousePos = getMousePositionOnCanvas();
+      createEntity(mousePos.x, mousePos.y);
+    }
   }
 
   draw();
@@ -123,6 +131,12 @@ void WorldPanel::drawNoImage(const ImVec2& min, const ImVec2& max) {
 
 void WorldPanel::drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a) {
   draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
+}
+
+void WorldPanel::createEntity(float x, float y) {
+  EntityDef* def = gameData.editorData.selectedEntityDef;
+  if (def == nullptr) return;
+  gameData.worldData.entities.push_back({def->id, x, y});
 }
 
 }  // namespace Vania

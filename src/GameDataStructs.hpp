@@ -93,7 +93,7 @@ struct Entity {
   float y;
 
   Entity() {}
-  Entity(int entityDefID, float x, float y) : defID(entityDefID), x(x), y(x) {}
+  Entity(int entityDefID, float x, float y) : defID(entityDefID), x(x), y(y) {}
 
   static void exposeToLua(sol::state& lua) {
     lua.new_usertype<Entity>(               //

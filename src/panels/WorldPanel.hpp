@@ -36,5 +36,6 @@ class WorldPanel : public IPanel {
   void draw();
   void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a);
   void drawNoImage(const ImVec2& min, const ImVec2& max);
+  void createEntity(float x, float y);
 };
 }  // namespace Vania
