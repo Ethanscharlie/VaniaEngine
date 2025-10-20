@@ -31,6 +31,7 @@ class WorldPanel : public IPanel {
   void calculateCanvasPositionValues();
   ImVec2 getMousePositionOnCanvas();
   ImVec2 getOrigin();
+  Entity* isHoveringOverEntity();
 
   void drawGrid();
   void draw();

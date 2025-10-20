@@ -34,9 +34,18 @@ void WorldPanel::update() {
 
     else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
       const ImVec2 mousePos = getMousePositionOnCanvas();
-      const float snapedX = (snapPositionToGrid(mousePos.x / zoom) + gridSize / 2);
-      const float snapedY = (snapPositionToGrid(mousePos.y / zoom) + gridSize / 2);
+      const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
+      const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
       createEntity(snapedX, snapedY);
+    }
+  }
+
+  {
+    Entity* hoveredEntity = isHoveringOverEntity();
+    if (hoveredEntity != nullptr) {
+      std::println("HOVER");
+    } else {
+      std::println("NO HOVER");
     }
   }
 
@@ -49,13 +58,30 @@ ImVec2 WorldPanel::getMousePositionOnCanvas() {
   ImGuiIO& io = ImGui::GetIO();
   const ImVec2 origin = getOrigin();
   return {
-      io.MousePos.x - origin.x,  //
-      io.MousePos.y - origin.y   //
+      (io.MousePos.x - origin.x) / zoom,  //
+      (io.MousePos.y - origin.y) / zoom   //
   };
 }
 
 ImVec2 WorldPanel::getOrigin() {
   return {canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y};  // Lock scrolled origin
+}
+
+Entity* WorldPanel::isHoveringOverEntity() {
+  ImVec2 mousePos = getMousePositionOnCanvas();
+
+  for (Entity& entity : gameData.worldData.entities) {
+    const EntityDef& def = gameData.entityDefs.at(entity.defID);
+    const float w = def.width;
+    const float h = def.height;
+    const float x = entity.x - w / 2;
+    const float y = entity.y - h / 2;
+    if (mousePos.x < x + w && mousePos.x > x && mousePos.y < y + h && mousePos.y > y) {
+      return &entity;
+    }
+  }
+
+  return nullptr;
 }
 
 void WorldPanel::calculateCanvasPositionValues() {
