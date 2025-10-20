@@ -16,9 +16,10 @@ Runner::Runner(const GameData& gameData, SDL_Renderer* renderer)
   lua.open_libraries(sol::lib::base, sol::lib::package);
 
   lua.set_function("summon", [this, gameData](const std::string& name, float x, float y) {
-    for (auto& [id, def] : gameDataCopy.entityDefs) {
+    for (auto& [defID, def] : gameDataCopy.entityDefs) {
       if (def.name == name) {
-        gameDataCopy.worldData.entities.push_back({id, x, y});
+        int id = rand() % 100000;
+        gameDataCopy.worldData.entities.push_back({id, defID, x, y});
         return;
       }
     }

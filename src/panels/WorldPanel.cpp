@@ -1,6 +1,9 @@
 #include "WorldPanel.hpp"
 
+#include <pstl/glue_algorithm_defs.h>
+
 #include <cmath>
+#include <cstdio>
 #include <format>
 #include <print>
 #include <system_error>
@@ -44,10 +47,16 @@ void WorldPanel::whileActive() {
   }
 
   else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-    const ImVec2 mousePos = getMousePositionOnCanvas();
-    const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
-    const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
-    createEntity(snapedX, snapedY);
+    if (hoveredEntity != nullptr) {  // Select entity
+      removeEntity(*hoveredEntity);
+    }
+
+    else {  // Create new Entity
+      const ImVec2 mousePos = getMousePositionOnCanvas();
+      const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
+      const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
+      createEntity(snapedX, snapedY);
+    }
   }
 }
 
@@ -198,7 +207,14 @@ float WorldPanel::snapPositionToGrid(float x) {
 void WorldPanel::createEntity(float x, float y) {
   EntityDef* def = gameData.editorData.selectedEntityDef;
   if (def == nullptr) return;
-  gameData.worldData.entities.push_back({def->id, x, y});
+  int id = rand() % 100000;
+  gameData.worldData.entities.push_back({id, def->id, x, y});
+}
+
+void WorldPanel::removeEntity(Entity& entity) {
+  auto& entities = gameData.worldData.entities;
+  auto it = std::remove(entities.begin(), entities.end(), entity);
+  entities.erase(it, entities.end());
 }
 
 }  // namespace Vania

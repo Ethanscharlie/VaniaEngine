@@ -76,7 +76,7 @@ void App::loadFromFile() {
     break;
   }
 
-  gameData.worldData.entities.push_back({def1id, 0, 0});
+  gameData.worldData.entities.push_back({101, def1id, 0, 0});
 }
 
 void App::update() {

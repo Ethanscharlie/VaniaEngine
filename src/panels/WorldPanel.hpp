@@ -43,5 +43,6 @@ class WorldPanel : public IPanel {
   void drawNoImage(const ImVec2& min, const ImVec2& max);
   float snapPositionToGrid(float x);
   void createEntity(float x, float y);
+  void removeEntity(Entity& entity);
 };
 }  // namespace Vania
