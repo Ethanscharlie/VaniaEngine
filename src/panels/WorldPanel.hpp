@@ -12,6 +12,7 @@ class WorldPanel : public IPanel {
   const ImU32 WHITE = IM_COL32(255, 255, 255, 255);
   const ImU32 RED = IM_COL32(255, 0, 0, 255);
   const float HOVER_BOX_PADDING = 5;
+  const int GHOST_ALPHA = 100;
 
   GameData& gameData;
   SDL_Renderer* renderer;
@@ -37,8 +38,10 @@ class WorldPanel : public IPanel {
   void whileActive();
   ImVec4 getEntityMinAndMax(const Entity& entity);
   void drawHoverBox(const Entity& entity);
+  void drawGhostAtCursor();
   void drawGrid();
   void draw();
+  void drawEntity(const Entity& entity, int alpha = 255);
   void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a);
   void drawNoImage(const ImVec2& min, const ImVec2& max);
   float snapPositionToGrid(float x);

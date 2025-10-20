@@ -29,7 +29,11 @@ void WorldPanel::update() {
   draw();
 
   Entity* hoveredEntity = isHoveringOverEntity();
-  if (hoveredEntity != nullptr) drawHoverBox(*hoveredEntity);
+  if (hoveredEntity != nullptr) {
+    drawHoverBox(*hoveredEntity);
+  } else {
+    drawGhostAtCursor();
+  }
 
   ImGui::End();
 }
@@ -72,6 +76,20 @@ void WorldPanel::drawHoverBox(const Entity& entity) {
   };
 
   draw_list->AddRect(min, max, RED);
+}
+
+void WorldPanel::drawGhostAtCursor() {
+  EntityDef* def = gameData.editorData.selectedEntityDef;
+  if (def == nullptr) return;
+
+  const float gridSize = gameData.worldData.gridSize;
+  const ImVec2 mousePos = getMousePositionOnCanvas();
+  const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
+  const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
+
+  Entity ghost = {0, def->id, snapedX, snapedY};
+
+  drawEntity(ghost, GHOST_ALPHA);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -151,42 +169,49 @@ void WorldPanel::draw() {
 
   const ImVec2 origin = getOrigin();
   for (const Entity& entity : gameData.worldData.entities) {
-    const ImVec4 minAndMax = getEntityMinAndMax(entity);
-    const ImVec2 min = {minAndMax.x, minAndMax.y};
-    const ImVec2 max = {minAndMax.z, minAndMax.w};
-
-    const EntityDef& def = gameData.entityDefs.at(entity.defID);
-    if (def.imageMode) {
-      auto& root = gameData.editorData.rootPath;
-      const std::string& image = def.image;
-      AssetManager& assetManager = AssetManager::getInstance();
-      SDL_Texture* texture = assetManager.get(renderer, root / image);
-
-      float textureW, textureH;
-      SDL_GetTextureSize(texture, &textureW, &textureH);
-
-      ImVec2 uv0 = {
-          def.imageCol / textureW,  //
-          def.imageRow / textureH   //
-      };
-
-      ImVec2 uv1 = {
-          (def.imageCol + def.imageWidth) / textureW,  //
-          (def.imageRow + def.imageHeight) / textureH  //
-      };
-
-      if (texture == nullptr) {
-        drawNoImage(min, max);
-        return;
-      }
-
-      draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max, uv0, uv1);
-    } else {
-      drawBox(min, max, def.r, def.g, def.b, def.a);
-    }
+    drawEntity(entity);
   }
 
   draw_list->PopClipRect();
+}
+
+void WorldPanel::drawEntity(const Entity& entity, int alpha) {
+  const ImVec4 minAndMax = getEntityMinAndMax(entity);
+  const ImVec2 min = {minAndMax.x, minAndMax.y};
+  const ImVec2 max = {minAndMax.z, minAndMax.w};
+
+  const EntityDef& def = gameData.entityDefs.at(entity.defID);
+  if (def.imageMode) {
+    auto& root = gameData.editorData.rootPath;
+    const std::string& image = def.image;
+    AssetManager& assetManager = AssetManager::getInstance();
+    SDL_Texture* texture = assetManager.get(renderer, root / image);
+
+    float textureW, textureH;
+    SDL_GetTextureSize(texture, &textureW, &textureH);
+
+    ImVec2 uv0 = {
+        def.imageCol / textureW,  //
+        def.imageRow / textureH   //
+    };
+
+    ImVec2 uv1 = {
+        (def.imageCol + def.imageWidth) / textureW,  //
+        (def.imageRow + def.imageHeight) / textureH  //
+    };
+
+    if (texture == nullptr) {
+      drawNoImage(min, max);
+      return;
+    }
+
+    const ImU32 color = IM_COL32(255, 255, 255, alpha);
+    draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max, uv0, uv1, color);
+  }
+
+  else {
+    drawBox(min, max, def.r, def.g, def.b, alpha);
+  }
 }
 
 void WorldPanel::drawNoImage(const ImVec2& min, const ImVec2& max) {
