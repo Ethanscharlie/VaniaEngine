@@ -95,7 +95,7 @@ void WorldPanel::draw() {
   for (const Entity& entity : gameData.worldData.entities) {
     const EntityDef& def = gameData.entityDefs.at(entity.defID);
     const float zoomedWidth = def.width * zoom;
-    const float zoomedHeight = def.width * zoom;
+    const float zoomedHeight = def.height * zoom;
     const float x = entity.x * zoom + origin.x - zoomedWidth / 2;
     const float y = entity.y * zoom + origin.y - zoomedHeight / 2;
     const float w = zoomedWidth;
