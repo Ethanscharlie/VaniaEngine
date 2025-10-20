@@ -15,8 +15,10 @@ WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(ga
 
 void WorldPanel::update() {
   ImGui::Begin("World");
+  ImGui::SliderFloat("Zoom", &zoom, 1, 10);
+
   const float gridSize = gameData.worldData.gridSize;
-  const float gridSizeWithZoom = gameData.worldData.gridSize * 1;
+  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
 
   calculateCanvasPositionValues();
 
@@ -32,8 +34,8 @@ void WorldPanel::update() {
 
     else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
       const ImVec2 mousePos = getMousePositionOnCanvas();
-      const float snapedX = snapPositionToGrid(mousePos.x) + gridSize / 2;
-      const float snapedY = snapPositionToGrid(mousePos.y) + gridSize / 2;
+      const float snapedX = (snapPositionToGrid(mousePos.x / zoom) + gridSize / 2);
+      const float snapedY = (snapPositionToGrid(mousePos.y / zoom) + gridSize / 2);
       createEntity(snapedX, snapedY);
     }
   }
@@ -46,7 +48,10 @@ void WorldPanel::update() {
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
   ImGuiIO& io = ImGui::GetIO();
   const ImVec2 origin = getOrigin();
-  return {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
+  return {
+      io.MousePos.x - origin.x,  //
+      io.MousePos.y - origin.y   //
+  };
 }
 
 ImVec2 WorldPanel::getOrigin() {
@@ -65,7 +70,7 @@ void WorldPanel::calculateCanvasPositionValues() {
 
 void WorldPanel::drawGrid() {
   const float gridSize = gameData.worldData.gridSize;
-  const float gridSizeWithZoom = gameData.worldData.gridSize * 1;
+  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
 
   for (float x = fmodf(scrolling.x, gridSizeWithZoom); x < canvas_sz.x; x += gridSizeWithZoom) {
     draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), LIGHT_GRAY);
@@ -89,10 +94,12 @@ void WorldPanel::draw() {
   const ImVec2 origin = getOrigin();
   for (const Entity& entity : gameData.worldData.entities) {
     const EntityDef& def = gameData.entityDefs.at(entity.defID);
-    const float x = entity.x + origin.x - def.width / 2;
-    const float y = entity.y + origin.y - def.height / 2;
-    const float w = def.width;
-    const float h = def.height;
+    const float zoomedWidth = def.width * zoom;
+    const float zoomedHeight = def.width * zoom;
+    const float x = entity.x * zoom + origin.x - zoomedWidth / 2;
+    const float y = entity.y * zoom + origin.y - zoomedHeight / 2;
+    const float w = zoomedWidth;
+    const float h = zoomedHeight;
 
     const ImVec2 min = {x, y};
     const ImVec2 max = {x + w, y + h};

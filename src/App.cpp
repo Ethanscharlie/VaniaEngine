@@ -75,7 +75,10 @@ void App::loadFromFile() {
     def1id = id;
     break;
   }
-  gameData.worldData.entities.push_back({def1id, 0, 0});
+
+  for (float i = 0; i < 20; i++) {
+    gameData.worldData.entities.push_back({def1id, i * 32, i * 32});
+  }
 }
 
 void App::update() {

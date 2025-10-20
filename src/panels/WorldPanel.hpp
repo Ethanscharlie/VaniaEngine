@@ -15,6 +15,7 @@ class WorldPanel : public IPanel {
   SDL_Renderer* renderer;
 
   ImVec2 scrolling = {0.0f, 0.0f};
+  float zoom = 1;
 
   ImVec2 canvas_p0;
   ImVec2 canvas_sz;
