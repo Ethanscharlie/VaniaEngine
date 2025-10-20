@@ -15,6 +15,8 @@ WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(ga
 
 void WorldPanel::update() {
   ImGui::Begin("World");
+  const float gridSize = gameData.worldData.gridSize;
+  const float gridSizeWithZoom = gameData.worldData.gridSize * 1;
 
   calculateCanvasPositionValues();
 
@@ -29,8 +31,10 @@ void WorldPanel::update() {
     }
 
     else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-      ImVec2 mousePos = getMousePositionOnCanvas();
-      createEntity(mousePos.x, mousePos.y);
+      const ImVec2 mousePos = getMousePositionOnCanvas();
+      const float snapedX = snapPositionToGrid(mousePos.x) + gridSize / 2;
+      const float snapedY = snapPositionToGrid(mousePos.y) + gridSize / 2;
+      createEntity(snapedX, snapedY);
     }
   }
 
@@ -60,11 +64,14 @@ void WorldPanel::calculateCanvasPositionValues() {
 }
 
 void WorldPanel::drawGrid() {
-  for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x; x += GRID_STEP) {
+  const float gridSize = gameData.worldData.gridSize;
+  const float gridSizeWithZoom = gameData.worldData.gridSize * 1;
+
+  for (float x = fmodf(scrolling.x, gridSizeWithZoom); x < canvas_sz.x; x += gridSizeWithZoom) {
     draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), LIGHT_GRAY);
   }
 
-  for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y; y += GRID_STEP) {
+  for (float y = fmodf(scrolling.y, gridSizeWithZoom); y < canvas_sz.y; y += gridSizeWithZoom) {
     draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), LIGHT_GRAY);
   }
 }
@@ -131,6 +138,11 @@ void WorldPanel::drawNoImage(const ImVec2& min, const ImVec2& max) {
 
 void WorldPanel::drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a) {
   draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
+}
+
+float WorldPanel::snapPositionToGrid(float x) {
+  const int gridSize = gameData.worldData.gridSize;
+  return floor(x / gridSize) * gridSize;
 }
 
 void WorldPanel::createEntity(float x, float y) {

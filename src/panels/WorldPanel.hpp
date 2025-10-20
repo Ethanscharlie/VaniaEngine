@@ -7,7 +7,6 @@
 
 namespace Vania {
 class WorldPanel : public IPanel {
-  const float GRID_STEP = 64.0f;
   const ImU32 DARK_GRAY = IM_COL32(50, 50, 50, 255);
   const ImU32 LIGHT_GRAY = IM_COL32(200, 200, 200, 40);
   const ImU32 WHITE = IM_COL32(255, 255, 255, 255);
@@ -36,6 +35,7 @@ class WorldPanel : public IPanel {
   void draw();
   void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a);
   void drawNoImage(const ImVec2& min, const ImVec2& max);
+  float snapPositionToGrid(float x);
   void createEntity(float x, float y);
 };
 }  // namespace Vania

@@ -114,13 +114,15 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
 
 struct WorldData {
   std::vector<Entity> entities;
+  int gridSize = 32;
 
   static void exposeToLua(sol::state& lua) {}
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     WorldData,                       //
-    entities                         //
+    entities,                        //
+    gridSize                         //
 )
 
 struct EditorData {
