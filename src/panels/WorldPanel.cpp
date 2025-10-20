@@ -82,8 +82,8 @@ void WorldPanel::draw() {
   const ImVec2 origin = getOrigin();
   for (const Entity& entity : gameData.worldData.entities) {
     const EntityDef& def = gameData.entityDefs.at(entity.defID);
-    const float x = entity.x + origin.x;
-    const float y = entity.y + origin.y;
+    const float x = entity.x + origin.x - def.width / 2;
+    const float y = entity.y + origin.y - def.height / 2;
     const float w = def.width;
     const float h = def.height;
 

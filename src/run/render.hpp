@@ -10,10 +10,10 @@ namespace Vania::Render {
 inline void render(SDL_Renderer* renderer, const Entity& entity, const EntityDef& def,
                    const std::filesystem::path root) {
   SDL_FRect rect = {
-      entity.x,                        //
-      entity.y,                        //
-      entity.entityDefOverride.width,  //
-      entity.entityDefOverride.height  //
+      entity.x - entity.entityDefOverride.width / 2,   //
+      entity.y - entity.entityDefOverride.height / 2,  //
+      entity.entityDefOverride.width,                  //
+      entity.entityDefOverride.height                  //
   };
 
   if (def.imageMode) {
