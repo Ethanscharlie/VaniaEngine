@@ -10,6 +10,8 @@ class WorldPanel : public IPanel {
   const ImU32 DARK_GRAY = IM_COL32(50, 50, 50, 255);
   const ImU32 LIGHT_GRAY = IM_COL32(200, 200, 200, 40);
   const ImU32 WHITE = IM_COL32(255, 255, 255, 255);
+  const ImU32 RED = IM_COL32(255, 0, 0, 255);
+  const float HOVER_BOX_PADDING = 5;
 
   GameData& gameData;
   SDL_Renderer* renderer;
@@ -32,7 +34,9 @@ class WorldPanel : public IPanel {
   ImVec2 getMousePositionOnCanvas();
   ImVec2 getOrigin();
   Entity* isHoveringOverEntity();
-
+  void whileActive();
+  ImVec4 getEntityMinAndMax(const Entity& entity);
+  void drawHoverBox(const Entity& entity);
   void drawGrid();
   void draw();
   void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a);

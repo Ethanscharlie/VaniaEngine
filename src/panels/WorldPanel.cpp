@@ -3,6 +3,7 @@
 #include <cmath>
 #include <format>
 #include <print>
+#include <system_error>
 
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
@@ -17,41 +18,51 @@ void WorldPanel::update() {
   ImGui::Begin("World");
   ImGui::SliderFloat("Zoom", &zoom, 1, 10);
 
-  const float gridSize = gameData.worldData.gridSize;
-  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
-
   calculateCanvasPositionValues();
-
   ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
 
-  const bool is_active = ImGui::IsItemActive();
-  if (is_active) {
-    if (ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
-      ImGuiIO& io = ImGui::GetIO();
-      scrolling.x += io.MouseDelta.x;
-      scrolling.y += io.MouseDelta.y;
-    }
-
-    else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-      const ImVec2 mousePos = getMousePositionOnCanvas();
-      const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
-      const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
-      createEntity(snapedX, snapedY);
-    }
-  }
-
-  {
-    Entity* hoveredEntity = isHoveringOverEntity();
-    if (hoveredEntity != nullptr) {
-      std::println("HOVER");
-    } else {
-      std::println("NO HOVER");
-    }
-  }
+  if (ImGui::IsItemActive()) whileActive();
 
   draw();
 
+  Entity* hoveredEntity = isHoveringOverEntity();
+  if (hoveredEntity != nullptr) drawHoverBox(*hoveredEntity);
+
   ImGui::End();
+}
+
+void WorldPanel::whileActive() {
+  const float gridSize = gameData.worldData.gridSize;
+  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
+
+  Entity* hoveredEntity = isHoveringOverEntity();
+
+  if (ImGui::IsMouseDragging(ImGuiMouseButton_Right, -1.0f)) {
+    ImGuiIO& io = ImGui::GetIO();
+    scrolling.x += io.MouseDelta.x;
+    scrolling.y += io.MouseDelta.y;
+  }
+
+  else if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+    const ImVec2 mousePos = getMousePositionOnCanvas();
+    const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
+    const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
+    createEntity(snapedX, snapedY);
+  }
+}
+
+void WorldPanel::drawHoverBox(const Entity& entity) {
+  const ImVec4 minAndMax = getEntityMinAndMax(entity);
+  const ImVec2 min = {
+      minAndMax.x - HOVER_BOX_PADDING,  //
+      minAndMax.y - HOVER_BOX_PADDING   //
+  };
+  const ImVec2 max = {
+      minAndMax.z + HOVER_BOX_PADDING,  //
+      minAndMax.w + HOVER_BOX_PADDING   //
+  };
+
+  draw_list->AddRect(min, max, RED);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -82,6 +93,18 @@ Entity* WorldPanel::isHoveringOverEntity() {
   }
 
   return nullptr;
+}
+
+ImVec4 WorldPanel::getEntityMinAndMax(const Entity& entity) {
+  const EntityDef& def = gameData.entityDefs.at(entity.defID);
+  const ImVec2 origin = getOrigin();
+  const float zoomedWidth = def.width * zoom;
+  const float zoomedHeight = def.height * zoom;
+  const float x = entity.x * zoom + origin.x - zoomedWidth / 2;
+  const float y = entity.y * zoom + origin.y - zoomedHeight / 2;
+  const float w = zoomedWidth;
+  const float h = zoomedHeight;
+  return {x, y, x + w, y + h};
 }
 
 void WorldPanel::calculateCanvasPositionValues() {
@@ -119,17 +142,11 @@ void WorldPanel::draw() {
 
   const ImVec2 origin = getOrigin();
   for (const Entity& entity : gameData.worldData.entities) {
+    const ImVec4 minAndMax = getEntityMinAndMax(entity);
+    const ImVec2 min = {minAndMax.x, minAndMax.y};
+    const ImVec2 max = {minAndMax.z, minAndMax.w};
+
     const EntityDef& def = gameData.entityDefs.at(entity.defID);
-    const float zoomedWidth = def.width * zoom;
-    const float zoomedHeight = def.height * zoom;
-    const float x = entity.x * zoom + origin.x - zoomedWidth / 2;
-    const float y = entity.y * zoom + origin.y - zoomedHeight / 2;
-    const float w = zoomedWidth;
-    const float h = zoomedHeight;
-
-    const ImVec2 min = {x, y};
-    const ImVec2 max = {x + w, y + h};
-
     if (def.imageMode) {
       auto& root = gameData.editorData.rootPath;
       const std::string& image = def.image;
