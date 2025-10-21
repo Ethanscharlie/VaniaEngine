@@ -92,6 +92,7 @@ struct Entity {
   EntityDef entityDefOverride;
   float x;
   float y;
+  float angle = 0;
 
   Entity() {}
   Entity(int id, int entityDefID, float x, float y) : id(id), defID(entityDefID), x(x), y(y) {}
@@ -103,6 +104,7 @@ struct Entity {
         "Entity",                           //
         "def", &Entity::entityDefOverride,  //
         "id", &Entity::id,                  //
+        "angle", &Entity::angle,            //
         "x", &Entity::x,                    //
         "y", &Entity::y                     //
     );
