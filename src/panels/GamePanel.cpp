@@ -1,13 +1,14 @@
 #include "GamePanel.hpp"
+
+#include <format>
+
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_oldnames.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
-#include <format>
 
 namespace Vania {
-GamePanel::GamePanel(GameData &gameData, SDL_Renderer *renderer)
-    : gameData(gameData), runner(gameData, renderer) {}
+GamePanel::GamePanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), runner(gameData, renderer) {}
 
 void GamePanel::update() {
   if (running) {
@@ -33,9 +34,15 @@ void GamePanel::update() {
 
   ImGui::Text((running) ? "Running..." : "Stopped.");
 
-  ImGui::Image((ImTextureID)(intptr_t)runner.displayTexture,
-               ImVec2(runner.DISPLAY_WIDTH, runner.DISPLAY_HEIGHT));
+  ImVec2 avail_size = ImGui::GetContentRegionAvail();
+  float aspect_ratio = (float)runner.DISPLAY_WIDTH / runner.DISPLAY_HEIGHT;
+  float scale_x = avail_size.x / runner.DISPLAY_WIDTH;
+  float scale_y = avail_size.y / runner.DISPLAY_HEIGHT;
+  float scale = std::min(scale_x, scale_y);
+
+  const ImVec2 newSize = {runner.DISPLAY_WIDTH * scale, runner.DISPLAY_HEIGHT * scale};
+  ImGui::Image(runner.displayTexture, newSize);
   ImGui::End();
 }
 
-} // namespace Vania
+}  // namespace Vania
