@@ -27,6 +27,9 @@ class Runner {
   void runAllScriptsSetups();
   void update();
   void render();
+
+ private:
+  static bool getButtonHeld(const std::string& button);
 };
 
 };  // namespace Vania

@@ -38,7 +38,7 @@
                 "name": "Player",
                 "properties": {},
                 "r": 255,
-                "script": "",
+                "script": "player.lua",
                 "width": 64.0
             }
         ]

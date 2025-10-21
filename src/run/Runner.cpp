@@ -1,5 +1,10 @@
 #include "Runner.hpp"
 
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <string>
+
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "render.hpp"
@@ -24,6 +29,8 @@ Runner::Runner(const GameData& gameData, SDL_Renderer* renderer)
       }
     }
   });
+
+  lua.set_function("getButtonHeld", getButtonHeld);
 
   EntityDef::exposeToLua(lua);
   Entity::exposeToLua(lua);
@@ -60,23 +67,11 @@ void Runner::update() {
     const std::string& script = entity.entityDefOverride.script;
     if (script == "") continue;
     sol::table funcs = lua.script_file(root / script);
-    funcs["update"](&entity);
+    auto result = funcs["update"](&entity);
 
-    const bool* keystates = SDL_GetKeyboardState(NULL);
-    if (keystates[SDL_SCANCODE_SPACE]) {
-      funcs["keyHeldSpace"](&entity);
-    }
-    if (keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_D]) {
-      funcs["keyHeldRight"](&entity);
-    }
-    if (keystates[SDL_SCANCODE_LEFT] || keystates[SDL_SCANCODE_A]) {
-      funcs["keyHeldLeft"](&entity);
-    }
-    if (keystates[SDL_SCANCODE_UP] || keystates[SDL_SCANCODE_W]) {
-      funcs["keyHeldUp"](&entity);
-    }
-    if (keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_S]) {
-      funcs["keyHeldDown"](&entity);
+    if (!result.valid()) {
+      sol::error err = result;
+      std::cerr << "Error executing script: " << err.what() << '\n';
     }
   }
 
@@ -94,6 +89,47 @@ void Runner::render() {
   }
 
   SDL_SetRenderTarget(renderer, nullptr);
+}
+
+bool Runner::getButtonHeld(const std::string& button) {
+  std::string b = button;
+  std::transform(b.begin(), b.end(), b.begin(), ::tolower);
+
+  const bool* k = SDL_GetKeyboardState(NULL);
+
+  if (k[SDL_SCANCODE_SPACE] && (b == "" || b == " ")) return true;
+  if (k[SDL_SCANCODE_A] && b == "a") return true;
+  if (k[SDL_SCANCODE_B] && b == "b") return true;
+  if (k[SDL_SCANCODE_C] && b == "c") return true;
+  if (k[SDL_SCANCODE_D] && b == "d") return true;
+  if (k[SDL_SCANCODE_E] && b == "e") return true;
+  if (k[SDL_SCANCODE_F] && b == "f") return true;
+  if (k[SDL_SCANCODE_G] && b == "g") return true;
+  if (k[SDL_SCANCODE_H] && b == "h") return true;
+  if (k[SDL_SCANCODE_I] && b == "i") return true;
+  if (k[SDL_SCANCODE_J] && b == "j") return true;
+  if (k[SDL_SCANCODE_K] && b == "k") return true;
+  if (k[SDL_SCANCODE_L] && b == "l") return true;
+  if (k[SDL_SCANCODE_M] && b == "m") return true;
+  if (k[SDL_SCANCODE_N] && b == "n") return true;
+  if (k[SDL_SCANCODE_O] && b == "o") return true;
+  if (k[SDL_SCANCODE_P] && b == "p") return true;
+  if (k[SDL_SCANCODE_Q] && b == "q") return true;
+  if (k[SDL_SCANCODE_R] && b == "r") return true;
+  if (k[SDL_SCANCODE_S] && b == "s") return true;
+  if (k[SDL_SCANCODE_T] && b == "t") return true;
+  if (k[SDL_SCANCODE_U] && b == "u") return true;
+  if (k[SDL_SCANCODE_V] && b == "v") return true;
+  if (k[SDL_SCANCODE_W] && b == "w") return true;
+  if (k[SDL_SCANCODE_X] && b == "x") return true;
+  if (k[SDL_SCANCODE_Y] && b == "y") return true;
+  if (k[SDL_SCANCODE_Z] && b == "z") return true;
+  if (k[SDL_SCANCODE_UP] && b == "up") return true;
+  if (k[SDL_SCANCODE_DOWN] && b == "down") return true;
+  if (k[SDL_SCANCODE_LEFT] && b == "left") return true;
+  if (k[SDL_SCANCODE_RIGHT] && b == "right") return true;
+
+  return false;
 }
 
 }  // namespace Vania
