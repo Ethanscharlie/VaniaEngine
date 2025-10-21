@@ -64,7 +64,7 @@ inline bool getButtonHeld(const std::string& button) {
 }
 
 inline void moveForward(Entity& entity, float speed) {
-  const float radians = entity.angle * (M_PI / 180);
+  const float radians = entity.angle * (M_PI / 180.0);
   entity.x += cos(radians) * speed;
   entity.y += sin(radians) * speed;
 }
