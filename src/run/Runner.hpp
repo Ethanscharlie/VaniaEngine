@@ -10,8 +10,8 @@ namespace Vania {
 
 class Runner {
  public:
-  const int DISPLAY_WIDTH = 700;
-  const int DISPLAY_HEIGHT = 700;
+  const int DISPLAY_WIDTH = 1920;
+  const int DISPLAY_HEIGHT = 1080;
 
   SDL_Texture* displayTexture;
 
