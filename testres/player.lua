@@ -1,4 +1,4 @@
-local speed = 0.1
+local speed = 0.18
 
 local function setup(entity) end
 
@@ -8,6 +8,9 @@ local function update(entity)
 	end
 	if getButtonHeld("d") then
 		entity.angle = entity.angle + speed
+	end
+	if getButtonHeld("w") then
+		moveForward(entity, speed)
 	end
 end
 
