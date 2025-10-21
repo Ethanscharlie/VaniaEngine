@@ -61,11 +61,15 @@ void Runner::runAllScriptsSetups() {
 }
 
 void Runner::update() {
+  Uint32 currentTime = SDL_GetTicks();
+  float deltaTime = (currentTime - lastTime) / 1000.0f;
+  lastTime = currentTime;
+
   for (auto& entity : gameDataCopy.worldData.entities) {
     const std::string& script = entity.entityDefOverride.script;
     if (script == "") continue;
     sol::table funcs = lua.script_file(root / script);
-    auto result = funcs["update"](&entity);
+    auto result = funcs["update"](&entity, deltaTime);
 
     if (!result.valid()) {
       sol::error err = result;

@@ -3,6 +3,7 @@
 
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_timer.h"
 #include "sol/sol.hpp"
 
 namespace Vania {
@@ -19,6 +20,7 @@ class Runner {
   sol::state lua;
   GameData gameDataCopy;
   const std::filesystem::path& root;
+  Uint32 lastTime = SDL_GetTicks();
 
  public:
   Runner(const GameData& gameData, SDL_Renderer* renderer);

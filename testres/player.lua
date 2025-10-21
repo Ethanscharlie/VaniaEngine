@@ -1,16 +1,16 @@
-local speed = 0.18
+local speed = 300
 
 local function setup(entity) end
 
-local function update(entity)
+local function update(entity, deltaTime)
 	if getButtonHeld("a") then
-		entity.angle = entity.angle - speed
+		entity.angle = entity.angle - speed * deltaTime
 	end
 	if getButtonHeld("d") then
-		entity.angle = entity.angle + speed
+		entity.angle = entity.angle + speed * deltaTime
 	end
 	if getButtonHeld("w") then
-		moveForward(entity, speed)
+		moveForward(entity, speed * deltaTime)
 	end
 end
 
