@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_timer.h"
 #include "sol/sol.hpp"
@@ -21,12 +22,14 @@ class Runner {
   GameData gameDataCopy;
   const std::filesystem::path& root;
   Uint32 lastTime = SDL_GetTicks();
+  SDL_FPoint mousePosition = {0, 0};
 
  public:
   Runner(const GameData& gameData, SDL_Renderer* renderer);
   ~Runner();
   void reset(const GameData& gameData);
   void runAllScriptsSetups();
+  void updateMousePos(const SDL_FPoint& mousePos);
   void update();
   void render();
 };

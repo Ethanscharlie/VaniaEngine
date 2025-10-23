@@ -69,6 +69,8 @@ void Runner::runAllScriptsSetups() {
   }
 }
 
+void Runner::updateMousePos(const SDL_FPoint& mousePos) { mousePosition = mousePos; }
+
 void Runner::update() {
   Uint32 currentTime = SDL_GetTicks();
   float deltaTime = (currentTime - lastTime) / 1000.0f;
@@ -99,10 +101,12 @@ void Runner::render() {
     auto& def = entity.entityDefOverride;
 
     SDL_FRect rect = {
-        entity.x - entity.entityDefOverride.width / 2,   //
-        entity.y - entity.entityDefOverride.height / 2,  //
-        entity.entityDefOverride.width,                  //
-        entity.entityDefOverride.height                  //
+        // entity.x - entity.entityDefOverride.width / 2,   //
+        // entity.y - entity.entityDefOverride.height / 2,  //
+        mousePosition.x,                 //
+        mousePosition.y,                 //
+        entity.entityDefOverride.width,  //
+        entity.entityDefOverride.height  //
     };
 
     if (def.imageMode) {
