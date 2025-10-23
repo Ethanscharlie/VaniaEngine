@@ -6,14 +6,20 @@ local function setup(entity)
 end
 
 local function update(entity, deltaTime)
+	local m = mousePos()
+	lookAt(entity, m.x, m.y)
+
 	if getButtonHeld("a") then
-		entity.angle = entity.angle - speed * deltaTime
+		entity.x = entity.x - speed * deltaTime
 	end
 	if getButtonHeld("d") then
-		entity.angle = entity.angle + speed * deltaTime
+		entity.x = entity.x + speed * deltaTime
 	end
 	if getButtonHeld("w") then
-		moveForward(entity, speed * deltaTime)
+		entity.y = entity.y - speed * deltaTime
+	end
+	if getButtonHeld("s") then
+		entity.y = entity.y + speed * deltaTime
 	end
 
 	local onCooldown = os.clock() < cooldownTime + entity.props["cooldown"]
