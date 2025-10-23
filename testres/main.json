@@ -15,7 +15,6 @@
                 "imageRow": 0.0,
                 "imageWidth": 0.0,
                 "name": "Bullet",
-                "properties": {},
                 "r": 255,
                 "script": "bullet.lua",
                 "width": 16.0
@@ -36,7 +35,6 @@
                 "imageRow": 32.0,
                 "imageWidth": 32.0,
                 "name": "Zombie",
-                "properties": {},
                 "r": 255,
                 "script": "",
                 "width": 32.0
@@ -57,7 +55,6 @@
                 "imageRow": 0.0,
                 "imageWidth": 64.0,
                 "name": "Player",
-                "properties": {},
                 "r": 255,
                 "script": "player.lua",
                 "width": 64.0

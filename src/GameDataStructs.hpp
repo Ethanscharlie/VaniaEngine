@@ -10,17 +10,19 @@
 #include <vector>
 
 #include "nlohmann/detail/macro_scope.hpp"
+#include "sol/object.hpp"
 #include "sol/state.hpp"
+#include "sol/table.hpp"
 
 struct Property {
   float number;
   std::string text;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
-    Property,                        //
-    number,                          //
-    text                             //
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE( //
+    Property,                       //
+    number,                         //
+    text                            //
 )
 
 struct EntityDef {
@@ -43,47 +45,45 @@ struct EntityDef {
   bool imageMode = false;
 
   std::string script = "";
-  std::map<std::string, Property> properties;
 
-  static void exposeToLua(sol::state& lua) {
-    lua.new_usertype<EntityDef>(                 //
-        "EntityDef",                             //
-        "id", &EntityDef::id,                    //
-        "name", &EntityDef::name,                //
-        "width", &EntityDef::width,              //
-        "height", &EntityDef::height,            //
-        "r", &EntityDef::r,                      //
-        "g", &EntityDef::g,                      //
-        "b", &EntityDef::b,                      //
-        "a", &EntityDef::a,                      //
-        "imageWith", &EntityDef::imageWidth,     //
-        "imageHeight", &EntityDef::imageHeight,  //
-        "imageRow", &EntityDef::imageRow,        //
-        "imageCol", &EntityDef::imageCol,        //
-        "image", &EntityDef::image,              //
-        "script", &EntityDef::script             //
+  static void exposeToLua(sol::state &lua) {
+    lua.new_usertype<EntityDef>(                //
+        "EntityDef",                            //
+        "id", &EntityDef::id,                   //
+        "name", &EntityDef::name,               //
+        "width", &EntityDef::width,             //
+        "height", &EntityDef::height,           //
+        "r", &EntityDef::r,                     //
+        "g", &EntityDef::g,                     //
+        "b", &EntityDef::b,                     //
+        "a", &EntityDef::a,                     //
+        "imageWith", &EntityDef::imageWidth,    //
+        "imageHeight", &EntityDef::imageHeight, //
+        "imageRow", &EntityDef::imageRow,       //
+        "imageCol", &EntityDef::imageCol,       //
+        "image", &EntityDef::image,             //
+        "script", &EntityDef::script            //
     );
   }
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
-    EntityDef,                       //
-    id,                              //
-    name,                            //
-    width,                           //
-    height,                          //
-    r,                               //
-    g,                               //
-    b,                               //
-    a,                               //
-    imageWidth,                      //
-    imageHeight,                     //
-    imageRow,                        //
-    imageCol,                        //
-    imageMode,                       //
-    image,                           //
-    script,                          //
-    properties                       //
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE( //
+    EntityDef,                      //
+    id,                             //
+    name,                           //
+    width,                          //
+    height,                         //
+    r,                              //
+    g,                              //
+    b,                              //
+    a,                              //
+    imageWidth,                     //
+    imageHeight,                    //
+    imageRow,                       //
+    imageCol,                       //
+    imageMode,                      //
+    image,                          //
+    script                          //
 )
 
 struct Entity {
@@ -94,46 +94,50 @@ struct Entity {
   float y;
   float angle = 0;
 
+  sol::table properties;
+
   Entity() {}
-  Entity(int id, int entityDefID, float x, float y) : id(id), defID(entityDefID), x(x), y(y) {}
+  Entity(int id, int entityDefID, float x, float y)
+      : id(id), defID(entityDefID), x(x), y(y) {}
 
-  bool operator==(Entity const& other) const { return this->id == other.id; }
+  bool operator==(Entity const &other) const { return this->id == other.id; }
 
-  static void exposeToLua(sol::state& lua) {
-    lua.new_usertype<Entity>(               //
-        "Entity",                           //
-        "def", &Entity::entityDefOverride,  //
-        "id", &Entity::id,                  //
-        "angle", &Entity::angle,            //
-        "x", &Entity::x,                    //
-        "y", &Entity::y                     //
+  static void exposeToLua(sol::state &lua) {
+    lua.new_usertype<Entity>(              //
+        "Entity",                          //
+        "def", &Entity::entityDefOverride, //
+        "id", &Entity::id,                 //
+        "angle", &Entity::angle,           //
+        "x", &Entity::x,                   //
+        "y", &Entity::y,                   //
+        "props", &Entity::properties       //
     );
   }
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
-    Entity,                          //
-    defID,                           //
-    id,                              //
-    x,                               //
-    y                                //
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE( //
+    Entity,                         //
+    defID,                          //
+    id,                             //
+    x,                              //
+    y                               //
 )
 
 struct WorldData {
   std::vector<Entity> entities;
   int gridSize = 32;
 
-  static void exposeToLua(sol::state& lua) {}
+  static void exposeToLua(sol::state &lua) {}
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
-    WorldData,                       //
-    entities,                        //
-    gridSize                         //
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE( //
+    WorldData,                      //
+    entities,                       //
+    gridSize                        //
 )
 
 struct EditorData {
-  EntityDef* selectedEntityDef = nullptr;
+  EntityDef *selectedEntityDef = nullptr;
   bool entityDefEditorOpen = false;
   std::filesystem::path rootPath = "../testres/";
 };
@@ -145,8 +149,8 @@ struct GameData {
   EditorData editorData;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
-    GameData,                        //
-    entityDefs,                      //
-    worldData                        //
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE( //
+    GameData,                       //
+    entityDefs,                     //
+    worldData                       //
 )

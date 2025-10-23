@@ -8,19 +8,19 @@
 namespace Vania::utils {
 inline void setPropStr(Entity &entity, const std::string &key,
                        const std::string &value) {
-  entity.entityDefOverride.properties[key] = Property(0.0f, value);
+  // entity.entityDefOverride.properties[key] = Property(0.0f, value);
 }
 
 inline void setPropNum(Entity &entity, const std::string &key, float value) {
-  entity.entityDefOverride.properties[key] = Property(value, "");
+  // entity.entityDefOverride.properties[key] = Property(value, "");
 }
 
 inline std::string &getPropStr(Entity &entity, const std::string &key) {
-  return entity.entityDefOverride.properties[key].text;
+  // return entity.entityDefOverride.properties[key].text;
 }
 
 inline float getPropNum(Entity &entity, const std::string &key) {
-  return entity.entityDefOverride.properties[key].number;
+  // return entity.entityDefOverride.properties[key].number;
 }
 
 inline bool getButtonHeld(const std::string &button) {
