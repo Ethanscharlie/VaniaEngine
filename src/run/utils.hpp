@@ -4,6 +4,7 @@
 
 #include "GameDataStructs.hpp"
 #include "Runner.hpp"
+#include "SDL3/SDL_mouse.h"
 
 namespace Vania::utils {
 inline void setPropStr(Entity& entity, const std::string& key, const std::string& value) {
@@ -63,6 +64,19 @@ inline bool getButtonHeld(const std::string& button) {
   return false;
 }
 
+inline bool getMouseButtonHeld(const std::string& button) {
+  std::string b = button;
+  std::transform(b.begin(), b.end(), b.begin(), ::tolower);
+
+  SDL_MouseButtonFlags mouseState = SDL_GetMouseState(nullptr, nullptr);
+
+  if (SDL_BUTTON_MASK(mouseState) == SDL_BUTTON_LMASK && b == "left") return true;
+  if (SDL_BUTTON_MASK(mouseState) == SDL_BUTTON_RMASK && b == "right") return true;
+  if (SDL_BUTTON_MASK(mouseState) == SDL_BUTTON_MMASK && b == "middle") return true;
+
+  return false;
+}
+
 inline void moveForward(Entity& entity, float speed) {
   const float radians = entity.angle * (M_PI / 180.0);
   entity.x += cos(radians) * speed;
@@ -81,6 +95,7 @@ inline void exposeAll(sol::state& lua) {
   lua.set_function("getPropStr", getPropStr);
   lua.set_function("getPropNum", getPropNum);
   lua.set_function("getButtonHeld", getButtonHeld);
+  lua.set_function("getMouseButtonHeld", getMouseButtonHeld);
   lua.set_function("moveForward", moveForward);
   lua.set_function("lookAt", lookAt);
 }

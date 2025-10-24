@@ -23,7 +23,7 @@ local function update(entity, deltaTime)
 	end
 
 	local onCooldown = os.clock() < cooldownTime + entity.props["cooldown"]
-	if getButtonHeld("f") and not onCooldown then
+	if getMouseButtonHeld("left") and not onCooldown then
 		bullet = summon("Bullet", entity.x, entity.y)
 		bullet.angle = entity.angle
 		entity.props["cooldown"] = os.clock()
