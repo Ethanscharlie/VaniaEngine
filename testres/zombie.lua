@@ -1,4 +1,4 @@
-local speed = 300
+local speed = 100
 
 local function setup(entity)
 	entity.props["cooldown"] = 0
@@ -7,6 +7,7 @@ end
 
 local function update(entity, deltaTime)
 	lookAt(entity, entity.props.player.x, entity.props.player.y)
+	moveForward(entity, speed * deltaTime)
 end
 
 return {
