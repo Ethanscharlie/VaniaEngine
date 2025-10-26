@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <print>
 #include <string>
 
 #include "GameDataStructs.hpp"
@@ -34,6 +35,20 @@ Runner::Runner(const GameData& gameData, SDL_Renderer* renderer)
     }
 
     return (Entity*)nullptr;
+  });
+
+  lua.set_function("getEntitiesByDef", [this](const std::string& defName) {
+    std::vector<Entity*> out;
+
+    EntityDef* def = getDefFromName(defName);
+    if (def == nullptr) return out;
+
+    for (Entity& entity : gameDataCopy.worldData.entities) {
+      if (entity.defID != def->id) continue;
+      out.push_back(&entity);
+    }
+
+    return out;
   });
 
   lua.set_function("mousePos", [this]() { return lua.create_table_with("x", mousePosition.x, "y", mousePosition.y); });
@@ -129,6 +144,14 @@ void Runner::render() {
   }
 
   SDL_SetRenderTarget(renderer, nullptr);
+}
+
+EntityDef* Runner::getDefFromName(const std::string& name) {
+  for (auto& [id, def] : gameDataCopy.entityDefs) {
+    if (name == def.name) return &def;
+  }
+
+  return nullptr;
 }
 
 }  // namespace Vania

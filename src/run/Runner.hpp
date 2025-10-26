@@ -32,6 +32,9 @@ class Runner {
   void updateMousePos(const SDL_FPoint& mousePos);
   void update();
   void render();
+
+  // Util ig
+  EntityDef* getDefFromName(const std::string& name);
 };
 
 };  // namespace Vania

@@ -36,7 +36,7 @@
                 "imageWidth": 32.0,
                 "name": "Zombie",
                 "r": 255,
-                "script": "",
+                "script": "zombie.lua",
                 "width": 64.0
             }
         ],
