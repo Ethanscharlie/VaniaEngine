@@ -5,6 +5,11 @@
             {
                 "a": 255,
                 "b": 0,
+                "colliderHeightFraction": 1.0,
+                "colliderOffsetX": 0.0,
+                "colliderOffsetY": 0.0,
+                "colliderType": "rect",
+                "colliderWidthFraction": 1.0,
                 "g": 255,
                 "height": 10.0,
                 "id": 33307,
@@ -17,12 +22,7 @@
                 "name": "Bullet",
                 "r": 255,
                 "script": "bullet.lua",
-                "width": 10.0,
-                "colliderType": "rect",
-                "colliderOffsetX": 0,
-                "colliderOffsetY": 0,
-                "colliderWidthFraction": 1,
-                "colliderHeightFraction": 1
+                "width": 10.0
             }
         ],
         [
@@ -30,6 +30,11 @@
             {
                 "a": 255,
                 "b": 255,
+                "colliderHeightFraction": 1.0,
+                "colliderOffsetX": 0.0,
+                "colliderOffsetY": 0.0,
+                "colliderType": "rect",
+                "colliderWidthFraction": 1.0,
                 "g": 255,
                 "height": 64.0,
                 "id": 47977,
@@ -42,12 +47,7 @@
                 "name": "Zombie",
                 "r": 255,
                 "script": "zombie.lua",
-                "width": 64.0,
-                "colliderType": "rect",
-                "colliderOffsetX": 0,
-                "colliderOffsetY": 0,
-                "colliderWidthFraction": 1,
-                "colliderHeightFraction": 1
+                "width": 64.0
             }
         ],
         [
@@ -55,6 +55,11 @@
             {
                 "a": 255,
                 "b": 255,
+                "colliderHeightFraction": 1.0,
+                "colliderOffsetX": 0.0,
+                "colliderOffsetY": 0.0,
+                "colliderType": "rect",
+                "colliderWidthFraction": 1.0,
                 "g": 255,
                 "height": 64.0,
                 "id": 65041,
@@ -67,64 +72,91 @@
                 "name": "Player",
                 "r": 255,
                 "script": "player.lua",
-                "width": 128.0,
+                "width": 128.0
+            }
+        ],
+        [
+            65476,
+            {
+                "a": 255,
+                "b": 146,
+                "colliderHeightFraction": 1.0,
+                "colliderOffsetX": 0.0,
+                "colliderOffsetY": 0.0,
                 "colliderType": "rect",
-                "colliderOffsetX": 0,
-                "colliderOffsetY": 0,
-                "colliderWidthFraction": 1,
-                "colliderHeightFraction": 1
+                "colliderWidthFraction": 1.0,
+                "g": 58,
+                "height": 100.0,
+                "id": 65476,
+                "image": "",
+                "imageCol": 0.0,
+                "imageHeight": 0.0,
+                "imageMode": false,
+                "imageRow": 0.0,
+                "imageWidth": 0.0,
+                "name": "TestingRect",
+                "r": 53,
+                "script": "",
+                "width": 100.0
+            }
+        ],
+        [
+            96042,
+            {
+                "a": 255,
+                "b": 255,
+                "colliderHeightFraction": 1.0,
+                "colliderOffsetX": 0.0,
+                "colliderOffsetY": 0.0,
+                "colliderType": "rect",
+                "colliderWidthFraction": 1.0,
+                "g": 255,
+                "height": 50.0,
+                "id": 96042,
+                "image": "",
+                "imageCol": 0.0,
+                "imageHeight": 0.0,
+                "imageMode": false,
+                "imageRow": 0.0,
+                "imageWidth": 0.0,
+                "name": "MouseFollowRect",
+                "r": 255,
+                "script": "",
+                "width": 50.0
             }
         ]
     ],
     "worldData": {
         "entities": [
             {
-                "defID": 65041,
-                "id": 37002,
-                "x": 176.0,
-                "y": 176.0
-            },
-            {
-                "defID": 33307,
-                "id": 27628,
-                "x": 240.0,
-                "y": 176.0
-            },
-            {
-                "defID": 33307,
-                "id": 37688,
-                "x": 240.0,
-                "y": 208.0
-            },
-            {
-                "defID": 33307,
-                "id": 68529,
-                "x": 240.0,
-                "y": 240.0
-            },
-            {
-                "defID": 33307,
-                "id": 66758,
-                "x": 240.0,
+                "defID": 65476,
+                "id": 21605,
+                "x": 336.0,
                 "y": 272.0
             },
             {
-                "defID": 47977,
-                "id": 96506,
-                "x": 400.0,
-                "y": 272.0
+                "defID": 65476,
+                "id": 19027,
+                "x": 336.0,
+                "y": 528.0
             },
             {
-                "defID": 47977,
-                "id": 23466,
-                "x": 272.0,
-                "y": 432.0
+                "defID": 65476,
+                "id": 28787,
+                "x": 528.0,
+                "y": 464.0
             },
             {
-                "defID": 47977,
-                "id": 57251,
-                "x": 144.0,
-                "y": 368.0
+                "defID": 65476,
+                "id": 73447,
+                "x": 688.0,
+                "y": 144.0
+            },
+            {
+                "defID": 96042,
+                "id": 47982,
+                "x": 496.0,
+                "y": 304.0
             }
         ],
         "gridSize": 32

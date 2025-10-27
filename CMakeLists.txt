@@ -10,6 +10,7 @@ add_executable(index
   src/panels/EntityPanel.cpp
   src/panels/GamePanel.cpp
   src/panels/WorldPanel.cpp
+  src/panels/InspectorPanel.cpp
   src/run/Runner.cpp
   src/run/AssetManager.cpp
   src/physics/collision.cpp

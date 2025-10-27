@@ -11,6 +11,7 @@
 #include "imgui_impl_sdlrenderer3.h"
 #include "panels/EntityPanel.hpp"
 #include "panels/GamePanel.hpp"
+#include "panels/InspectorPanel.hpp"
 #include "panels/WorldPanel.hpp"
 
 #define DEFAULT_ROOT_PATH std::filesystem::path("../testres/")
@@ -26,6 +27,7 @@ App::App() {
   panels.emplace_back(std::make_unique<EntityPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
   panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
+  panels.emplace_back(std::make_unique<InspectorPanel>(gameData, renderer));
 }
 
 App::~App() {
@@ -54,11 +56,12 @@ void App::loadFromFile() {
       gameData = gameDataJson.get<GameData>();
       return;
     } else {
-      std::cerr << "Error: Invalid JSON structure in file: " << mainPath << std::endl;
+      std::cerr << "Error: Invalid JSON structure in file: " << mainPath
+                << std::endl;
     }
-  } catch (const nlohmann::json::parse_error& e) {
+  } catch (const nlohmann::json::parse_error &e) {
     std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
-  } catch (const nlohmann::json::out_of_range& e) {
+  } catch (const nlohmann::json::out_of_range &e) {
     std::cerr << "Error: Failed to parse JSON. " << e.what() << std::endl;
   }
 
@@ -71,7 +74,7 @@ void App::loadFromFile() {
   newDef.script = "player.lua";
 
   int def1id = 0;
-  for (auto& [id, def] : gameData.entityDefs) {
+  for (auto &[id, def] : gameData.entityDefs) {
     def1id = id;
     break;
   }
@@ -95,7 +98,7 @@ void App::update() {
 
   ImGui::ShowDemoWindow();
 
-  for (auto& panel : panels) {
+  for (auto &panel : panels) {
     panel->update();
   }
 
@@ -112,7 +115,8 @@ void App::startNewFrame() {
 
 void App::render() {
   ImGui::Render();
-  SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x, io->DisplayFramebufferScale.y);
+  SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x,
+                     io->DisplayFramebufferScale.y);
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
 
   SDL_RenderPresent(renderer);
@@ -121,15 +125,19 @@ void App::render() {
 void App::initSDL() {
   const int sdlInitSuccess = SDL_Init(SDL_INIT_VIDEO);
   if (!sdlInitSuccess) {
-    throw std::runtime_error(std::format("Couldn't initialize SDL: %s\n", SDL_GetError()).c_str());
+    throw std::runtime_error(
+        std::format("Couldn't initialize SDL: %s\n", SDL_GetError()).c_str());
   }
 }
 
 void App::createWindow() {
   const int windowCreationSucess =
-      SDL_CreateWindowAndRenderer("Demo", WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer);
+      SDL_CreateWindowAndRenderer("Demo", WINDOW_WIDTH, WINDOW_HEIGHT,
+                                  SDL_WINDOW_RESIZABLE, &window, &renderer);
   if (!windowCreationSucess) {
-    throw std::runtime_error(std::format("Couldn't initialize SDL window: %s\n", SDL_GetError()).c_str());
+    throw std::runtime_error(
+        std::format("Couldn't initialize SDL window: %s\n", SDL_GetError())
+            .c_str());
   }
 }
 
@@ -147,4 +155,4 @@ void App::initImGui() {
   ImGui_ImplSDLRenderer3_Init(renderer);
 }
 
-};  // namespace Vania
+}; // namespace Vania
