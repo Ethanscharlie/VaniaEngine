@@ -28,6 +28,8 @@ local function update(entity, deltaTime)
 		bullet.angle = entity.angle
 		entity.props["cooldown"] = os.clock()
 	end
+
+	print(isColliding(entity, getEntitiesByDef("Zombie")[1]))
 end
 
 return {

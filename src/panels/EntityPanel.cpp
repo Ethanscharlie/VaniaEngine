@@ -68,7 +68,6 @@ EntityDef& EntityPanel::createDef() {
 }
 
 void EntityPanel::showPropertyEditor() {
-  ImGui::BeginGroup();
   EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
   ImGui::InputText("name", &selectedEntity.name);
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
@@ -115,7 +114,8 @@ void EntityPanel::showPropertyEditor() {
   }
 
   ImGui::InputText("Script", &selectedEntity.script);
-  ImGui::EndGroup();
+
+  // Colliders
 }
 
 void EntityPanel::showImagePicker() {

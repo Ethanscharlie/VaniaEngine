@@ -8,6 +8,7 @@
 
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
+#include "physics/collision.hpp"
 #include "run/AssetManager.hpp"
 #include "run/utils.hpp"
 #include "sol/forward.hpp"
@@ -52,6 +53,7 @@ Runner::Runner(const GameData& gameData, SDL_Renderer* renderer)
   });
 
   lua.set_function("mousePos", [this]() { return lua.create_table_with("x", mousePosition.x, "y", mousePosition.y); });
+  lua.set_function("isColliding", [this](const Entity& a, const Entity& b) { return isColliding(gameDataCopy, a, b); });
 
   EntityDef::exposeToLua(lua);
   Entity::exposeToLua(lua);

@@ -12,6 +12,7 @@ add_executable(index
   src/panels/WorldPanel.cpp
   src/run/Runner.cpp
   src/run/AssetManager.cpp
+  src/physics/collision.cpp
 )
 
 target_include_directories(index PUBLIC

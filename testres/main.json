@@ -17,7 +17,12 @@
                 "name": "Bullet",
                 "r": 255,
                 "script": "bullet.lua",
-                "width": 10.0
+                "width": 10.0,
+                "colliderType": "rect",
+                "colliderOffsetX": 0,
+                "colliderOffsetY": 0,
+                "colliderWidthFraction": 1,
+                "colliderHeightFraction": 1
             }
         ],
         [
@@ -37,7 +42,12 @@
                 "name": "Zombie",
                 "r": 255,
                 "script": "zombie.lua",
-                "width": 64.0
+                "width": 64.0,
+                "colliderType": "rect",
+                "colliderOffsetX": 0,
+                "colliderOffsetY": 0,
+                "colliderWidthFraction": 1,
+                "colliderHeightFraction": 1
             }
         ],
         [
@@ -57,7 +67,12 @@
                 "name": "Player",
                 "r": 255,
                 "script": "player.lua",
-                "width": 128.0
+                "width": 128.0,
+                "colliderType": "rect",
+                "colliderOffsetX": 0,
+                "colliderOffsetY": 0,
+                "colliderWidthFraction": 1,
+                "colliderHeightFraction": 1
             }
         ]
     ],
