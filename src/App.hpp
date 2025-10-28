@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "FilesystemWatcher.hpp"
 #include "GameDataStructs.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
@@ -14,29 +15,30 @@ class App {
   const int WINDOW_WIDTH = 1920;
   const int WINDOW_HEIGHT = 1080;
 
-  SDL_Window* window = nullptr;
-  SDL_Renderer* renderer = nullptr;
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
   SDL_Event event;
-  ImGuiIO* io;
+  ImGuiIO *io;
 
   bool running = true;
 
   std::vector<std::unique_ptr<IPanel>> panels;
 
   GameData gameData;
+  FileSystemWatcher filesystemWatcher = {gameData.editorData.rootPath};
 
- public:
+public:
   App();
   ~App();
   void loadFromFile();
   void update();
   bool isRunning();
 
- private:
+private:
   void startNewFrame();
   void render();
   void initSDL();
   void createWindow();
   void initImGui();
 };
-};  // namespace Vania
+}; // namespace Vania

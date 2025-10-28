@@ -1,4 +1,8 @@
 #include "InspectorPanel.hpp"
+
+#include <print>
+
+#include "FilesystemWatcher.hpp"
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
@@ -6,8 +10,8 @@
 #include "run/AssetManager.hpp"
 
 namespace Vania {
-InspectorPanel::InspectorPanel(GameData &gameData, SDL_Renderer *renderer)
-    : gameData(gameData), renderer(renderer) {}
+InspectorPanel::InspectorPanel(GameData& gameData, SDL_Renderer* renderer, FileSystemWatcher& filesystemWatcher)
+    : gameData(gameData), renderer(renderer), filesystemWatcher(filesystemWatcher) {}
 
 void InspectorPanel::update() {
   ImGui::Begin("Inspector");
@@ -20,7 +24,7 @@ void InspectorPanel::update() {
 }
 
 void InspectorPanel::showPropertyEditor() {
-  EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
+  EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
   ImGui::InputText("name", &selectedEntity.name);
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputFloat("Width", &selectedEntity.width);
@@ -28,8 +32,7 @@ void InspectorPanel::showPropertyEditor() {
   ImGui::InputFloat("Height", &selectedEntity.height);
 
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
-  if (ImGui::BeginCombo("###renderCombo",
-                        selectedEntity.imageMode ? "image" : "box")) {
+  if (ImGui::BeginCombo("###renderCombo", selectedEntity.imageMode ? "image" : "box")) {
     if (ImGui::Selectable("box", !selectedEntity.imageMode)) {
       selectedEntity.imageMode = false;
     }
@@ -47,10 +50,10 @@ void InspectorPanel::showPropertyEditor() {
       ImGui::OpenPopup("Image Picker");
     }
   } else {
-    int &r = selectedEntity.r;
-    int &g = selectedEntity.g;
-    int &b = selectedEntity.b;
-    int &a = selectedEntity.a;
+    int& r = selectedEntity.r;
+    int& g = selectedEntity.g;
+    int& b = selectedEntity.b;
+    int& a = selectedEntity.a;
     float color_f[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
     if (ImGui::ColorEdit4("###Color", color_f, ImGuiColorEditFlags_NoInputs)) {
       r = color_f[0] * 255.0f;
@@ -66,11 +69,21 @@ void InspectorPanel::showPropertyEditor() {
     ImGui::EndPopup();
   }
 
-  ImGui::InputText("Script", &selectedEntity.script);
+  // ImGui::InputText("Script", &selectedEntity.script);
+  const std::string previewValue = (selectedEntity.script != "") ? selectedEntity.script : "Select Script";
+  if (ImGui::BeginCombo("ScriptSelectionCombo", previewValue.c_str())) {
+    const auto& scripts = filesystemWatcher.getAllFilesWithExtension(".lua");
+    for (const auto& script : scripts) {
+      if (ImGui::Selectable(script.c_str(), script == selectedEntity.script)) {
+        selectedEntity.script = script;
+      }
+    }
+    ImGui::EndCombo();
+  }
 }
 
 void InspectorPanel::showImagePicker() {
-  EntityDef &selectedEntity = *gameData.editorData.selectedEntityDef;
+  EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
   ImGui::InputText("Image", &selectedEntity.image);
 
   static float zoom = 1;
@@ -85,10 +98,9 @@ void InspectorPanel::showImagePicker() {
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputInt("Cell Height", &cellHeight);
 
-  auto &root = gameData.editorData.rootPath;
-  AssetManager &assetManager = AssetManager::getInstance();
-  SDL_Texture *texture =
-      assetManager.get(renderer, root / selectedEntity.image);
+  auto& root = gameData.editorData.rootPath;
+  AssetManager& assetManager = AssetManager::getInstance();
+  SDL_Texture* texture = assetManager.get(renderer, root / selectedEntity.image);
 
   float width, height;
   SDL_GetTextureSize(texture, &width, &height);
@@ -106,13 +118,11 @@ void InspectorPanel::showImagePicker() {
       ImVec2 position(col * tile_size_x, row * tile_size_y);
 
       ImVec2 uv0(col * tile_size_x / width, row * tile_size_y / height);
-      ImVec2 uv1((col + 1) * tile_size_x / width,
-                 (row + 1) * tile_size_y / height);
+      ImVec2 uv1((col + 1) * tile_size_x / width, (row + 1) * tile_size_y / height);
 
       std::string buttonID = std::format("{},{}", row, col);
       const bool buttonPressed =
-          ImGui::ImageButton(buttonID.c_str(), texture,
-                             ImVec2(tile_size_x, tile_size_y), uv0, uv1);
+          ImGui::ImageButton(buttonID.c_str(), texture, ImVec2(tile_size_x, tile_size_y), uv0, uv1);
 
       if (buttonPressed) {
         selectedEntity.imageWidth = gridSize * cellWidth;
@@ -128,4 +138,4 @@ void InspectorPanel::showImagePicker() {
     ImGui::NewLine();
   }
 }
-} // namespace Vania
+}  // namespace Vania

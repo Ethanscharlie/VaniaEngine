@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "FilesystemWatcher.hpp"
 #include "GameDataStructs.hpp"
 #include "IPanel.hpp"
 #include "SDL3/SDL_render.h"
@@ -10,9 +11,11 @@ class EntityPanel : public IPanel {
 
   GameData &gameData;
   SDL_Renderer *renderer;
+  FileSystemWatcher &filesystemWatcher;
 
 public:
-  EntityPanel(GameData &gameData, SDL_Renderer *renderer);
+  EntityPanel(GameData &gameData, SDL_Renderer *renderer,
+              FileSystemWatcher &filesystemWatcher);
   void update() override;
 
 private:
