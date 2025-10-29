@@ -121,7 +121,7 @@
                 "imageWidth": 0.0,
                 "name": "MouseFollowRect",
                 "r": 255,
-                "script": "",
+                "script": "MouseFollowRectTest.lua",
                 "width": 50.0
             }
         ]

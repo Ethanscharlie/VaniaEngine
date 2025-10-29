@@ -10,10 +10,10 @@ struct CollisionRect {
   float h;
 
   CollisionRect(const Entity& entity, const EntityDef& def) {
-    x = entity.x + def.colliderOffsetX;
-    y = entity.y + def.colliderOffsetY;
     w = def.width * def.colliderWidthFraction;
     h = def.height * def.colliderHeightFraction;
+    x = entity.x + def.colliderOffsetX - def.width / 2;
+    y = entity.y + def.colliderOffsetY - def.height / 2;
   }
 };
 
