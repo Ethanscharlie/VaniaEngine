@@ -25,7 +25,7 @@ struct CollisionCircle {
   CollisionCircle(const Entity& entity, const EntityDef& def) {
     x = entity.x + def.colliderOffsetX;
     y = entity.y + def.colliderOffsetY;
-    r = def.width * def.colliderWidthFraction;
+    r = def.width * def.colliderWidthFraction / 2;
   }
 };
 
@@ -36,12 +36,21 @@ static bool checkCollisionWithAxisAlignedBoundingBox(CollisionRect a, CollisionR
          a.y < b.y + b.h;
 }
 
+static bool checkCollisionWithDistance(CollisionCircle a, CollisionCircle b) {
+  const float distance = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
+  return distance < a.r + b.r;
+}
+
 bool isColliding(const GameData& gameData, const Entity& a, const Entity& b) {
   const EntityDef& defA = gameData.entityDefs.at(a.defID);
   const EntityDef& defB = gameData.entityDefs.at(b.defID);
 
   if (defA.colliderType == "rect" && defB.colliderType == "rect") {
     return checkCollisionWithAxisAlignedBoundingBox({a, defA}, {b, defB});
+  }
+
+  if (defA.colliderType == "circle" && defB.colliderType == "circle") {
+    return checkCollisionWithDistance({a, defA}, {b, defB});
   }
 
   throw std::runtime_error("Dumbass Engine developer forgot to support this collision case");

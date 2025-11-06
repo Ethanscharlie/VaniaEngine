@@ -96,6 +96,12 @@ void InspectorPanel::showPropertyEditor() {
     showScriptCreator();
     ImGui::EndPopup();
   }
+
+  if (ImGui::BeginCombo("###colliderCombo", selectedEntity.colliderType.c_str())) {
+    if (ImGui::Selectable("rect")) selectedEntity.colliderType = "rect";
+    if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
+    ImGui::EndCombo();
+  }
 }
 
 void InspectorPanel::showImagePicker() {
