@@ -3,11 +3,12 @@
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
+#include "panels/EditorContext.hpp"
 #include "run/Runner.hpp"
 
 namespace Vania {
 class GamePanel : public IPanel {
-  GameData& gameData;
+  EditorContext& context;
   Runner runner;
 
   ImVec2 gameWindowSize = {0, 0};
@@ -15,7 +16,7 @@ class GamePanel : public IPanel {
   bool running = false;
 
  public:
-  GamePanel(GameData& gameData, SDL_Renderer* renderer);
+  GamePanel(EditorContext& context);
   void update() override;
 
  private:

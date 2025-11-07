@@ -8,9 +8,10 @@
 #include "SDL3/SDL_rect.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "run/Runner.hpp"
 
 namespace Vania {
-GamePanel::GamePanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), runner(gameData, renderer) {}
+GamePanel::GamePanel(EditorContext& context) : context(context), runner(context) {}
 
 void GamePanel::update() {
   ImGui::Begin("Game Runner");
@@ -22,7 +23,7 @@ void GamePanel::update() {
 
   if (ImGui::Button("Run")) {
     running = true;
-    runner.reset(gameData);
+    runner.reset(context.gameData);
     runner.runAllScriptsSetups();
   }
 
@@ -30,7 +31,7 @@ void GamePanel::update() {
 
   if (ImGui::Button("Stop")) {
     running = false;
-    runner.reset(gameData);
+    runner.reset(context.gameData);
   }
 
   ImGui::SameLine();

@@ -5,6 +5,7 @@
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_timer.h"
+#include "panels/EditorContext.hpp"
 #include "sol/sol.hpp"
 
 namespace Vania {
@@ -17,15 +18,15 @@ class Runner {
   SDL_Texture* displayTexture;
 
  private:
-  SDL_Renderer* renderer;
   sol::state lua;
+  EditorContext& context;
   GameData gameDataCopy;
   const std::filesystem::path& root;
   Uint32 lastTime = SDL_GetTicks();
   SDL_FPoint mousePosition = {0, 0};
 
  public:
-  Runner(const GameData& gameData, SDL_Renderer* renderer);
+  Runner(EditorContext& context);
   ~Runner();
   void reset(const GameData& gameData);
   void runAllScriptsSetups();

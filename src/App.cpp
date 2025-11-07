@@ -32,7 +32,7 @@ App::App() {
 
   panels.emplace_back(std::make_unique<EntityPanel>(context.gameData, renderer, context.filesystemWatcher));
   panels.emplace_back(std::make_unique<WorldPanel>(context));
-  panels.emplace_back(std::make_unique<GamePanel>(context.gameData, renderer));
+  panels.emplace_back(std::make_unique<GamePanel>(context));
   panels.emplace_back(std::make_unique<InspectorPanel>(context));
 }
 
