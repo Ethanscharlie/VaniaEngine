@@ -17,8 +17,7 @@ static void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, i
   draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
 }
 
-inline void renderEntityOnPanel(EditorContext& context, const Entity& entity, ImVec2 min, ImVec2 max, int alpha = 255) {
-  const EntityDef& def = context.gameData.entityDefs.at(entity.defID);
+inline void renderEntityOnPanel(EditorContext& context, const EntityDef& def, ImVec2 min, ImVec2 max, int alpha = 255) {
   if (def.imageMode) {
     auto& root = context.gameData.editorData.rootPath;
     const std::string& image = def.image;

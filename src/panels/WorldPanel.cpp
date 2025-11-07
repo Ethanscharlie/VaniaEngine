@@ -90,7 +90,7 @@ void WorldPanel::drawGhostAtCursor() {
   const ImVec2 min = {minAndMax.x, minAndMax.y};
   const ImVec2 max = {minAndMax.z, minAndMax.w};
 
-  renderEntityOnPanel(context, ghost, min, max, GHOST_ALPHA);
+  renderEntityOnPanel(context, *def, min, max, GHOST_ALPHA);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -173,7 +173,8 @@ void WorldPanel::draw() {
     const ImVec4 minAndMax = getEntityMinAndMax(entity);
     const ImVec2 min = {minAndMax.x, minAndMax.y};
     const ImVec2 max = {minAndMax.z, minAndMax.w};
-    renderEntityOnPanel(context, entity, min, max);
+    const EntityDef& def = context.gameData.entityDefs.at(entity.defID);
+    renderEntityOnPanel(context, def, min, max);
   }
 
   draw_list->PopClipRect();

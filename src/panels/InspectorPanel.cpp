@@ -8,6 +8,7 @@
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "panels/PanelEntityRendering.hpp"
 #include "run/AssetManager.hpp"
 
 namespace Vania {
@@ -15,11 +16,7 @@ InspectorPanel::InspectorPanel(EditorContext& context) : context(context) {}
 
 void InspectorPanel::update() {
   ImGui::Begin("Inspector");
-
-  if (context.gameData.editorData.selectedEntityDef != nullptr) {
-    showPropertyEditor();
-  }
-
+  if (context.gameData.editorData.selectedEntityDef != nullptr) showPropertyEditor();
   ImGui::End();
 }
 
@@ -117,10 +114,34 @@ void InspectorPanel::showCollision() {
     if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
     ImGui::EndCombo();
   }
+
+  auto* draw_list = ImGui::GetWindowDrawList();
+
+  // Background
+  const ImVec2 backgroundMin = ImGui::GetCursorScreenPos();
+  ImVec2 backgroundSize = ImGui::GetContentRegionAvail();
+  if (backgroundSize.x < 50.0f) backgroundSize.x = 50.0f;
+  if (backgroundSize.x > 300.0f) backgroundSize.x = 300.0f;
+  backgroundSize.y = backgroundSize.x;
+  const ImVec2 backgroundMax = {backgroundMin.x + backgroundSize.x, backgroundMin.y + backgroundSize.y};
+
+  draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
+
+  // Entity
+  float largestSide = (selectedEntity.width > selectedEntity.height) ? selectedEntity.width : selectedEntity.height;
+  const float innerSize = backgroundSize.x / 2;
+  const float scale = innerSize / largestSide;
+  const float scaledWidth = selectedEntity.width * scale;
+  const float scaledHeight = selectedEntity.height * scale;
+  const ImVec2 center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
+  const ImVec2 entityMin = {center.x - scaledWidth / 2, center.y - scaledHeight / 2};
+  const ImVec2 entityMax = {center.x + scaledWidth / 2, center.y + scaledHeight / 2};
+  renderEntityOnPanel(context, selectedEntity, entityMin, entityMax);
 }
 
 void InspectorPanel::showImagePicker() {
   EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
+
   ImGui::InputText("Image", &selectedEntity.image);
 
   static float zoom = 1;
