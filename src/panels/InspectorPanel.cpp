@@ -31,6 +31,14 @@ void InspectorPanel::showPropertyEditor() {
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputFloat("Height", &selectedEntity.height);
 
+  if (ImGui::CollapsingHeader("Graphic", ImGuiTreeNodeFlags_DefaultOpen)) showGraphic();
+  if (ImGui::CollapsingHeader("Behaviour", ImGuiTreeNodeFlags_DefaultOpen)) showBehaviour();
+  if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen)) showCollision();
+}
+
+void InspectorPanel::showGraphic() {
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
+
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   if (ImGui::BeginCombo("###renderCombo", selectedEntity.imageMode ? "image" : "box")) {
     if (ImGui::Selectable("box", !selectedEntity.imageMode)) {
@@ -68,6 +76,10 @@ void InspectorPanel::showPropertyEditor() {
     showImagePicker();
     ImGui::EndPopup();
   }
+}
+
+void InspectorPanel::showBehaviour() {
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
 
   bool willCreateScript = false;
   const std::string previewValue = (selectedEntity.script != "") ? selectedEntity.script : "Select Script";
@@ -95,13 +107,15 @@ void InspectorPanel::showPropertyEditor() {
     showScriptCreator();
     ImGui::EndPopup();
   }
+}
 
-  if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen)) {
-    if (ImGui::BeginCombo("###colliderCombo", selectedEntity.colliderType.c_str())) {
-      if (ImGui::Selectable("rect")) selectedEntity.colliderType = "rect";
-      if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
-      ImGui::EndCombo();
-    }
+void InspectorPanel::showCollision() {
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
+
+  if (ImGui::BeginCombo("###colliderCombo", selectedEntity.colliderType.c_str())) {
+    if (ImGui::Selectable("rect")) selectedEntity.colliderType = "rect";
+    if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
+    ImGui::EndCombo();
   }
 }
 
