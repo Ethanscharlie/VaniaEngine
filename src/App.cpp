@@ -3,11 +3,13 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <memory>
 #include <print>
 #include <stdexcept>
 
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
 #include "panels/EntityPanel.hpp"
@@ -25,6 +27,7 @@ App::App() {
   createWindow();
   initImGui();
 
+  context.window = window;
   context.renderer = renderer;
 
   panels.emplace_back(std::make_unique<EntityPanel>(context.gameData, renderer, context.filesystemWatcher));
@@ -119,6 +122,9 @@ void App::render() {
   ImGui::Render();
   SDL_SetRenderScale(renderer, io->DisplayFramebufferScale.x, io->DisplayFramebufferScale.y);
   ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+
+  for (std::function<void()> f : context.postImGuiRender) f();
+  context.postImGuiRender.clear();
 
   SDL_RenderPresent(renderer);
 }
