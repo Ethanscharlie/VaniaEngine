@@ -5,6 +5,8 @@
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 
+struct EditorContext;
+
 namespace Vania {
 class WorldPanel : public IPanel {
   const ImU32 DARK_GRAY = IM_COL32(50, 50, 50, 255);
@@ -14,8 +16,7 @@ class WorldPanel : public IPanel {
   const float HOVER_BOX_PADDING = 5;
   const int GHOST_ALPHA = 100;
 
-  GameData& gameData;
-  SDL_Renderer* renderer;
+  EditorContext& context;
 
   ImVec2 scrolling = {0.0f, 0.0f};
   float zoom = 1;
@@ -27,7 +28,7 @@ class WorldPanel : public IPanel {
   ImDrawList* draw_list;
 
  public:
-  WorldPanel(GameData& gameData, SDL_Renderer* renderer);
+  WorldPanel(EditorContext& context);
   void update() override;
 
  private:
@@ -41,9 +42,6 @@ class WorldPanel : public IPanel {
   void drawGhostAtCursor();
   void drawGrid();
   void draw();
-  void drawEntity(const Entity& entity, int alpha = 255);
-  void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a);
-  void drawNoImage(const ImVec2& min, const ImVec2& max);
   float snapPositionToGrid(float x);
   void createEntity(float x, float y);
   void removeEntity(Entity& entity);

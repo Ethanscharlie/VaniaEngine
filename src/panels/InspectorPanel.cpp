@@ -11,13 +11,12 @@
 #include "run/AssetManager.hpp"
 
 namespace Vania {
-InspectorPanel::InspectorPanel(GameData& gameData, SDL_Renderer* renderer, FileSystemWatcher& filesystemWatcher)
-    : gameData(gameData), renderer(renderer), filesystemWatcher(filesystemWatcher) {}
+InspectorPanel::InspectorPanel(EditorContext& context) : context(context) {}
 
 void InspectorPanel::update() {
   ImGui::Begin("Inspector");
 
-  if (gameData.editorData.selectedEntityDef != nullptr) {
+  if (context.gameData.editorData.selectedEntityDef != nullptr) {
     showPropertyEditor();
   }
 
@@ -25,7 +24,7 @@ void InspectorPanel::update() {
 }
 
 void InspectorPanel::showPropertyEditor() {
-  EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
   ImGui::InputText("name", &selectedEntity.name);
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputFloat("Width", &selectedEntity.width);
@@ -81,7 +80,7 @@ void InspectorPanel::showPropertyEditor() {
       willCreateScript = true;
     }
 
-    const auto& scripts = filesystemWatcher.getAllFilesWithExtension(".lua");
+    const auto& scripts = context.filesystemWatcher.getAllFilesWithExtension(".lua");
     for (const auto& script : scripts) {
       if (ImGui::Selectable(script.c_str(), script == selectedEntity.script)) {
         selectedEntity.script = script;
@@ -97,15 +96,17 @@ void InspectorPanel::showPropertyEditor() {
     ImGui::EndPopup();
   }
 
-  if (ImGui::BeginCombo("###colliderCombo", selectedEntity.colliderType.c_str())) {
-    if (ImGui::Selectable("rect")) selectedEntity.colliderType = "rect";
-    if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
-    ImGui::EndCombo();
+  if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen)) {
+    if (ImGui::BeginCombo("###colliderCombo", selectedEntity.colliderType.c_str())) {
+      if (ImGui::Selectable("rect")) selectedEntity.colliderType = "rect";
+      if (ImGui::Selectable("circle")) selectedEntity.colliderType = "circle";
+      ImGui::EndCombo();
+    }
   }
 }
 
 void InspectorPanel::showImagePicker() {
-  EntityDef& selectedEntity = *gameData.editorData.selectedEntityDef;
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
   ImGui::InputText("Image", &selectedEntity.image);
 
   static float zoom = 1;
@@ -120,9 +121,9 @@ void InspectorPanel::showImagePicker() {
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputInt("Cell Height", &cellHeight);
 
-  auto& root = gameData.editorData.rootPath;
+  auto& root = context.gameData.editorData.rootPath;
   AssetManager& assetManager = AssetManager::getInstance();
-  SDL_Texture* texture = assetManager.get(renderer, root / selectedEntity.image);
+  SDL_Texture* texture = assetManager.get(context.renderer, root / selectedEntity.image);
 
   float width, height;
   SDL_GetTextureSize(texture, &width, &height);
@@ -173,9 +174,9 @@ void InspectorPanel::showScriptCreator() {
 }
 
 void InspectorPanel::createScriptAndAttach(const std::filesystem::path& newScript) {
-  gameData.editorData.selectedEntityDef->script = newScript;
+  context.gameData.editorData.selectedEntityDef->script = newScript;
 
-  std::ofstream file(gameData.editorData.rootPath / newScript);
+  std::ofstream file(context.gameData.editorData.rootPath / newScript);
   file << "local function setup(entity)" << "\n";
   file << "end" << "\n";
   file << "\n";

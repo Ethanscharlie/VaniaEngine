@@ -1,17 +1,15 @@
 
-#include "FilesystemWatcher.hpp"
-#include "GameDataStructs.hpp"
-#include "SDL3/SDL_render.h"
-#include "panels/IPanel.hpp"
 #include <filesystem>
+
+#include "imgui.h"
+#include "panels/EditorContext.hpp"
+#include "panels/IPanel.hpp"
 
 namespace Vania {
 class InspectorPanel : public IPanel {
   const int SMALL_NUMBER_WIDTH = 100;
 
-  GameData &gameData;
-  SDL_Renderer *renderer;
-  FileSystemWatcher &filesystemWatcher;
+  EditorContext& context;
 
   // Image Picker
   int cellWidth = 1;
@@ -20,13 +18,15 @@ class InspectorPanel : public IPanel {
   // script creator
   std::string scriptCreatorTempText = "";
 
-public:
-  InspectorPanel(GameData &gameData, SDL_Renderer *renderer,
-                 FileSystemWatcher &filesystemWatcher);
+  // Collision
+  ImDrawList* draw_list;
+
+ public:
+  InspectorPanel(EditorContext& context);
   void update() override;
   void showPropertyEditor();
   void showImagePicker();
   void showScriptCreator();
-  void createScriptAndAttach(const std::filesystem::path &newScript);
+  void createScriptAndAttach(const std::filesystem::path& newScript);
 };
-} // namespace Vania
+}  // namespace Vania

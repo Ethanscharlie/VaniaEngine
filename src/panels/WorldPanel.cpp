@@ -4,18 +4,15 @@
 
 #include <cmath>
 #include <cstdio>
-#include <format>
-#include <print>
-#include <system_error>
 
+#include "EditorContext.hpp"
 #include "GameDataStructs.hpp"
-#include "SDL3/SDL_render.h"
+#include "PanelEntityRendering.hpp"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
-#include "run/AssetManager.hpp"
 
 namespace Vania {
-WorldPanel::WorldPanel(GameData& gameData, SDL_Renderer* renderer) : gameData(gameData), renderer(renderer) {}
+WorldPanel::WorldPanel(EditorContext& context) : context(context) {}
 
 void WorldPanel::update() {
   ImGui::Begin("World");
@@ -39,8 +36,8 @@ void WorldPanel::update() {
 }
 
 void WorldPanel::whileActive() {
-  const float gridSize = gameData.worldData.gridSize;
-  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
+  const float gridSize = context.gameData.worldData.gridSize;
+  const float gridSizeWithZoom = context.gameData.worldData.gridSize * zoom;
 
   Entity* hoveredEntity = isHoveringOverEntity();
 
@@ -79,17 +76,21 @@ void WorldPanel::drawHoverBox(const Entity& entity) {
 }
 
 void WorldPanel::drawGhostAtCursor() {
-  EntityDef* def = gameData.editorData.selectedEntityDef;
+  EntityDef* def = context.gameData.editorData.selectedEntityDef;
   if (def == nullptr) return;
 
-  const float gridSize = gameData.worldData.gridSize;
+  const float gridSize = context.gameData.worldData.gridSize;
   const ImVec2 mousePos = getMousePositionOnCanvas();
   const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
   const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
 
   Entity ghost = {0, def->id, snapedX, snapedY};
 
-  drawEntity(ghost, GHOST_ALPHA);
+  const ImVec4 minAndMax = getEntityMinAndMax(ghost);
+  const ImVec2 min = {minAndMax.x, minAndMax.y};
+  const ImVec2 max = {minAndMax.z, minAndMax.w};
+
+  renderEntityOnPanel(context, ghost, min, max, GHOST_ALPHA);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -108,8 +109,8 @@ ImVec2 WorldPanel::getOrigin() {
 Entity* WorldPanel::isHoveringOverEntity() {
   ImVec2 mousePos = getMousePositionOnCanvas();
 
-  for (Entity& entity : gameData.worldData.entities) {
-    const EntityDef& def = gameData.entityDefs.at(entity.defID);
+  for (Entity& entity : context.gameData.worldData.entities) {
+    const EntityDef& def = context.gameData.entityDefs.at(entity.defID);
     const float w = def.width;
     const float h = def.height;
     const float x = entity.x - w / 2;
@@ -123,7 +124,7 @@ Entity* WorldPanel::isHoveringOverEntity() {
 }
 
 ImVec4 WorldPanel::getEntityMinAndMax(const Entity& entity) {
-  const EntityDef& def = gameData.entityDefs.at(entity.defID);
+  const EntityDef& def = context.gameData.entityDefs.at(entity.defID);
   const ImVec2 origin = getOrigin();
   const float zoomedWidth = def.width * zoom;
   const float zoomedHeight = def.height * zoom;
@@ -145,8 +146,8 @@ void WorldPanel::calculateCanvasPositionValues() {
 }
 
 void WorldPanel::drawGrid() {
-  const float gridSize = gameData.worldData.gridSize;
-  const float gridSizeWithZoom = gameData.worldData.gridSize * zoom;
+  const float gridSize = context.gameData.worldData.gridSize;
+  const float gridSizeWithZoom = context.gameData.worldData.gridSize * zoom;
 
   for (float x = fmodf(scrolling.x, gridSizeWithZoom); x < canvas_sz.x; x += gridSizeWithZoom) {
     draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), LIGHT_GRAY);
@@ -168,76 +169,30 @@ void WorldPanel::draw() {
   drawGrid();
 
   const ImVec2 origin = getOrigin();
-  for (const Entity& entity : gameData.worldData.entities) {
-    drawEntity(entity);
+  for (const Entity& entity : context.gameData.worldData.entities) {
+    const ImVec4 minAndMax = getEntityMinAndMax(entity);
+    const ImVec2 min = {minAndMax.x, minAndMax.y};
+    const ImVec2 max = {minAndMax.z, minAndMax.w};
+    renderEntityOnPanel(context, entity, min, max);
   }
 
   draw_list->PopClipRect();
 }
 
-void WorldPanel::drawEntity(const Entity& entity, int alpha) {
-  const ImVec4 minAndMax = getEntityMinAndMax(entity);
-  const ImVec2 min = {minAndMax.x, minAndMax.y};
-  const ImVec2 max = {minAndMax.z, minAndMax.w};
-
-  const EntityDef& def = gameData.entityDefs.at(entity.defID);
-  if (def.imageMode) {
-    auto& root = gameData.editorData.rootPath;
-    const std::string& image = def.image;
-    AssetManager& assetManager = AssetManager::getInstance();
-    SDL_Texture* texture = assetManager.get(renderer, root / image);
-
-    float textureW, textureH;
-    SDL_GetTextureSize(texture, &textureW, &textureH);
-
-    ImVec2 uv0 = {
-        def.imageCol / textureW,  //
-        def.imageRow / textureH   //
-    };
-
-    ImVec2 uv1 = {
-        (def.imageCol + def.imageWidth) / textureW,  //
-        (def.imageRow + def.imageHeight) / textureH  //
-    };
-
-    if (texture == nullptr) {
-      drawNoImage(min, max);
-      return;
-    }
-
-    const ImU32 color = IM_COL32(255, 255, 255, alpha);
-    draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max, uv0, uv1, color);
-  }
-
-  else {
-    drawBox(min, max, def.r, def.g, def.b, alpha);
-  }
-}
-
-void WorldPanel::drawNoImage(const ImVec2& min, const ImVec2& max) {
-  draw_list->AddRectFilled(min, max, IM_COL32(0, 0, 0, 255));
-  draw_list->AddRect(min, max, IM_COL32(255, 0, 0, 255));
-  draw_list->AddLine(min, max, IM_COL32(255, 0, 0, 255));
-}
-
-void WorldPanel::drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a) {
-  draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
-}
-
 float WorldPanel::snapPositionToGrid(float x) {
-  const int gridSize = gameData.worldData.gridSize;
+  const int gridSize = context.gameData.worldData.gridSize;
   return floor(x / gridSize) * gridSize;
 }
 
 void WorldPanel::createEntity(float x, float y) {
-  EntityDef* def = gameData.editorData.selectedEntityDef;
+  EntityDef* def = context.gameData.editorData.selectedEntityDef;
   if (def == nullptr) return;
   int id = rand() % 100000;
-  gameData.worldData.entities.push_back({id, def->id, x, y});
+  context.gameData.worldData.entities.push_back({id, def->id, x, y});
 }
 
 void WorldPanel::removeEntity(Entity& entity) {
-  auto& entities = gameData.worldData.entities;
+  auto& entities = context.gameData.worldData.entities;
   auto it = std::remove(entities.begin(), entities.end(), entity);
   entities.erase(it, entities.end());
 }

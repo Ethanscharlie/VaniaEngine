@@ -7,6 +7,7 @@
 #include <print>
 #include <stdexcept>
 
+#include "GameDataStructs.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
 #include "panels/EntityPanel.hpp"
@@ -24,10 +25,12 @@ App::App() {
   createWindow();
   initImGui();
 
-  panels.emplace_back(std::make_unique<EntityPanel>(gameData, renderer, filesystemWatcher));
-  panels.emplace_back(std::make_unique<WorldPanel>(gameData, renderer));
-  panels.emplace_back(std::make_unique<GamePanel>(gameData, renderer));
-  panels.emplace_back(std::make_unique<InspectorPanel>(gameData, renderer, filesystemWatcher));
+  context.renderer = renderer;
+
+  panels.emplace_back(std::make_unique<EntityPanel>(context.gameData, renderer, context.filesystemWatcher));
+  panels.emplace_back(std::make_unique<WorldPanel>(context));
+  panels.emplace_back(std::make_unique<GamePanel>(context.gameData, renderer));
+  panels.emplace_back(std::make_unique<InspectorPanel>(context));
 }
 
 App::~App() {
@@ -53,7 +56,7 @@ void App::loadFromFile() {
     ifs >> gameDataJson;
 
     if (gameDataJson.is_object()) {
-      gameData = gameDataJson.get<GameData>();
+      context.gameData = gameDataJson.get<GameData>();
       return;
     } else {
       std::cerr << "Error: Invalid JSON structure in file: " << mainPath << std::endl;
@@ -68,17 +71,17 @@ void App::loadFromFile() {
   int id = rand() % 100000;
   EntityDef newDef;
   newDef.id = id;
-  gameData.entityDefs[id] = newDef;
+  context.gameData.entityDefs[id] = newDef;
   newDef.name = "Player";
   newDef.script = "player.lua";
 
   int def1id = 0;
-  for (auto& [id, def] : gameData.entityDefs) {
+  for (auto& [id, def] : context.gameData.entityDefs) {
     def1id = id;
     break;
   }
 
-  gameData.worldData.entities.push_back({101, def1id, 0, 0});
+  context.gameData.worldData.entities.push_back({101, def1id, 0, 0});
 }
 
 void App::update() {
