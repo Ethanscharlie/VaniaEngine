@@ -2,66 +2,103 @@
 
 #include "EditorContext.hpp"
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "run/AssetManager.hpp"
 
-static void drawNoImage(const ImVec2& min, const ImVec2& max) {
-  auto* draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
-  draw_list->AddRectFilled(min, max, IM_COL32(0, 0, 0, 255));
-  draw_list->AddRect(min, max, IM_COL32(255, 0, 0, 255));
-  draw_list->AddLine(min, max, IM_COL32(255, 0, 0, 255));
+// https://stackoverflow.com/questions/38334081/how-to-draw-circles-arcs-and-vector-graphics-in-sdl
+static void drawCircle(SDL_Renderer* renderer, SDL_FPoint center, int32_t radius) {
+  const int32_t diameter = (radius * 2);
+
+  int32_t x = (radius - 1);
+  int32_t y = 0;
+  int32_t tx = 1;
+  int32_t ty = 1;
+  int32_t error = (tx - diameter);
+
+  while (x >= y) {
+    //  Each of the following renders an octant of the circle
+    SDL_RenderPoint(renderer, center.x + x, center.y - y);
+    SDL_RenderPoint(renderer, center.x + x, center.y + y);
+    SDL_RenderPoint(renderer, center.x - x, center.y - y);
+    SDL_RenderPoint(renderer, center.x - x, center.y + y);
+    SDL_RenderPoint(renderer, center.x + y, center.y - x);
+    SDL_RenderPoint(renderer, center.x + y, center.y + x);
+    SDL_RenderPoint(renderer, center.x - y, center.y - x);
+    SDL_RenderPoint(renderer, center.x - y, center.y + x);
+
+    if (error <= 0) {
+      ++y;
+      error += ty;
+      ty += 2;
+    }
+
+    if (error > 0) {
+      --x;
+      tx += 2;
+      error += (tx - diameter);
+    }
+  }
 }
 
-static void drawBox(const ImVec2& min, const ImVec2& max, int r, int g, int b, int a) {
-  auto* draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
-  draw_list->AddRectFilled(min, max, IM_COL32(r, g, b, a));
-}
+inline void renderEntityOnPanel(EditorContext& context, const EntityDef& def, SDL_FPoint center, float scale = 1,
+                                int alpha = 255) {
+  SDL_FRect rect;
+  rect.x = center.x - def.width * scale / 2;
+  rect.y = center.y - def.height * scale / 2;
+  rect.w = def.width * scale;
+  rect.h = def.height * scale;
 
-inline void renderEntityOnPanel(EditorContext& context, const EntityDef& def, ImVec2 min, ImVec2 max, int alpha = 255) {
   if (def.imageMode) {
     auto& root = context.gameData.editorData.rootPath;
     const std::string& image = def.image;
     AssetManager& assetManager = AssetManager::getInstance();
-    SDL_Texture* texture = assetManager.get(context.renderer, root / image);
+    std::string texturePath = root / image;
+    SDL_Texture* texture = assetManager.get(context.renderer, texturePath);
 
-    float textureW, textureH;
-    SDL_GetTextureSize(texture, &textureW, &textureH);
-
-    ImVec2 uv0 = {
-        def.imageCol / textureW,  //
-        def.imageRow / textureH   //
-    };
-
-    ImVec2 uv1 = {
-        (def.imageCol + def.imageWidth) / textureW,  //
-        (def.imageRow + def.imageHeight) / textureH  //
+    SDL_FRect srcRect = {
+        def.imageCol,     //
+        def.imageRow,     //
+        def.imageWidth,   //
+        def.imageHeight,  //
     };
 
     if (texture == nullptr) {
-      drawNoImage(min, max);
+      context.postImGuiRender.push_back(([rect, &context]() {
+        SDL_SetRenderDrawColor(context.renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(context.renderer, &rect);
+      }));
       return;
     }
 
-    const ImU32 color = IM_COL32(255, 255, 255, alpha);
-    auto* draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
-    draw_list->AddImage((ImTextureID)(intptr_t)texture, min, max, uv0, uv1, color);
+    context.postImGuiRender.push_back(([rect, srcRect, texturePath, &context]() {
+      AssetManager& assetManager = AssetManager::getInstance();
+      SDL_Texture* texture = assetManager.get(context.renderer, texturePath);
+      SDL_RenderTexture(context.renderer, texture, &srcRect, &rect);
+    }));
   }
 
   else {
-    drawBox(min, max, def.r, def.g, def.b, alpha);
+    int r = def.r;
+    int g = def.g;
+    int b = def.b;
+    int a = def.a;
+    context.postImGuiRender.push_back(([rect, r, g, b, a, &context]() {
+      SDL_SetRenderDrawColor(context.renderer, r, g, b, a);
+      SDL_RenderFillRect(context.renderer, &rect);
+    }));
   }
 }
 
-inline void renderEntityColliderOnPanel(EditorContext& context, const EntityDef& def, ImVec2 eMin, ImVec2 eMax) {
+inline void renderEntityColliderOnPanel(EditorContext& context, const EntityDef& def, SDL_FPoint center,
+                                        float scale = 1) {
   auto* draw_list = ImGui::GetWindowDrawList();
 
-  const float scaledWidth = eMax.x - eMin.x;
-  const float scaledHeight = eMax.y - eMin.y;
-  const ImVec2 center = {eMin.x + scaledWidth / 2, eMin.y + scaledHeight / 2};
+  const float scaledWidth = def.width * scale;
+  const float scaledHeight = def.height * scale;
 
   const std::string& type = def.colliderType;
-  const auto& colliderColor = ImGui::ColorConvertFloat4ToU32({0, 1, 0, 1});
   const float& offsetX = def.colliderOffsetX;
   const float& offsetY = def.colliderOffsetY;
   const float& widthFraction = def.colliderWidthFraction;
@@ -80,7 +117,12 @@ inline void renderEntityColliderOnPanel(EditorContext& context, const EntityDef&
   }
 
   else if (type == "circle") {
-    const ImVec2 colliderCenter = {center.x + offsetX, center.y + offsetY};
-    draw_list->AddCircle(colliderCenter, scaledWidth * widthFraction / 2, colliderColor);
+    const SDL_FPoint colliderCenter = {center.x + offsetX, center.y + offsetY};
+    const float radius = scaledWidth * widthFraction / 2;
+
+    context.postImGuiRender.push_back(([colliderCenter, radius, &context]() {
+      SDL_SetRenderDrawColor(context.renderer, 0, 255, 0, 255);
+      drawCircle(context.renderer, colliderCenter, radius);
+    }));
   }
 }
