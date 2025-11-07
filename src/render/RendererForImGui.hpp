@@ -1,6 +1,9 @@
+#pragma once
+
 #include "SDL3/SDL_pixels.h"
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_stdinc.h"
 #include "imgui.h"
 #include "render/IRenderer.hpp"
 #include "run/AssetManager.hpp"
@@ -31,7 +34,7 @@ class RendererForImGui : public IRenderer {
     ImGui::GetWindowDrawList()->AddCircle({center.x, center.y}, radius, colorFromColor(color));
   }
 
-  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot) override {
+  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) override {
     AssetManager& assetManager = AssetManager::getInstance();
     SDL_Texture* texture = assetManager.get(context.renderer, pathWithRoot);
 
@@ -41,6 +44,8 @@ class RendererForImGui : public IRenderer {
     ImVec2 uv0 = {srcRect.x / textureW, srcRect.y / textureH};
     ImVec2 uv1 = {(srcRect.x + srcRect.w) / textureW, (srcRect.y + srcRect.h) / textureH};
 
-    ImGui::GetWindowDrawList()->AddImage(texture, minFromRect(rect), maxFromRect(rect), uv0, uv1);
+    const auto color = colorFromColor({255, 255, 255, (Uint8)alpha});
+
+    ImGui::GetWindowDrawList()->AddImage(texture, minFromRect(rect), maxFromRect(rect), uv0, uv1, color);
   }
 };

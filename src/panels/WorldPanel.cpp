@@ -12,7 +12,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 namespace Vania {
-WorldPanel::WorldPanel(EditorContext& context) : context(context) {}
+WorldPanel::WorldPanel(EditorContext& context) : context(context), vaniaRenderer(context) {}
 
 void WorldPanel::update() {
   ImGui::Begin("World");
@@ -76,15 +76,15 @@ void WorldPanel::drawHoverBox(const Entity& entity) {
 }
 
 void WorldPanel::drawGhostAtCursor() {
-  EntityDef* def = context.gameData.editorData.selectedEntityDef;
-  if (def == nullptr) return;
+  EntityDef* defPtr = context.gameData.editorData.selectedEntityDef;
+  if (defPtr == nullptr) return;
 
   const float gridSize = context.gameData.worldData.gridSize;
   const ImVec2 mousePos = getMousePositionOnCanvas();
   const float snapedX = (snapPositionToGrid(mousePos.x) + gridSize / 2);
   const float snapedY = (snapPositionToGrid(mousePos.y) + gridSize / 2);
 
-  Entity ghost = {0, def->id, snapedX, snapedY};
+  Entity ghost = {0, defPtr->id, snapedX, snapedY};
 
   const ImVec4 minAndMax = getEntityMinAndMax(ghost);
   const ImVec2 min = {minAndMax.x, minAndMax.y};
@@ -94,7 +94,9 @@ void WorldPanel::drawGhostAtCursor() {
       min.y + (max.y - min.y) / 2,  //
   };
 
-  renderEntityOnPanel(context, *def, center, 1, GHOST_ALPHA);
+  EntityDef def = *context.gameData.editorData.selectedEntityDef;
+  def.a = GHOST_ALPHA;
+  vaniaRenderer.drawEntity(def, center);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -184,7 +186,7 @@ void WorldPanel::draw() {
         min.y + (max.y - min.y) / 2,  //
     };
 
-    renderEntityOnPanel(context, def, center);
+    vaniaRenderer.drawEntity(def, center);
   }
 
   draw_list->PopClipRect();

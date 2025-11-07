@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "panels/EditorContext.hpp"
@@ -52,9 +54,11 @@ class RendererForSDL : public IRenderer {
     }
   }
 
-  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot) override {
+  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) override {
     AssetManager& assetManager = AssetManager::getInstance();
     SDL_Texture* texture = assetManager.get(context.renderer, pathWithRoot);
+
+    // TODO Alpha
 
     SDL_RenderTexture(context.renderer, texture, &srcRect, &rect);
   }

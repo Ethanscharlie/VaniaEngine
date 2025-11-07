@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <string>
 
@@ -18,7 +20,7 @@ class IRenderer {
   virtual void drawRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawFillRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawCircle(SDL_FPoint center, float radius, SDL_Color color) = 0;
-  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot) = 0;
+  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) = 0;
 
   void drawEntity(const EntityDef& def, SDL_FPoint center, int scale = 1) {
     SDL_FRect rect;
@@ -30,7 +32,7 @@ class IRenderer {
     if (def.imageMode) {
       SDL_FRect srcRect = {def.imageCol, def.imageRow, def.imageWidth, def.imageHeight};
       const std::string& image = context.gameData.editorData.rootPath / def.image;
-      drawAsset(rect, srcRect, image);
+      drawAsset(rect, srcRect, image, def.a);
     }
 
     else {

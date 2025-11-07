@@ -4,6 +4,7 @@
 #include "IPanel.hpp"
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
+#include "render/RendererForImGui.hpp"
 
 struct EditorContext;
 
@@ -26,6 +27,7 @@ class WorldPanel : public IPanel {
   ImVec2 canvas_p1;
 
   ImDrawList* draw_list;
+  RendererForImGui vaniaRenderer;
 
  public:
   WorldPanel(EditorContext& context);
