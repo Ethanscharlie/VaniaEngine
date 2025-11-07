@@ -15,7 +15,7 @@
 #include "run/AssetManager.hpp"
 
 namespace Vania {
-InspectorPanel::InspectorPanel(EditorContext& context) : context(context) {}
+InspectorPanel::InspectorPanel(EditorContext& context) : context(context), vaniaRenderer(context) {}
 
 void InspectorPanel::update() {
   ImGui::Begin("Inspector");
@@ -148,8 +148,8 @@ void InspectorPanel::showCollision() {
   const ImVec2 entityMax = {center.x + scaledWidth / 2, center.y + scaledHeight / 2};
 
   SDL_FPoint sdlCenter = {center.x, center.y};
-  renderEntityOnPanel(context, selectedEntity, sdlCenter, scale);
-  renderEntityColliderOnPanel(context, selectedEntity, sdlCenter, scale);
+  vaniaRenderer.drawEntity(selectedEntity, sdlCenter, scale);
+  vaniaRenderer.drawCollider(selectedEntity, sdlCenter, scale);
 }
 
 void InspectorPanel::showImagePicker() {

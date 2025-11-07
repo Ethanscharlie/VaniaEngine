@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "panels/EditorContext.hpp"
 #include "panels/IPanel.hpp"
+#include "render/RendererForImGui.hpp"
 
 namespace Vania {
 class InspectorPanel : public IPanel {
@@ -20,6 +21,7 @@ class InspectorPanel : public IPanel {
 
   // Collision
   ImDrawList* draw_list;
+  RendererForImGui vaniaRenderer;
 
  public:
   InspectorPanel(EditorContext& context);
