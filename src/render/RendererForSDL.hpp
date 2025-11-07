@@ -21,6 +21,8 @@ class RendererForSDL : public IRenderer {
   }
 
   void drawCircle(SDL_FPoint center, float radius, SDL_Color color) override {
+    SDL_SetRenderDrawColor(context.renderer, color.r, color.g, color.b, color.a);
+
     const int32_t diameter = (radius * 2);
 
     int32_t x = (radius - 1);

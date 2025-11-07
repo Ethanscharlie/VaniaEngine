@@ -121,6 +121,7 @@ void Runner::render() {
     auto& def = entity.entityDefOverride;
 
     RendererForSDL(context).drawEntity(def, {entity.x, entity.y});
+    RendererForSDL(context).drawCollider(def, {entity.x, entity.y});
 
     // SDL_FRect rect = {
     //     entity.x - entity.entityDefOverride.width / 2,   //
