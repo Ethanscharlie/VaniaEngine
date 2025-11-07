@@ -1,5 +1,7 @@
 #include "InspectorPanel.hpp"
 
+#include <unistd.h>
+
 #include <fstream>
 #include <print>
 
@@ -115,6 +117,14 @@ void InspectorPanel::showCollision() {
     ImGui::EndCombo();
   }
 
+  float largestSide = (selectedEntity.width > selectedEntity.height) ? selectedEntity.width : selectedEntity.height;
+  ImGui::SliderFloat("Width Fraction", &selectedEntity.colliderWidthFraction, 0.1, 2);
+  if (selectedEntity.colliderType != "circle") {
+    ImGui::SliderFloat("Height Fraction", &selectedEntity.colliderHeightFraction, 0.1, 2);
+  }
+  ImGui::SliderFloat("Offset X", &selectedEntity.colliderOffsetX, -largestSide, largestSide);
+  ImGui::SliderFloat("Offset Y", &selectedEntity.colliderOffsetY, -largestSide, largestSide);
+
   auto* draw_list = ImGui::GetWindowDrawList();
 
   // Background
@@ -128,7 +138,6 @@ void InspectorPanel::showCollision() {
   draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
 
   // Entity
-  float largestSide = (selectedEntity.width > selectedEntity.height) ? selectedEntity.width : selectedEntity.height;
   const float innerSize = backgroundSize.x / 2;
   const float scale = innerSize / largestSide;
   const float scaledWidth = selectedEntity.width * scale;
@@ -137,6 +146,30 @@ void InspectorPanel::showCollision() {
   const ImVec2 entityMin = {center.x - scaledWidth / 2, center.y - scaledHeight / 2};
   const ImVec2 entityMax = {center.x + scaledWidth / 2, center.y + scaledHeight / 2};
   renderEntityOnPanel(context, selectedEntity, entityMin, entityMax);
+
+  // Collider
+  {
+    const std::string& type = selectedEntity.colliderType;
+    const auto& colliderColor = ImGui::ColorConvertFloat4ToU32({0, 1, 0, 1});
+    const float& offsetX = selectedEntity.colliderOffsetX;
+    const float& offsetY = selectedEntity.colliderOffsetY;
+    const float& widthFraction = selectedEntity.colliderWidthFraction;
+    const float& heightFraction = selectedEntity.colliderHeightFraction;
+
+    // Render
+    if (type == "rect") {
+      const float colliderWidth = scaledWidth * widthFraction;
+      const float colliderHeight = scaledHeight * heightFraction;
+      const ImVec2 colliderMin = {center.x - colliderWidth / 2 + offsetX, center.y - colliderHeight / 2 + offsetY};
+      const ImVec2 colliderMax = {center.x + colliderWidth / 2 + offsetX, center.y + colliderHeight / 2 + offsetY};
+      draw_list->AddRect(colliderMin, colliderMax, colliderColor);
+    }
+
+    else if (type == "circle") {
+      const ImVec2 colliderCenter = {center.x + offsetX, center.y + offsetY};
+      draw_list->AddCircle(colliderCenter, scaledWidth * widthFraction / 2, colliderColor);
+    }
+  }
 }
 
 void InspectorPanel::showImagePicker() {
