@@ -32,6 +32,9 @@ struct EntityDef {
   float width = 16;
   float height = 16;
 
+  float centerOffsetX = 0;
+  float centerOffsetY = 0;
+
   int r = 255;
   int g = 255;
   int b = 255;
@@ -59,6 +62,8 @@ struct EntityDef {
         "name", &EntityDef::name,                                     //
         "width", &EntityDef::width,                                   //
         "height", &EntityDef::height,                                 //
+        "centerOffsetX", &EntityDef::centerOffsetX,                   //
+        "centerOffsetY", &EntityDef::centerOffsetY,                   //
         "r", &EntityDef::r,                                           //
         "g", &EntityDef::g,                                           //
         "b", &EntityDef::b,                                           //
@@ -84,6 +89,8 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     name,                            //
     width,                           //
     height,                          //
+    centerOffsetX,                   //
+    centerOffsetY,                   //
     r,                               //
     g,                               //
     b,                               //
