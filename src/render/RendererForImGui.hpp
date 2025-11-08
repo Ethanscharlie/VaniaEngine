@@ -34,7 +34,9 @@ class RendererForImGui : public IRenderer {
     ImGui::GetWindowDrawList()->AddCircle({center.x, center.y}, radius, colorFromColor(color));
   }
 
-  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) override {
+  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, float angle = 0,
+                 int alpha = 255) override {
+    // TODO Angle
     AssetManager& assetManager = AssetManager::getInstance();
     SDL_Texture* texture = assetManager.get(context.renderer, pathWithRoot);
 
@@ -44,7 +46,7 @@ class RendererForImGui : public IRenderer {
     ImVec2 uv0 = {srcRect.x / textureW, srcRect.y / textureH};
     ImVec2 uv1 = {(srcRect.x + srcRect.w) / textureW, (srcRect.y + srcRect.h) / textureH};
 
-    const auto color = colorFromColor({255, 255, 255, (Uint8)alpha});
+    const auto color = ImGui::GetColorU32({1, 1, 1, alpha / 255.0f});
 
     ImGui::GetWindowDrawList()->AddImage(texture, minFromRect(rect), maxFromRect(rect), uv0, uv1, color);
   }

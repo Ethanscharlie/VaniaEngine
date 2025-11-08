@@ -18,7 +18,8 @@
 
 namespace Vania {
 
-Runner::Runner(EditorContext& context) : root(context.gameData.editorData.rootPath), context(context) {
+Runner::Runner(EditorContext& context)
+    : root(context.gameData.editorData.rootPath), context(context), vaniaRenderer(context) {
   displayTexture = SDL_CreateTexture(context.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                      DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
@@ -120,33 +121,8 @@ void Runner::render() {
   for (auto& entity : gameDataCopy.worldData.entities) {
     auto& def = entity.entityDefOverride;
 
-    RendererForSDL(context).drawEntity(def, {entity.x, entity.y});
-    RendererForSDL(context).drawCollider(def, {entity.x, entity.y});
-
-    // SDL_FRect rect = {
-    //     entity.x - entity.entityDefOverride.width / 2,   //
-    //     entity.y - entity.entityDefOverride.height / 2,  //
-    //     entity.entityDefOverride.width,                  //
-    //     entity.entityDefOverride.height                  //
-    // };
-    //
-    // if (def.imageMode) {
-    //   SDL_Texture* texture = AssetManager::getInstance().get(renderer, root / def.image);
-    //   SDL_FRect srcRect = {
-    //       def.imageCol,     //
-    //       def.imageRow,     //
-    //       def.imageWidth,   //
-    //       def.imageHeight,  //
-    //   };
-    //
-    //   SDL_RenderTextureRotated(renderer, texture, &srcRect, &rect, entity.angle, nullptr, SDL_FLIP_NONE);
-    // }
-    // //
-    // else {
-    //   SDL_SetRenderDrawColor(renderer, entity.entityDefOverride.r, entity.entityDefOverride.g,
-    //                          entity.entityDefOverride.b, entity.entityDefOverride.a);
-    //   SDL_RenderFillRect(renderer, &rect);
-    // }
+    vaniaRenderer.drawEntity(def, {entity.x, entity.y}, 1, entity.angle);
+    vaniaRenderer.drawCollider(def, {entity.x, entity.y});
   }
 
   SDL_SetRenderTarget(context.renderer, nullptr);

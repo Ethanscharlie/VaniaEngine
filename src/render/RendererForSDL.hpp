@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
 #include "imgui.h"
 #include "panels/EditorContext.hpp"
 #include "render/IRenderer.hpp"
@@ -56,12 +57,13 @@ class RendererForSDL : public IRenderer {
     }
   }
 
-  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) override {
+  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, float angle = 0,
+                 int alpha = 255) override {
     AssetManager& assetManager = AssetManager::getInstance();
     SDL_Texture* texture = assetManager.get(context.renderer, pathWithRoot);
 
     // TODO Alpha
 
-    SDL_RenderTexture(context.renderer, texture, &srcRect, &rect);
+    SDL_RenderTextureRotated(context.renderer, texture, &srcRect, &rect, angle, nullptr, SDL_FLIP_NONE);
   }
 };

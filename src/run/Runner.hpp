@@ -6,6 +6,7 @@
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_timer.h"
 #include "panels/EditorContext.hpp"
+#include "render/RendererForSDL.hpp"
 #include "sol/sol.hpp"
 
 namespace Vania {
@@ -16,6 +17,7 @@ class Runner {
   const int DISPLAY_HEIGHT = 1080;
 
   SDL_Texture* displayTexture;
+  RendererForSDL vaniaRenderer;
 
  private:
   sol::state lua;

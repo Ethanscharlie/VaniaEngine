@@ -20,9 +20,10 @@ class IRenderer {
   virtual void drawRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawFillRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawCircle(SDL_FPoint center, float radius, SDL_Color color) = 0;
-  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, int alpha = 255) = 0;
+  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, float angle = 0,
+                         int alpha = 255) = 0;
 
-  void drawEntity(const EntityDef& def, SDL_FPoint center, int scale = 1) {
+  void drawEntity(const EntityDef& def, SDL_FPoint center, int scale = 1, float angle = 0) {
     SDL_FRect rect;
     rect.x = center.x - def.width * scale / 2;
     rect.y = center.y - def.height * scale / 2;
@@ -32,7 +33,7 @@ class IRenderer {
     if (def.imageMode) {
       SDL_FRect srcRect = {def.imageCol, def.imageRow, def.imageWidth, def.imageHeight};
       const std::string& image = context.gameData.editorData.rootPath / def.image;
-      drawAsset(rect, srcRect, image, def.a);
+      drawAsset(rect, srcRect, image, angle, def.a);
     }
 
     else {
@@ -58,7 +59,8 @@ class IRenderer {
     if (type == "rect") {
       const float colliderWidth = scaledWidth * widthFraction;
       const float colliderHeight = scaledHeight * heightFraction;
-      SDL_FRect rect = {center.x - colliderWidth / 2, center.y - colliderHeight / 2, colliderWidth, colliderHeight};
+      SDL_FRect rect = {center.x - colliderWidth / 2 + offsetX, center.y - colliderHeight / 2 + offsetY, colliderWidth,
+                        colliderHeight};
       drawRect(rect, COLLIDER_COLOR);
     }
 

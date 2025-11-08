@@ -138,18 +138,12 @@ void InspectorPanel::showCollision() {
 
   draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
 
-  // Entity
   const float innerSize = backgroundSize.x / 2;
   const float scale = innerSize / largestSide;
-  const float scaledWidth = selectedEntity.width * scale;
-  const float scaledHeight = selectedEntity.height * scale;
-  const ImVec2 center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
-  const ImVec2 entityMin = {center.x - scaledWidth / 2, center.y - scaledHeight / 2};
-  const ImVec2 entityMax = {center.x + scaledWidth / 2, center.y + scaledHeight / 2};
+  const SDL_FPoint center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
 
-  SDL_FPoint sdlCenter = {center.x, center.y};
-  vaniaRenderer.drawEntity(selectedEntity, sdlCenter, scale);
-  vaniaRenderer.drawCollider(selectedEntity, sdlCenter, scale);
+  vaniaRenderer.drawEntity(selectedEntity, center, scale);
+  vaniaRenderer.drawCollider(selectedEntity, center, scale);
 }
 
 void InspectorPanel::showImagePicker() {
