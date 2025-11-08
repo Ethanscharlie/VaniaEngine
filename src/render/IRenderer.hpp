@@ -20,8 +20,8 @@ class IRenderer {
   virtual void drawRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawFillRect(SDL_FRect rect, SDL_Color color) = 0;
   virtual void drawCircle(SDL_FPoint center, float radius, SDL_Color color) = 0;
-  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, float angle = 0,
-                         int alpha = 255) = 0;
+  virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, SDL_FPoint rotationCenter,
+                         float angle = 0, int alpha = 255) = 0;
 
   void drawEntity(const EntityDef& def, SDL_FPoint center, int scale = 1, float angle = 0) {
     SDL_FRect rect;
@@ -33,7 +33,13 @@ class IRenderer {
     if (def.imageMode) {
       SDL_FRect srcRect = {def.imageCol, def.imageRow, def.imageWidth, def.imageHeight};
       const std::string& image = context.gameData.editorData.rootPath / def.image;
-      drawAsset(rect, srcRect, image, angle, def.a);
+
+      SDL_FPoint centerOffset = {
+          rect.w / 2 + def.centerOffsetX * scale,  //
+          rect.h / 2 + def.centerOffsetY * scale   //
+      };
+
+      drawAsset(rect, srcRect, image, centerOffset, angle, def.a);
     }
 
     else {

@@ -57,13 +57,13 @@ class RendererForSDL : public IRenderer {
     }
   }
 
-  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, float angle = 0,
-                 int alpha = 255) override {
+  void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, SDL_FPoint rotationCenter,
+                 float angle = 0, int alpha = 255) override {
     AssetManager& assetManager = AssetManager::getInstance();
     SDL_Texture* texture = assetManager.get(context.renderer, pathWithRoot);
 
     // TODO Alpha
 
-    SDL_RenderTextureRotated(context.renderer, texture, &srcRect, &rect, angle, nullptr, SDL_FLIP_NONE);
+    SDL_RenderTextureRotated(context.renderer, texture, &srcRect, &rect, angle, &rotationCenter, SDL_FLIP_NONE);
   }
 };
