@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 
+#include <algorithm>
 #include <fstream>
 #include <print>
 
@@ -25,6 +26,9 @@ void InspectorPanel::update() {
 
 void InspectorPanel::showPropertyEditor() {
   EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
+
+  showSample();
+
   ImGui::InputText("name", &selectedEntity.name);
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputFloat("Width", &selectedEntity.width);
@@ -34,6 +38,33 @@ void InspectorPanel::showPropertyEditor() {
   if (ImGui::CollapsingHeader("Graphic", ImGuiTreeNodeFlags_DefaultOpen)) showGraphic();
   if (ImGui::CollapsingHeader("Behaviour", ImGuiTreeNodeFlags_DefaultOpen)) showBehaviour();
   if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen)) showCollision();
+}
+
+void InspectorPanel::showSample() {
+  EntityDef& selectedEntity = *context.gameData.editorData.selectedEntityDef;
+  auto* draw_list = ImGui::GetWindowDrawList();
+
+  // Background
+  const ImVec2 backgroundMin = ImGui::GetCursorScreenPos();
+  ImVec2 backgroundSize = ImGui::GetContentRegionAvail();
+  if (backgroundSize.x < 50.0f) backgroundSize.x = 50.0f;
+  if (backgroundSize.x > 300.0f) backgroundSize.x = 300.0f;
+  backgroundSize.y = backgroundSize.x;
+  const ImVec2 backgroundMax = {backgroundMin.x + backgroundSize.x, backgroundMin.y + backgroundSize.y};
+
+  draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
+
+  const float innerSize = backgroundSize.x / 2;
+  float largestSide = std::max(selectedEntity.width, selectedEntity.height);
+  const float scale = innerSize / largestSide;
+  const SDL_FPoint center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
+
+  vaniaRenderer.drawEntity(selectedEntity, center, scale);
+  vaniaRenderer.drawCollider(selectedEntity, center, scale);
+
+  ImVec2 newPos = ImGui::GetCursorPos();
+  newPos.y += backgroundSize.y + 20;
+  ImGui::SetCursorPos(newPos);
 }
 
 void InspectorPanel::showGraphic() {
@@ -125,25 +156,6 @@ void InspectorPanel::showCollision() {
   }
   ImGui::SliderFloat("Offset X", &selectedEntity.colliderOffsetX, -largestSide, largestSide);
   ImGui::SliderFloat("Offset Y", &selectedEntity.colliderOffsetY, -largestSide, largestSide);
-
-  auto* draw_list = ImGui::GetWindowDrawList();
-
-  // Background
-  const ImVec2 backgroundMin = ImGui::GetCursorScreenPos();
-  ImVec2 backgroundSize = ImGui::GetContentRegionAvail();
-  if (backgroundSize.x < 50.0f) backgroundSize.x = 50.0f;
-  if (backgroundSize.x > 300.0f) backgroundSize.x = 300.0f;
-  backgroundSize.y = backgroundSize.x;
-  const ImVec2 backgroundMax = {backgroundMin.x + backgroundSize.x, backgroundMin.y + backgroundSize.y};
-
-  draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
-
-  const float innerSize = backgroundSize.x / 2;
-  const float scale = innerSize / largestSide;
-  const SDL_FPoint center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
-
-  vaniaRenderer.drawEntity(selectedEntity, center, scale);
-  vaniaRenderer.drawCollider(selectedEntity, center, scale);
 }
 
 void InspectorPanel::showImagePicker() {

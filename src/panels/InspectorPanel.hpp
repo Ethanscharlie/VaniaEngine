@@ -26,6 +26,7 @@ class InspectorPanel : public IPanel {
  public:
   InspectorPanel(EditorContext& context);
   void update() override;
+  void showSample();
   void showGraphic();
   void showBehaviour();
   void showCollision();
