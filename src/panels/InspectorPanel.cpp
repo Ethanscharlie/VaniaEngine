@@ -67,8 +67,8 @@ void InspectorPanel::showSample() {
   vaniaRenderer.drawCollider(selectedEntity, center, scale);
 
   const SDL_FPoint crossMarkerCenter = {
-      center.x + selectedEntity.centerOffsetX / scale,  //
-      center.y + selectedEntity.centerOffsetY / scale   //
+      center.x + selectedEntity.centerOffsetX,  //
+      center.y + selectedEntity.centerOffsetY   //
   };
   vaniaRenderer.drawCross(crossMarkerCenter, 15, 5, {0, 0, 0, 255});
   vaniaRenderer.drawCross(crossMarkerCenter, 10, 2, {0, 255, 255, 255});

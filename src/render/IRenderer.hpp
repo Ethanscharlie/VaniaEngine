@@ -35,8 +35,8 @@ class IRenderer {
       const std::string& image = context.gameData.editorData.rootPath / def.image;
 
       SDL_FPoint centerOffset = {
-          rect.w / 2 + def.centerOffsetX * scale,  //
-          rect.h / 2 + def.centerOffsetY * scale   //
+          rect.w / 2 + def.centerOffsetX,  //
+          rect.h / 2 + def.centerOffsetY   //
       };
 
       drawAsset(rect, srcRect, image, centerOffset, angle, def.a);
@@ -57,8 +57,8 @@ class IRenderer {
     const float scaledHeight = def.height * scale;
 
     const std::string& type = def.colliderType;
-    const float& offsetX = def.colliderOffsetX;
-    const float& offsetY = def.colliderOffsetY;
+    const float& offsetX = def.colliderOffsetX + def.centerOffsetX;
+    const float& offsetY = def.colliderOffsetY + def.centerOffsetY;
     const float& widthFraction = def.colliderWidthFraction;
     const float& heightFraction = def.colliderHeightFraction;
 
