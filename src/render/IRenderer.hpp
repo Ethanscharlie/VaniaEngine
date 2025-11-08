@@ -70,4 +70,22 @@ class IRenderer {
       drawCircle(colliderCenter, radius, COLLIDER_COLOR);
     }
   }
+
+  void drawCross(SDL_FPoint center, float length, float thickness, SDL_Color color) {
+    const SDL_FRect verticalBar = {
+        center.x - thickness / 2,  //
+        center.y - length / 2,     //
+        thickness,                 //
+        length                     //
+    };
+    drawFillRect(verticalBar, color);
+
+    const SDL_FRect horizontalBar = {
+        center.x - length / 2,     //
+        center.y - thickness / 2,  //
+        length,                    //
+        thickness                  //
+    };
+    drawFillRect(horizontalBar, color);
+  }
 };

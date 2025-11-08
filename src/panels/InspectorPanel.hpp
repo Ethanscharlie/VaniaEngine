@@ -1,6 +1,8 @@
 
 #include <filesystem>
 
+#include "SDL3/SDL_pixels.h"
+#include "SDL3/SDL_rect.h"
 #include "imgui.h"
 #include "panels/EditorContext.hpp"
 #include "panels/IPanel.hpp"

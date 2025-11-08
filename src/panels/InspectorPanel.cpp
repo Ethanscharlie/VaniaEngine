@@ -35,6 +35,9 @@ void InspectorPanel::showPropertyEditor() {
   ImGui::SetNextItemWidth(SMALL_NUMBER_WIDTH);
   ImGui::InputFloat("Height", &selectedEntity.height);
 
+  ImGui::SliderFloat("Center Offset X", &selectedEntity.centerOffsetX, -selectedEntity.width, selectedEntity.width);
+  ImGui::SliderFloat("Center Offset Y", &selectedEntity.centerOffsetY, -selectedEntity.height, selectedEntity.height);
+
   if (ImGui::CollapsingHeader("Graphic", ImGuiTreeNodeFlags_DefaultOpen)) showGraphic();
   if (ImGui::CollapsingHeader("Behaviour", ImGuiTreeNodeFlags_DefaultOpen)) showBehaviour();
   if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen)) showCollision();
@@ -54,6 +57,7 @@ void InspectorPanel::showSample() {
 
   draw_list->AddRectFilled(backgroundMin, backgroundMax, ImGui::ColorConvertFloat4ToU32({0.1, 0.1, 0.1, 1}));
 
+  // Entity
   const float innerSize = backgroundSize.x / 2;
   float largestSide = std::max(selectedEntity.width, selectedEntity.height);
   const float scale = innerSize / largestSide;
@@ -62,6 +66,14 @@ void InspectorPanel::showSample() {
   vaniaRenderer.drawEntity(selectedEntity, center, scale);
   vaniaRenderer.drawCollider(selectedEntity, center, scale);
 
+  const SDL_FPoint crossMarkerCenter = {
+      center.x + selectedEntity.centerOffsetX,  //
+      center.y + selectedEntity.centerOffsetY   //
+  };
+  vaniaRenderer.drawCross(crossMarkerCenter, 15, 5, {0, 0, 0, 255});
+  vaniaRenderer.drawCross(crossMarkerCenter, 10, 2, {0, 255, 255, 255});
+
+  // Adjust cursor to after
   ImVec2 newPos = ImGui::GetCursorPos();
   newPos.y += backgroundSize.y + 20;
   ImGui::SetCursorPos(newPos);
