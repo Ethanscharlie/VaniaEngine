@@ -15,6 +15,7 @@
 #include "panels/EntityPanel.hpp"
 #include "panels/GamePanel.hpp"
 #include "panels/InspectorPanel.hpp"
+#include "panels/ProjectPanel.hpp"
 #include "panels/WorldPanel.hpp"
 
 #define DEFAULT_ROOT_PATH std::filesystem::path("../testres/")
@@ -34,6 +35,7 @@ App::App() {
   panels.emplace_back(std::make_unique<WorldPanel>(context));
   panels.emplace_back(std::make_unique<GamePanel>(context));
   panels.emplace_back(std::make_unique<InspectorPanel>(context));
+  panels.emplace_back(std::make_unique<ProjectPanel>(context));
 }
 
 App::~App() {
