@@ -38,6 +38,7 @@ class Runner {
   void updateMousePos(const SDL_FPoint& mousePos);
   void update();
   void render();
+  void renderBackground();
 
   // Util ig
   EntityDef* getDefFromName(const std::string& name);

@@ -7,6 +7,7 @@
 #include <string>
 
 #include "GameDataStructs.hpp"
+#include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
 #include "panels/EditorContext.hpp"
 #include "physics/collision.hpp"
@@ -135,6 +136,8 @@ void Runner::render() {
   SDL_SetRenderDrawColor(context.renderer, 0, 0, 10, 255);
   SDL_RenderClear(context.renderer);
 
+  renderBackground();
+
   for (auto& entity : gameDataCopy.worldData.entities) {
     auto& def = entity.entityDefOverride;
 
@@ -151,6 +154,28 @@ EntityDef* Runner::getDefFromName(const std::string& name) {
   }
 
   return nullptr;
+}
+
+void Runner::renderBackground() {
+  std::string path = context.gameData.editorData.rootPath / context.gameData.backgroundImage;
+
+  int screenWidth, screenHeight;
+  SDL_GetWindowSize(context.window, &screenWidth, &screenHeight);
+
+  float imageWidth, imageHeight;
+  AssetManager& assetManager = AssetManager::getInstance();
+  SDL_Texture* texture = assetManager.get(context.renderer, path);
+  SDL_GetTextureSize(texture, &imageWidth, &imageHeight);
+
+  const float resizeScale = std::max(screenWidth / imageWidth, screenHeight / imageHeight);
+  const SDL_FRect dstRect = {
+      screenWidth / 2.0f - imageWidth * resizeScale / 2.0f,
+      screenHeight / 2.0f - imageHeight * resizeScale / 2.0f,
+      imageWidth * resizeScale,
+      imageHeight * resizeScale,
+  };
+  const SDL_FRect srcRect = {0, 0, imageWidth, imageHeight};
+  vaniaRenderer.drawAsset(dstRect, srcRect, path, {0, 0});
 }
 
 }  // namespace Vania
