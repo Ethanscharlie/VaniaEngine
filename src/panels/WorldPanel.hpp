@@ -14,6 +14,7 @@ class WorldPanel : public IPanel {
   const ImU32 LIGHT_GRAY = IM_COL32(200, 200, 200, 40);
   const ImU32 WHITE = IM_COL32(255, 255, 255, 255);
   const ImU32 RED = IM_COL32(255, 0, 0, 255);
+  const ImU32 CYAN = IM_COL32(0, 255, 255, 255);
   const float HOVER_BOX_PADDING = 5;
   const int GHOST_ALPHA = 100;
 
@@ -43,6 +44,7 @@ class WorldPanel : public IPanel {
   void drawHoverBox(const Entity& entity);
   void drawGhostAtCursor();
   void drawGrid();
+  void drawCamera();
   void draw();
   float snapPositionToGrid(float x);
   void createEntity(float x, float y);

@@ -15,7 +15,7 @@ WorldPanel::WorldPanel(EditorContext& context) : context(context), vaniaRenderer
 
 void WorldPanel::update() {
   ImGui::Begin("World");
-  ImGui::SliderFloat("Zoom", &zoom, 1, 10);
+  ImGui::SliderFloat("Zoom", &zoom, 0.2, 10);
 
   calculateCanvasPositionValues();
   ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
@@ -163,6 +163,17 @@ void WorldPanel::drawGrid() {
   }
 }
 
+void WorldPanel::drawCamera() {
+  const ImVec2 origin = getOrigin();
+  const ImVec2 cameraMin = origin;
+  const ImVec2 cameraMax = {origin.x + 1920 * zoom, origin.y + 1080 * zoom};
+
+  draw_list->AddLine(cameraMin, {cameraMax.x, cameraMin.y}, CYAN);
+  draw_list->AddLine(cameraMin, {cameraMin.x, cameraMax.y}, CYAN);
+  draw_list->AddLine(cameraMax, {cameraMax.x, cameraMin.y}, CYAN);
+  draw_list->AddLine(cameraMax, {cameraMin.x, cameraMax.y}, CYAN);
+}
+
 void WorldPanel::draw() {
   draw_list = ImGui::GetWindowDrawList();  // ImGui is annoying
 
@@ -188,6 +199,8 @@ void WorldPanel::draw() {
     vaniaRenderer.drawEntity(def, center, zoom);
     vaniaRenderer.drawCollider(def, center, zoom);
   }
+
+  drawCamera();
 
   draw_list->PopClipRect();
 }
