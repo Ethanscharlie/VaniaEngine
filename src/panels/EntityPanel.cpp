@@ -12,10 +12,8 @@
 #include "run/AssetManager.hpp"
 
 namespace Vania {
-EntityPanel::EntityPanel(GameData &gameData, SDL_Renderer *renderer,
-                         FileSystemWatcher &filesystemWatcher)
-    : gameData(gameData), renderer(renderer),
-      filesystemWatcher(filesystemWatcher) {}
+EntityPanel::EntityPanel(GameData& gameData, SDL_Renderer* renderer, FileSystemWatcher& filesystemWatcher)
+    : gameData(gameData), renderer(renderer), filesystemWatcher(filesystemWatcher) {}
 
 void EntityPanel::update() {
   ImGui::Begin("Entity");
@@ -25,14 +23,11 @@ void EntityPanel::update() {
   }
 
   {
-    ImGui::BeginChild("Entity Selection", ImVec2(150, 0),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
-    for (auto &[id, entity] : gameData.entityDefs) {
-      const std::string label =
-          std::format("{}###{}n{}", entity.name, entity.name, id);
+    ImGui::BeginChild("Entity Selection", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
+    for (auto& [id, entity] : gameData.entityDefs) {
+      const std::string label = std::format("{}###{}n{}", entity.name, entity.name, id);
       const bool isSelected = gameData.editorData.selectedEntityDef == &entity;
-      if (ImGui::Selectable(label.c_str(), isSelected,
-                            ImGuiSelectableFlags_SelectOnNav)) {
+      if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_SelectOnNav)) {
         gameData.editorData.selectedEntityDef = &entity;
       }
     }
@@ -43,15 +38,6 @@ void EntityPanel::update() {
 
   const bool somethingIsSelected = gameData.editorData.selectedEntityDef;
 
-  if (ImGui::Button("Save")) {
-    const std::filesystem::path mainPath =
-        gameData.editorData.rootPath / "main.json";
-    const nlohmann::json j = gameData;
-    std::ofstream file(mainPath);
-    file << j.dump(4);
-    file.close();
-  }
-
   bool defEditorOpen = true;
   if (ImGui::BeginPopupModal("Entity Def Editor", &defEditorOpen)) {
     // showPropertyEditor();
@@ -61,7 +47,7 @@ void EntityPanel::update() {
   ImGui::End();
 }
 
-EntityDef &EntityPanel::createDef() {
+EntityDef& EntityPanel::createDef() {
   int id = rand() % 100000;
   EntityDef newDef;
   newDef.id = id;
@@ -69,4 +55,4 @@ EntityDef &EntityPanel::createDef() {
   return gameData.entityDefs.at(id);
 }
 
-} // namespace Vania
+}  // namespace Vania
