@@ -35,7 +35,7 @@ void ProjectPanel::update() {
     ImGui::EndCombo();
   }
 
-  ImGui::SliderFloat("Camera Zoom", &context.gameData.cameraZoom, 0.2, 10);
+  ImGui::SliderFloat("Camera Zoom", &context.gameData.cameraZoom, 0.2, 4);
 
   ImGui::End();
 }

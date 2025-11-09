@@ -164,9 +164,11 @@ void WorldPanel::drawGrid() {
 }
 
 void WorldPanel::drawCamera() {
+  const float cameraZoom = context.gameData.cameraZoom;
+
   const ImVec2 origin = getOrigin();
   const ImVec2 cameraMin = origin;
-  const ImVec2 cameraMax = {origin.x + 1920 * zoom, origin.y + 1080 * zoom};
+  const ImVec2 cameraMax = {origin.x + 1920 * zoom / cameraZoom, origin.y + 1080 * zoom / cameraZoom};
 
   draw_list->AddLine(cameraMin, {cameraMax.x, cameraMin.y}, CYAN);
   draw_list->AddLine(cameraMin, {cameraMin.x, cameraMax.y}, CYAN);
