@@ -23,7 +23,7 @@ class IRenderer {
   virtual void drawAsset(SDL_FRect rect, SDL_FRect srcRect, const std::string& pathWithRoot, SDL_FPoint rotationCenter,
                          float angle = 0, int alpha = 255) = 0;
 
-  void drawEntity(const EntityDef& def, SDL_FPoint center, int scale = 1, float angle = 0) {
+  void drawEntity(const EntityDef& def, SDL_FPoint center, float scale = 1, float angle = 0) {
     SDL_FRect rect;
     rect.x = center.x - def.width * scale / 2;
     rect.y = center.y - def.height * scale / 2;
@@ -52,7 +52,7 @@ class IRenderer {
     }
   }
 
-  void drawCollider(const EntityDef& def, SDL_FPoint center, int scale = 1) {
+  void drawCollider(const EntityDef& def, SDL_FPoint center, float scale = 1) {
     const float scaledWidth = def.width * scale;
     const float scaledHeight = def.height * scale;
 

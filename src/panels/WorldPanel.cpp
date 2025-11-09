@@ -95,7 +95,7 @@ void WorldPanel::drawGhostAtCursor() {
 
   EntityDef def = *context.gameData.editorData.selectedEntityDef;
   def.a = GHOST_ALPHA;
-  vaniaRenderer.drawEntity(def, center);
+  vaniaRenderer.drawEntity(def, center, zoom);
 }
 
 ImVec2 WorldPanel::getMousePositionOnCanvas() {
@@ -185,8 +185,8 @@ void WorldPanel::draw() {
         min.y + (max.y - min.y) / 2,  //
     };
 
-    vaniaRenderer.drawEntity(def, center);
-    vaniaRenderer.drawCollider(def, center);
+    vaniaRenderer.drawEntity(def, center, zoom);
+    vaniaRenderer.drawCollider(def, center, zoom);
   }
 
   draw_list->PopClipRect();
