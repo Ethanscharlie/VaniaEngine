@@ -9,6 +9,8 @@ local function update(entity, deltaTime)
 	for i = 1, zombies:size() do
 		if isColliding(entity, zombies[i]) then
 			kill(zombies[i].id)
+			kill(entity.id)
+			break
 		end
 	end
 end
