@@ -8,10 +8,10 @@
                 "centerOffsetX": 0.0,
                 "centerOffsetY": 0.0,
                 "colliderHeightFraction": 1.0,
-                "colliderType": "rect",
-                "colliderWidthFraction": 1.0,
+                "colliderType": "circle",
+                "colliderWidthFraction": 1.0700000524520874,
                 "g": 255,
-                "height": 10.0,
+                "height": 5.0,
                 "id": 33307,
                 "image": "",
                 "imageCol": 0.0,
@@ -30,11 +30,11 @@
             {
                 "a": 255,
                 "b": 255,
-                "centerOffsetX": 0.0,
+                "centerOffsetX": -7.013999938964844,
                 "centerOffsetY": 0.0,
                 "colliderHeightFraction": 1.0,
-                "colliderType": "rect",
-                "colliderWidthFraction": 1.0,
+                "colliderType": "circle",
+                "colliderWidthFraction": 0.8799999952316284,
                 "g": 255,
                 "height": 64.0,
                 "id": 47977,
@@ -55,11 +55,11 @@
             {
                 "a": 255,
                 "b": 255,
-                "centerOffsetX": 0.0,
+                "centerOffsetX": -29.966999053955078,
                 "centerOffsetY": 0.0,
                 "colliderHeightFraction": 1.0,
-                "colliderType": "rect",
-                "colliderWidthFraction": 1.0,
+                "colliderType": "circle",
+                "colliderWidthFraction": 0.5400000214576721,
                 "g": 255,
                 "height": 64.0,
                 "id": 65041,
@@ -129,40 +129,28 @@
     "worldData": {
         "entities": [
             {
-                "defID": 65476,
-                "id": 21605,
-                "x": 336.0,
-                "y": 272.0
-            },
-            {
-                "defID": 65476,
-                "id": 19027,
-                "x": 336.0,
-                "y": 528.0
-            },
-            {
-                "defID": 65476,
-                "id": 28787,
-                "x": 528.0,
-                "y": 464.0
-            },
-            {
-                "defID": 65476,
-                "id": 73447,
-                "x": 688.0,
-                "y": 144.0
-            },
-            {
-                "defID": 96042,
-                "id": 47982,
-                "x": 496.0,
-                "y": 304.0
-            },
-            {
                 "defID": 65041,
-                "id": 67672,
-                "x": 592.0,
-                "y": 368.0
+                "id": 2341,
+                "x": 432.0,
+                "y": 336.0
+            },
+            {
+                "defID": 47977,
+                "id": 39309,
+                "x": 400.0,
+                "y": 592.0
+            },
+            {
+                "defID": 47977,
+                "id": 7644,
+                "x": 848.0,
+                "y": 496.0
+            },
+            {
+                "defID": 47977,
+                "id": 22129,
+                "x": 656.0,
+                "y": 208.0
             }
         ],
         "gridSize": 32

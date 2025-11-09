@@ -40,6 +40,8 @@ Runner::Runner(EditorContext& context)
     return (Entity*)nullptr;
   });
 
+  lua.set_function("kill", [this](int id) { killQueue.insert(id); });
+
   lua.set_function("getEntitiesByDef", [this](const std::string& defName) {
     std::vector<Entity*> out;
 
@@ -97,7 +99,9 @@ void Runner::update() {
   float deltaTime = (currentTime - lastTime) / 1000.0f;
   lastTime = currentTime;
 
-  for (auto& entity : gameDataCopy.worldData.entities) {
+  auto& entities = gameDataCopy.worldData.entities;
+
+  for (auto& entity : entities) {
     const std::string& script = entity.entityDefOverride.script;
     if (script == "") continue;
     sol::table funcs = lua.script_file(root / script);
@@ -107,6 +111,17 @@ void Runner::update() {
       sol::error err = result;
       std::cerr << "Error executing script: " << err.what() << '\n';
     }
+  }
+
+  // Kill
+  for (auto it = entities.begin(); it != entities.end();) {
+    if (!killQueue.contains(it->id)) {
+      it++;
+      continue;
+    }
+
+    it = entities.erase(it);
+    killQueue.erase(it->id);
   }
 
   render();

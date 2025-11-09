@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+#include <set>
 #include <vector>
 
 #include "GameDataStructs.hpp"
@@ -26,6 +28,7 @@ class Runner {
   const std::filesystem::path& root;
   Uint32 lastTime = SDL_GetTicks();
   SDL_FPoint mousePosition = {0, 0};
+  std::set<int> killQueue;
 
  public:
   Runner(EditorContext& context);

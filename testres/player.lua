@@ -29,7 +29,7 @@ local function update(entity, deltaTime)
 		entity.props["cooldown"] = os.clock()
 	end
 
-	print(isColliding(entity, getEntitiesByDef("Zombie")[1]))
+	-- print(isColliding(entity, getEntitiesByDef("Zombie")[1]))
 end
 
 return {
