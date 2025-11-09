@@ -80,6 +80,8 @@ void Runner::reset(const GameData& gameData) {
 
   lastTime = SDL_GetTicks();
 
+  killQueue.clear();
+
   render();
 }
 
