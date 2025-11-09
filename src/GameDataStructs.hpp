@@ -160,13 +160,14 @@ struct EditorData {
 
 struct GameData {
   std::map<int, EntityDef> entityDefs;
-
   WorldData worldData;
   EditorData editorData;
+  std::string backgroundImage = "";
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     GameData,                        //
     entityDefs,                      //
-    worldData                        //
+    worldData,                       //
+    backgroundImage                  //
 )

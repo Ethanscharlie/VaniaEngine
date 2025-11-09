@@ -1,6 +1,7 @@
 #include "ProjectPanel.hpp"
 
 #include <fstream>
+#include <string>
 
 #include "imgui.h"
 
@@ -17,6 +18,21 @@ void ProjectPanel::update() {
     std::ofstream file(mainPath);
     file << j.dump(4);
     file.close();
+  }
+
+  std::string& backgroundImage = context.gameData.backgroundImage;
+  if (ImGui::BeginCombo("BackgroundImageSelectionCombo", backgroundImage.c_str())) {
+    if (ImGui::Selectable("None")) {
+      backgroundImage = "";
+    }
+
+    const auto& images = context.filesystemWatcher.getAllFilesWithExtension(".png");
+    for (const auto& image : images) {
+      if (ImGui::Selectable(image.c_str(), image == backgroundImage)) {
+        backgroundImage = image;
+      }
+    }
+    ImGui::EndCombo();
   }
 
   ImGui::End();

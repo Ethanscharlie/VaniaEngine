@@ -154,5 +154,7 @@
             }
         ],
         "gridSize": 32
-    }
+    },
+
+  "backgroundImage": ""
 }
