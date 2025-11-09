@@ -163,11 +163,13 @@ struct GameData {
   WorldData worldData;
   EditorData editorData;
   std::string backgroundImage = "";
+  float cameraZoom = 1;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     GameData,                        //
     entityDefs,                      //
     worldData,                       //
-    backgroundImage                  //
+    backgroundImage,                 //
+    cameraZoom                       //
 )

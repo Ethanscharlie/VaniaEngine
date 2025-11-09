@@ -1,5 +1,6 @@
 {
     "backgroundImage": "background.png",
+    "cameraZoom": 1,
     "entityDefs": [
         [
             33307,
