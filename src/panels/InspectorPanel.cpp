@@ -12,7 +12,6 @@
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
-#include "panels/PanelEntityRendering.hpp"
 #include "run/AssetManager.hpp"
 
 namespace Vania {
@@ -64,7 +63,6 @@ void InspectorPanel::showSample() {
   const SDL_FPoint center = {backgroundMin.x + backgroundSize.x / 2, backgroundMin.y + backgroundSize.y / 2};
 
   vaniaRenderer.drawEntity(selectedEntity, center, scale);
-  vaniaRenderer.drawCollider(selectedEntity, center, scale);
 
   const SDL_FPoint crossMarkerCenter = {
       center.x + selectedEntity.centerOffsetX,  //
@@ -162,12 +160,10 @@ void InspectorPanel::showCollision() {
   }
 
   float largestSide = (selectedEntity.width > selectedEntity.height) ? selectedEntity.width : selectedEntity.height;
-  ImGui::SliderFloat("Width Fraction", &selectedEntity.colliderWidthFraction, 0.1, 2);
+  ImGui::DragFloat("Width Fraction", &selectedEntity.colliderWidthFraction, 0.01, 0.1);
   if (selectedEntity.colliderType != "circle") {
-    ImGui::SliderFloat("Height Fraction", &selectedEntity.colliderHeightFraction, 0.1, 2);
+    ImGui::DragFloat("Height Fraction", &selectedEntity.colliderHeightFraction, 0.01, 0.1);
   }
-  ImGui::SliderFloat("Offset X", &selectedEntity.colliderOffsetX, -largestSide, largestSide);
-  ImGui::SliderFloat("Offset Y", &selectedEntity.colliderOffsetY, -largestSide, largestSide);
 }
 
 void InspectorPanel::showImagePicker() {

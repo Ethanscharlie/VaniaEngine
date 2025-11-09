@@ -57,21 +57,21 @@ class IRenderer {
     const float scaledHeight = def.height * scale;
 
     const std::string& type = def.colliderType;
-    const float& offsetX = def.colliderOffsetX + def.centerOffsetX;
-    const float& offsetY = def.colliderOffsetY + def.centerOffsetY;
+    const float& offsetX = def.centerOffsetX;
+    const float& offsetY = def.centerOffsetY;
     const float& widthFraction = def.colliderWidthFraction;
     const float& heightFraction = def.colliderHeightFraction;
 
     if (type == "rect") {
       const float colliderWidth = scaledWidth * widthFraction;
       const float colliderHeight = scaledHeight * heightFraction;
-      SDL_FRect rect = {center.x - colliderWidth / 2 + offsetX, center.y - colliderHeight / 2 + offsetY, colliderWidth,
-                        colliderHeight};
+      SDL_FRect rect = {center.x - colliderWidth / 2 + offsetX * scale, center.y - colliderHeight / 2 + offsetY * scale,
+                        colliderWidth, colliderHeight};
       drawRect(rect, COLLIDER_COLOR);
     }
 
     else if (type == "circle") {
-      const SDL_FPoint colliderCenter = {center.x + offsetX, center.y + offsetY};
+      const SDL_FPoint colliderCenter = {center.x + offsetX * scale, center.y + offsetY * scale};
       const float radius = scaledWidth * widthFraction / 2;
       drawCircle(colliderCenter, radius, COLLIDER_COLOR);
     }

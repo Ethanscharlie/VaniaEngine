@@ -7,7 +7,6 @@
 
 #include "EditorContext.hpp"
 #include "GameDataStructs.hpp"
-#include "PanelEntityRendering.hpp"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
@@ -187,6 +186,7 @@ void WorldPanel::draw() {
     };
 
     vaniaRenderer.drawEntity(def, center);
+    vaniaRenderer.drawCollider(def, center);
   }
 
   draw_list->PopClipRect();

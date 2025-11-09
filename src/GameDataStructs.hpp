@@ -50,8 +50,6 @@ struct EntityDef {
   std::string script = "";
 
   std::string colliderType = "rect";
-  float colliderOffsetX = 0;
-  float colliderOffsetY = 0;
   float colliderWidthFraction = 1;
   float colliderHeightFraction = 1;
 
@@ -75,8 +73,6 @@ struct EntityDef {
         "image", &EntityDef::image,                                   //
         "script", &EntityDef::script,                                 //
         "colliderType", &EntityDef::colliderType,                     //
-        "colliderOffsetX", &EntityDef::colliderOffsetX,               //
-        "colliderOffsetY", &EntityDef::colliderOffsetX,               //
         "colliderWidthFraction", &EntityDef::colliderWidthFraction,   //
         "colliderHeightFraction", &EntityDef::colliderHeightFraction  //
     );
@@ -103,8 +99,6 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(  //
     image,                           //
     script,                          //
     colliderType,                    //
-    colliderOffsetX,                 //
-    colliderOffsetY,                 //
     colliderWidthFraction,           //
     colliderHeightFraction           //
 )

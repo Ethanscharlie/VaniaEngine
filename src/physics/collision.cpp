@@ -12,8 +12,8 @@ struct CollisionRect {
   CollisionRect(const Entity& entity, const EntityDef& def) {
     w = def.width * def.colliderWidthFraction;
     h = def.height * def.colliderHeightFraction;
-    x = entity.x + def.colliderOffsetX - def.width / 2;
-    y = entity.y + def.colliderOffsetY - def.height / 2;
+    x = entity.x + def.centerOffsetX - def.width / 2;
+    y = entity.y + def.centerOffsetY - def.height / 2;
   }
 };
 
@@ -23,8 +23,8 @@ struct CollisionCircle {
   float r;
 
   CollisionCircle(const Entity& entity, const EntityDef& def) {
-    x = entity.x + def.colliderOffsetX;
-    y = entity.y + def.colliderOffsetY;
+    x = entity.x + def.centerOffsetX;
+    y = entity.y + def.centerOffsetY;
     r = def.width * def.colliderWidthFraction / 2;
   }
 };
