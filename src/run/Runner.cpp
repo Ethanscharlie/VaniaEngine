@@ -152,8 +152,8 @@ void Runner::render() {
   }
 
   const SDL_FPoint crossMarkerCenter = {mousePosition.x, mousePosition.y};
-  vaniaRenderer.drawCross(crossMarkerCenter, 15, 5, {0, 0, 0, 255});
-  vaniaRenderer.drawCross(crossMarkerCenter, 10, 2, {0, 255, 255, 255});
+  vaniaRenderer.drawCross(crossMarkerCenter, 20, 10, {0, 0, 0, 255});
+  vaniaRenderer.drawCross(crossMarkerCenter, 15, 5, {255, 255, 255, 255});
 
   SDL_SetRenderTarget(context.renderer, nullptr);
 }
