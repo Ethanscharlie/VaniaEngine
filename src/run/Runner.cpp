@@ -141,8 +141,11 @@ void Runner::render() {
   for (auto& entity : gameDataCopy.worldData.entities) {
     auto& def = entity.entityDefOverride;
 
-    vaniaRenderer.drawEntity(def, {entity.x, entity.y}, 1, entity.angle);
-    vaniaRenderer.drawCollider(def, {entity.x, entity.y});
+    const float zoom = context.gameData.cameraZoom;
+    const SDL_FPoint zoomedPos = {entity.x * zoom, entity.y * zoom};
+
+    vaniaRenderer.drawEntity(def, zoomedPos, zoom, entity.angle);
+    vaniaRenderer.drawCollider(def, zoomedPos, zoom);
   }
 
   SDL_SetRenderTarget(context.renderer, nullptr);
