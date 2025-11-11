@@ -57,7 +57,10 @@ Runner::Runner(EditorContext& context)
     return out;
   });
 
-  lua.set_function("mousePos", [this]() { return lua.create_table_with("x", mousePosition.x, "y", mousePosition.y); });
+  lua.set_function("mousePos", [this]() {
+    const SDL_FPoint m = getWorldMousePos();
+    return lua.create_table_with("x", m.x, "y", m.y);
+  });
   lua.set_function("isColliding", [this](const Entity& a, const Entity& b) { return isColliding(gameDataCopy, a, b); });
 
   EntityDef::exposeToLua(lua);
@@ -148,6 +151,10 @@ void Runner::render() {
     vaniaRenderer.drawCollider(def, zoomedPos, zoom);
   }
 
+  const SDL_FPoint crossMarkerCenter = {mousePosition.x, mousePosition.y};
+  vaniaRenderer.drawCross(crossMarkerCenter, 15, 5, {0, 0, 0, 255});
+  vaniaRenderer.drawCross(crossMarkerCenter, 10, 2, {0, 255, 255, 255});
+
   SDL_SetRenderTarget(context.renderer, nullptr);
 }
 
@@ -179,6 +186,11 @@ void Runner::renderBackground() {
   };
   const SDL_FRect srcRect = {0, 0, imageWidth, imageHeight};
   vaniaRenderer.drawAsset(dstRect, srcRect, path, {0, 0});
+}
+
+SDL_FPoint Runner::getWorldMousePos() {
+  const float zoom = gameDataCopy.cameraZoom;
+  return {mousePosition.x / zoom, mousePosition.y / zoom};
 }
 
 }  // namespace Vania

@@ -42,6 +42,9 @@ class Runner {
 
   // Util ig
   EntityDef* getDefFromName(const std::string& name);
+
+ private:
+  SDL_FPoint getWorldMousePos();
 };
 
 };  // namespace Vania

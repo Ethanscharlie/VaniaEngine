@@ -1,6 +1,6 @@
 {
     "backgroundImage": "background.png",
-    "cameraZoom": 2.01200008392334,
+    "cameraZoom": 2.003000020980835,
     "entityDefs": [
         [
             33307,
@@ -32,13 +32,13 @@
             {
                 "a": 255,
                 "b": 255,
-                "centerOffsetX": -7.013999938964844,
+                "centerOffsetX": -2.878000020980835,
                 "centerOffsetY": 0.0,
                 "colliderHeightFraction": 1.0,
                 "colliderType": "circle",
                 "colliderWidthFraction": 0.8799999952316284,
                 "g": 255,
-                "height": 64.0,
+                "height": 32.0,
                 "id": 47977,
                 "image": "sheet.png",
                 "imageCol": 0.0,
@@ -49,7 +49,7 @@
                 "name": "Zombie",
                 "r": 255,
                 "script": "zombie.lua",
-                "width": 64.0
+                "width": 32.0
             }
         ],
         [
@@ -57,13 +57,13 @@
             {
                 "a": 255,
                 "b": 255,
-                "centerOffsetX": -29.966999053955078,
+                "centerOffsetX": -15.600000381469727,
                 "centerOffsetY": 0.0,
                 "colliderHeightFraction": 1.0,
                 "colliderType": "circle",
                 "colliderWidthFraction": 0.5400000214576721,
                 "g": 255,
-                "height": 64.0,
+                "height": 32.0,
                 "id": 65041,
                 "image": "sheet.png",
                 "imageCol": 0.0,
@@ -74,7 +74,7 @@
                 "name": "Player",
                 "r": 255,
                 "script": "player.lua",
-                "width": 128.0
+                "width": 64.0
             }
         ],
         [
