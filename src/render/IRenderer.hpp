@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <print>
 #include <string>
 
 #include "GameDataStructs.hpp"
@@ -35,8 +36,8 @@ class IRenderer {
       const std::string& image = context.gameData.editorData.rootPath / def.image;
 
       SDL_FPoint centerOffset = {
-          rect.w / 2 + def.centerOffsetX,  //
-          rect.h / 2 + def.centerOffsetY   //
+          rect.w / 2 + def.centerOffsetX * scale,  //
+          rect.h / 2 + def.centerOffsetY * scale   //
       };
 
       drawAsset(rect, srcRect, image, centerOffset, angle, def.a);
