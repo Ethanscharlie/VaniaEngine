@@ -7,6 +7,7 @@
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_pixels.h"
 #include "SDL3/SDL_rect.h"
+#include "panels/ConsolePanel.hpp"
 #include "panels/EditorContext.hpp"
 
 class IRenderer {
@@ -50,6 +51,10 @@ class IRenderer {
       color.b = def.b;
       color.a = def.a;
       drawFillRect(rect, color);
+
+      if (angle != 0) {
+        Vania::ConsolePanel::consoleOutput += "WARNING Rects cannot rotate\n\n";
+      }
     }
   }
 
