@@ -12,6 +12,7 @@ add_executable(index
   src/panels/GamePanel.cpp
   src/panels/WorldPanel.cpp
   src/panels/ProjectPanel.cpp
+  src/panels/ConsolePanel.cpp
   src/panels/InspectorPanel.cpp
   src/run/Runner.cpp
   src/run/AssetManager.cpp

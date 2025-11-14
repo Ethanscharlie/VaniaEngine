@@ -12,6 +12,7 @@
 #include "SDL3/SDL_render.h"
 #include "imgui.h"
 #include "imgui_impl_sdlrenderer3.h"
+#include "panels/ConsolePanel.hpp"
 #include "panels/EntityPanel.hpp"
 #include "panels/GamePanel.hpp"
 #include "panels/InspectorPanel.hpp"
@@ -36,6 +37,7 @@ App::App() {
   panels.emplace_back(std::make_unique<GamePanel>(context));
   panels.emplace_back(std::make_unique<InspectorPanel>(context));
   panels.emplace_back(std::make_unique<ProjectPanel>(context));
+  panels.emplace_back(std::make_unique<ConsolePanel>(context));
 }
 
 App::~App() {

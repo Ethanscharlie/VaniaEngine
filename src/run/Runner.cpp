@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <format>
 #include <iostream>
 #include <print>
 #include <string>
@@ -9,6 +10,7 @@
 #include "GameDataStructs.hpp"
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_render.h"
+#include "panels/ConsolePanel.hpp"
 #include "panels/EditorContext.hpp"
 #include "physics/collision.hpp"
 #include "render/RendererForSDL.hpp"
@@ -94,7 +96,11 @@ void Runner::runAllScriptsSetups() {
     const std::string& script = entity.entityDefOverride.script;
     if (script == "") continue;
     sol::table funcs = lua.script_file(root / script);
-    funcs["setup"](&entity);
+    auto result = funcs["setup"](&entity);
+    if (!result.valid()) {
+      sol::error err = result;
+      ConsolePanel::consoleOutput += std::format("Error executing script: {}\n\n", err.what());
+    }
   }
 }
 
@@ -115,7 +121,7 @@ void Runner::update() {
 
     if (!result.valid()) {
       sol::error err = result;
-      std::cerr << "Error executing script: " << err.what() << '\n';
+      ConsolePanel::consoleOutput += std::format("Error executing script: {}\n\n", err.what());
     }
   }
 
