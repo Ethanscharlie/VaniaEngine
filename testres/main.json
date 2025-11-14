@@ -24,7 +24,7 @@
                 "name": "Bullet",
                 "r": 255,
                 "script": "bullet.lua",
-                "width": 10.0
+                "width": 5.0
             }
         ],
         [
