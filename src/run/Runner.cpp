@@ -33,10 +33,10 @@ Runner::Runner(EditorContext& context)
       if (def.name == name) {
         int id = rand() % 100000;
         gameDataCopy.worldData.entities.push_back({id, defID, x, y});
-        Entity& entity = gameDataCopy.worldData.entities.back();
-        entity.entityDefOverride = def;
-        entity.properties = lua.create_table();
-        return &entity;
+        Entity* entity = &gameDataCopy.worldData.entities.back();
+        entity->entityDefOverride = def;
+        entity->properties = lua.create_table();
+        return entity;
       }
     }
 
