@@ -3,7 +3,7 @@ local speed = 500
 local function setup(entity) end
 
 local function update(entity, deltaTime)
-	moveForward(entity, speed * deltaTime)
+	moveAtAngle(entity, speed * deltaTime, entity.props["direction"])
 
 	local zombies = getEntitiesByDef("Zombie")
 	for i = 1, zombies:size() do

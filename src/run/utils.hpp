@@ -62,11 +62,13 @@ inline bool getMouseButtonHeld(const std::string& button) {
   return false;
 }
 
-inline void moveForward(Entity& entity, float speed) {
-  const float radians = entity.angle * (M_PI / 180.0);
+inline void moveAtAngle(Entity& entity, float speed, float angle) {
+  const float radians = angle * (M_PI / 180.0);
   entity.x += cos(radians) * speed;
   entity.y += sin(radians) * speed;
 }
+
+inline void moveForward(Entity& entity, float speed) { moveAtAngle(entity, speed, entity.angle); }
 
 inline void lookAt(Entity& entity, float targetX, float targetY) {
   const float deltaX = targetX - entity.x;
@@ -78,6 +80,7 @@ inline void exposeAll(sol::state& lua) {
   lua.set_function("getButtonHeld", getButtonHeld);
   lua.set_function("getMouseButtonHeld", getMouseButtonHeld);
   lua.set_function("moveForward", moveForward);
+  lua.set_function("moveAtAngle", moveAtAngle);
   lua.set_function("lookAt", lookAt);
 }
 }  // namespace Vania::utils
